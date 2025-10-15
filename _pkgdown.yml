@@ -1,0 +1,35 @@
+url: http://www.roald-arboel.com/animetric/
+home:
+  title: "animetric – An R package for calculating movement-based metrics"
+
+authors:
+  - name: "Mikkel Roald‑Arbøl"
+    href: "https://roald-arboel.com"
+
+template:
+  bootstrap: 5
+  light-switch: true
+
+navbar:
+  structure:
+    left:
+      - intro
+      - reference
+      - news
+    right:
+      - search
+      - github
+      - lightswitch
+
+reference:
+- title: "Calculate"
+  desc: These functions are where your results begin to emerge.
+  contents:
+  - add_centroid
+  - calculate_kinematics
+  - calculate_statistics
+  - calculate_derivative
+  - calculate_direction
+  - calculate_distance
+  - calculate_speed
+  - calculate_straightness

@@ -1,0 +1,14 @@
+citHeader("To cite animetric in publications use:")
+
+bibentry(bibtype = "Misc",
+         key = "animetric",
+         doi = "10.5281/zenodo.17357778",
+         title = "animetric: An R package for calculating movement-based metrics",
+         author = person(given = "Mikkel",
+                         family = "Roald-Arbøl",
+                         email = "animovement.84w1m@passmail.com",
+                         comment = c(ORCID = "0000-0002-9998-0058")),
+         year = "2025",
+         url = "http://www.roald-arboel.com/aniprocess/",
+         abstract = "An R package for calculating movement-based metrics.",
+         version = "0.1.0")

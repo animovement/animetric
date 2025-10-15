@@ -1,0 +1,27 @@
+# --------------------------------------------
+# CITATION file created with {cffr} R package
+# See also: https://docs.ropensci.org/cffr/
+# --------------------------------------------
+
+cff-version: 1.2.0
+message: 'To cite package "animetric" in publications use:'
+type: software
+license: MIT
+title: 'animetric: An R package for calculating movement-based metrics.'
+version: 0.1.0
+date-released: 2025-10-15
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.17357778
+abstract: An R package for calculating movement-based metrics.
+authors:
+- family-names: Roald-Arbøl
+  given-names: Mikkel
+  email: animovement.84w1m@passmail.com
+  orcid: https://orcid.org/0000-0002-9998-0058
+url: http://www.roald-arboel.com/aniread/
+contact:
+- family-names: Roald-Arbøl
+  given-names: Mikkel
+  email: animovement.84w1m@passmail.com
+  orcid: https://orcid.org/0000-0002-9998-0058
