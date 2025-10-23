@@ -25,7 +25,6 @@ reference:
 - title: "Calculate"
   desc: These functions are where your results begin to emerge.
   contents:
-  - add_centroid
   - calculate_kinematics
   - calculate_statistics
   - calculate_derivative

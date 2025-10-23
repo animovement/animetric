@@ -6,15 +6,15 @@
 <!-- badges: start -->
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17357778.svg)](https://doi.org/10.5281/zenodo.17357778)
-[![R-CMD-check](https://github.com/roaldarbol/animetric/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/roaldarbol/animetric/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/animovement/animetric/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/animovement/animetric/actions/workflows/R-CMD-check.yaml)
 [![animetric status
-badge](https://roaldarbol.r-universe.dev/badges/animetric)](https://roaldarbol.r-universe.dev)
-[![codecov](https://codecov.io/gh/roaldarbol/animetric/graph/badge.svg?token=Pf5n3yzLzK)](https://codecov.io/gh/roaldarbol/animetric)
+badge](https://animovement.r-universe.dev/badges/animetric)](https://animovement.r-universe.dev)
+[![codecov](https://codecov.io/gh/animovement/animetric/graph/badge.svg?token=Pf5n3yzLzK)](https://codecov.io/gh/animovement/animetric)
 <!-- badges: end -->
 
 *An R package for calculating movement-based metrics*
 
-The primary aim of the animetric package is to provide methods for
+The primary aim of the *animetric* package is to provide methods for
 calculating movement-based metrics, including kinematics, navigational
 statistics, and social interaction measures.
 
@@ -23,7 +23,7 @@ statistics, and social interaction measures.
 You can install the development version of *animetric* with:
 
 ``` r
-install.packages('animetric', repos = c('https://roaldarbol.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages('animetric', repos = c('https://animovement.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 Once you have installed the package, you can load it with:
