@@ -25,10 +25,16 @@ reference:
 - title: "Calculate"
   desc: These functions are where your results begin to emerge.
   contents:
-  - calculate_kinematics
+  - calculate_kinematics_2d
+  - calculate_kinematics_3d
   - calculate_statistics
   - calculate_derivative
   - calculate_direction
   - calculate_distance
-  - calculate_speed
   - calculate_straightness
+  - mean_angle
+  - median_angle
+
+- title: "Helpers"
+  contents:
+  - is_aniframe_kin

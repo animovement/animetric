@@ -9,7 +9,7 @@ calculate_straightness(data, straightness = c("A", "B", "C", "D"))
 \arguments{
 \item{data}{Data frame}
 
-\item{straightness}{hich method to calculate path straightness. Choose between "A" (default), "B", "C"... or a combination (e.g. "c("A","B")"). See description for details about the different calculations.}
+\item{straightness}{Which method to calculate path straightness. Choose between "A" (default), "B", "C"... or a combination (e.g. "c("A","B")"). See description for details about the different calculations.}
 }
 \description{
 Calculate straightness measures

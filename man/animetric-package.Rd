@@ -11,9 +11,9 @@ An R package for calculating movement-based metrics.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{http://www.roald-arboel.com/animetric/}
-  \item \url{https://github.com/roaldarbol/animetric/}
-  \item Report bugs at \url{https://github.com/roaldarbol/animetric/issues}
+  \item \url{http://animovement.dev/animetric/}
+  \item \url{https://github.com/animovement/animetric/}
+  \item Report bugs at \url{https://github.com/animovement/animetric/issues}
 }
 
 }

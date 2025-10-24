@@ -16,12 +16,6 @@ calculate_statistics <- function(
   measures = "median_mad",
   straightness = c("A", "B", "C", "D")
 ) {
-  validate_statistics()
-
-  # Ungroup (makes summarise work better)
-  data <- data |>
-    dplyr::ungroup()
-
   # Calculate translational and rotational separately (maybe?) and gather at the end
   totals <- data |>
     dplyr::summarise(
@@ -101,24 +95,4 @@ calculate_statistics <- function(
   }
 
   return(data)
-}
-
-#' Calculate circular Median Absolute Deviation (MAD)
-#' @param angles Vector of angles
-#' @importFrom circular circular
-#' @importFrom collapse fmedian
-#' @keywords internal
-calculate_circular_mad <- function(angles) {
-  ensure_circular(angles)
-  # Convert angles to circular object
-  angles_circular <- circular::circular(angles, units = "radians")
-
-  # Calculate circular median
-  circular_median <- collapse::fmedian(angles_circular)
-
-  # Compute absolute deviations from the circular median
-  abs_dev <- abs(angles_circular - circular_median)
-
-  # Calculate and return the median absolute deviation
-  collapse::fmedian(abs_dev)
 }
