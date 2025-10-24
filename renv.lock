@@ -25,21 +25,17 @@
     },
     "aniframe": {
       "Package": "aniframe",
-      "Version": "0.2.0",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "aniframe",
-      "RemoteUsername": "animovement",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "638d9345f8aba595a7332369b06b510edc3ce94d",
+      "Version": "0.2.1",
+      "Source": "Repository",
+      "Repository": "https://animovement.r-universe.dev",
       "Requirements": [
+        "R",
         "cli",
         "dplyr",
         "pillar",
         "rlang"
       ],
-      "Hash": "1fb0b5a75c624c711ac3e933e2ce3f4f"
+      "Hash": "78da039b57cd1dd5e8b1ac0821bd7c35"
     },
     "cli": {
       "Package": "cli",
