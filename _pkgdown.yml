@@ -27,7 +27,6 @@ reference:
   contents:
   - calculate_kinematics_2d
   - calculate_kinematics_3d
-  - calculate_statistics
   - calculate_derivative
   - calculate_direction
   - calculate_distance
