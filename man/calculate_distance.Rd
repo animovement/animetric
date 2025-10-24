@@ -5,12 +5,14 @@
 \title{Calculate distance (Pythagoras)
 Calculate distance from an x and y distance, using Pythagoras theorem.}
 \usage{
-calculate_distance(dx, dy)
+calculate_distance(dx, dy, dz = NULL)
 }
 \arguments{
 \item{dx}{dx}
 
 \item{dy}{dy}
+
+\item{dz}{dz}
 }
 \description{
 Calculate distance (Pythagoras)

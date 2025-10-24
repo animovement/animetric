@@ -2,22 +2,38 @@
 % Please edit documentation in R/calculate_derivative.R
 \name{calculate_derivative}
 \alias{calculate_derivative}
-\title{Calculate the derivative (dx/dt)
-Calculate the derivative (dx/dt) with four arguments}
+\title{Numerical derivative of arbitrary order}
 \usage{
-calculate_derivative(from_x, to_x, from_t, to_t)
+calculate_derivative(x, time, order = 1L)
 }
 \arguments{
-\item{from_x}{Current x value}
+\item{x}{Numeric vector of the same length as \code{time} (e.g., position/distance).}
 
-\item{to_x}{Lagging x value}
+\item{time}{Numeric, strictly increasing vector of timestamps.}
 
-\item{from_t}{Current timestamp}
-
-\item{to_t}{Lagging timestamp}
+\item{order}{Positive integer indicating the derivative order (1 = first,
+2 = second, …).  Defaults to 1.}
+}
+\value{
+A numeric vector of length \code{length(time)} containing the
+\code{order}‑th derivative.
 }
 \description{
-Calculate the derivative (dx/dt)
-Calculate the derivative (dx/dt) with four arguments
+Computes the n‑th derivative of a 1‑D signal \code{x} sampled at timestamps
+\code{time}.  The algorithm mirrors \code{xarray.DataArray.differentiate}:
+\itemize{
+\item forward difference at the first point,
+\item central differences for interior points,
+\item backward difference at the last point.
+The result always has the \strong{same length} as the input vectors.
 }
-\keyword{internal}
+}
+\examples{
+# Linear motion: x = t  →  1st derivative = 1, 2nd = 0, 3rd = 0 …
+t <- 0:5
+x <- 0:5
+calculate_derivative(x, t, order = 1L)  # => c(1,1,1,1,1,1)
+calculate_derivative(x, t, order = 2L)  # => c(0,0,0,0,0,0)
+calculate_derivative(x, t, order = 3L)  # => c(0,0,0,0,0,0)
+
+}
