@@ -64,19 +64,30 @@ calculate_translation_2d <- function(data) {
   data |>
     dplyr::mutate(
       d_translation = calculate_distance(.data$dx, .data$dy),
-      d_translation = dplyr::if_else(
-        is.na(.data$d_translation),
-        0,
-        .data$d_translation
-      ),
       cumsum_d_translation = cumsum_na(.data$d_translation),
-      v_translation = calculate_derivative(
-        .data$d_translation,
+      speed_translation = d_translation / (.data$time - dplyr::lag(.data$time)),
+      a_translation = calculate_derivative(
+          .data$speed_translation,
+          .data$time,
+          order = 1L
+        ),
+      vx_translation = calculate_derivative(
+        .data$x,
         .data$time,
         order = 1L
       ),
-      a_translation = calculate_derivative(
-        .data$d_translation,
+      vy_translation = calculate_derivative(
+        .data$y,
+        .data$time,
+        order = 1L
+      ),
+      ax_translation = calculate_derivative(
+        .data$x,
+        .data$time,
+        order = 2L
+      ),
+      ay_translation = calculate_derivative(
+        .data$y,
         .data$time,
         order = 2L
       )
@@ -88,12 +99,8 @@ calculate_translation_3d <- function(data) {
   data |>
     dplyr::mutate(
       d_translation = calculate_distance(.data$dx, .data$dy, .data$dz),
-      d_translation = dplyr::if_else(
-        is.na(.data$d_translation),
-        0,
-        .data$d_translation
-      ),
       cumsum_d_translation = cumsum_na(.data$d_translation),
+      speed_translation = d_translation / diff(.data$time),
       v_translation = calculate_derivative(
         .data$d_translation,
         .data$time,

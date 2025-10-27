@@ -22,6 +22,7 @@ Imports:
     dplyr,
     rlang
 Suggests: 
+    circular,
     knitr,
     testthat (>= 3.0.0)
 Additional_repositories: https://animovement.r-universe.dev

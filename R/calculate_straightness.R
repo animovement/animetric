@@ -6,9 +6,6 @@
 #' @keywords internal
 #' @export
 calculate_straightness <- function(data, straightness = c("A", "B", "C", "D")) {
-  # Make validator to ensure that x,y,total_translation and total_rotation is present
-  ensure_is_aniframe_kin()
-
   data <- data |>
     dplyr::mutate(
       straightness_A = calculate_straightness_A(
