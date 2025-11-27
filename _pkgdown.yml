@@ -23,12 +23,29 @@ navbar:
 
 reference:
 - title: "Calculate"
-  desc: These functions are where your results begin to emerge.
+  desc: These functions take your aniframe as input and give you results in return.
   contents:
   - calculate_kinematics
-  - calculate_statistics
-  - calculate_derivative
-  - calculate_direction
-  - calculate_distance
-  - calculate_speed
-  - calculate_straightness
+  - calculate_tortuosity
+
+- title: "Summarise"
+  desc: These functions return a single value per group, or a full summary.
+  contents:
+  - summarise_kinematics
+  - summarise_keypoints
+
+- title: "Compute"
+  desc: These functions are cogs used in `calculate_` and `summarise_` functions.
+  contents:
+  - compute_gradient
+  - differentiate
+  - compute_straightness
+  - compute_sinuosity
+  - compute_emax
+  - compute_centroid
+
+- title: "Helpers"
+  contents:
+  - is_aniframe_kin
+  - mean_angle
+  - median_angle

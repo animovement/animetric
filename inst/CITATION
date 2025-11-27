@@ -9,6 +9,6 @@ bibentry(bibtype = "Misc",
                          email = "animovement.84w1m@passmail.com",
                          comment = c(ORCID = "0000-0002-9998-0058")),
          year = "2025",
-         url = "http://www.roald-arboel.com/aniprocess/",
+         url = "http://animovement.dev/animetric/",
          abstract = "An R package for calculating movement-based metrics.",
-         version = "0.1.0")
+         version = "0.2.0")
