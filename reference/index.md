@@ -1,0 +1,52 @@
+# Package index
+
+## Calculate
+
+These functions take your aniframe as input and give you results in
+return.
+
+- [`calculate_kinematics()`](http://animovement.dev/animetric/reference/calculate_kinematics.md)
+  [`calculate_kinematics_2d()`](http://animovement.dev/animetric/reference/calculate_kinematics.md)
+  [`calculate_kinematics_3d()`](http://animovement.dev/animetric/reference/calculate_kinematics.md)
+  : Calculate kinematic measures from trajectory data
+- [`calculate_tortuosity()`](http://animovement.dev/animetric/reference/calculate_tortuosity.md)
+  [`calculate_tortuosity_2d()`](http://animovement.dev/animetric/reference/calculate_tortuosity.md)
+  [`calculate_tortuosity_3d()`](http://animovement.dev/animetric/reference/calculate_tortuosity.md)
+  : Calculate tortuosity metrics over sliding windows
+
+## Summarise
+
+These functions return a single value per group, or a full summary.
+
+- [`summarise_kinematics()`](http://animovement.dev/animetric/reference/summarise_kinematics.md)
+  : Calculate summary statistics
+- [`summarise_keypoints()`](http://animovement.dev/animetric/reference/summarise_keypoints.md)
+  : Summarize keypoint data
+
+## Compute
+
+These functions are cogs used in `calculate_` and `summarise_`
+functions.
+
+- [`compute_gradient()`](http://animovement.dev/animetric/reference/compute_gradient.md)
+  : Compute numerical derivatives on possibly uneven grids
+- [`differentiate()`](http://animovement.dev/animetric/reference/differentiate.md)
+  : Differentiate a numeric series (optionally repeatedly)
+- [`compute_straightness()`](http://animovement.dev/animetric/reference/compute_straightness.md)
+  : Compute straightness index from precomputed vectors
+- [`compute_sinuosity()`](http://animovement.dev/animetric/reference/compute_sinuosity.md)
+  : Compute sinuosity index from precomputed vectors
+- [`compute_emax()`](http://animovement.dev/animetric/reference/compute_emax.md)
+  : Compute E_max (maximum expected displacement) from pre‑computed
+  vectors
+- [`compute_centroid()`](http://animovement.dev/animetric/reference/compute_centroid.md)
+  : Compute centroid from keypoints
+
+## Helpers
+
+- [`is_aniframe_kin()`](http://animovement.dev/animetric/reference/is_aniframe_kin.md)
+  : Check if object is an aniframe_kin
+- [`mean_angle()`](http://animovement.dev/animetric/reference/mean_angle.md)
+  : Compute the circular mean of a set of angles (radians)
+- [`median_angle()`](http://animovement.dev/animetric/reference/median_angle.md)
+  : Compute the circular median of a set of angles (radians)
