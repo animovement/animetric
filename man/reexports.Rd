@@ -5,11 +5,13 @@
 \alias{reexports}
 \alias{rad_to_deg}
 \alias{deg_to_rad}
-\alias{constrain_angles_radians}
+\alias{wrap_angle}
+\alias{unwrap_angle}
 \alias{calculate_angular_difference}
 \alias{diff_angle}
 \alias{is_aniframe}
 \alias{ensure_is_aniframe}
+\alias{as_aniframe}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -17,6 +19,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{aniframe}{\code{\link[aniframe]{calculate_angular_difference}}, \code{\link[aniframe]{constrain_angles_radians}}, \code{\link[aniframe]{deg_to_rad}}, \code{\link[aniframe]{diff_angle}}, \code{\link[aniframe]{ensure_is_aniframe}}, \code{\link[aniframe]{is_aniframe}}, \code{\link[aniframe]{rad_to_deg}}}
+  \item{aniframe}{\code{\link[aniframe]{as_aniframe}}, \code{\link[aniframe]{calculate_angular_difference}}, \code{\link[aniframe]{deg_to_rad}}, \code{\link[aniframe]{diff_angle}}, \code{\link[aniframe]{ensure_is_aniframe}}, \code{\link[aniframe]{is_aniframe}}, \code{\link[aniframe]{rad_to_deg}}, \code{\link[aniframe]{unwrap_angle}}, \code{\link[aniframe]{wrap_angle}}}
 }}
 

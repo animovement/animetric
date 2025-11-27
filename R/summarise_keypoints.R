@@ -1,66 +1,68 @@
+#' Summarize keypoint data
+#'
+#' Creates summary statistics across multiple keypoints at each time point.
+#' Currently supports computing centroids from selected keypoints. Future
+#' functionality will include polygonal summaries.
+#'
+#' @param data An aniframe containing keypoint data.
+#' @param keypoints Character vector of keypoint names to summarize, or "all"
+#'   to use all keypoints in the data. Default is "all".
+#' @param name Character string for the name of the new summary keypoint.
+#'   Default is "centroid".
+#' @param add_area Logical indicating whether to compute area (not yet
+#'   implemented). Default is FALSE.
+#'
+#' @return An aniframe with the original data plus the new summary keypoint.
+#'
 #' @export
 summarise_keypoints <- function(
-    data,
-    keypoints = "all",
-    name = "centroid",
-    add_area = FALSE
-    ) {
+  data,
+  keypoints = "all",
+  name = "centroid",
+  add_area = FALSE
+) {
+  # Validate input
   ensure_is_aniframe(data)
 
-  # TODO: Check whether the new centorid name already exists in the data
-
-  if (keypoints == "all") {
+  # Resolve keypoint selection
+  if (identical(keypoints, "all")) {
     keypoints <- unique(data$keypoint)
   }
+
+  # Validate name doesn't conflict
+  if (name %in% keypoints) {
+    cli::cli_abort(
+      "Summary name {.val {name}} conflicts with existing keypoint."
+    )
+  }
+
+  # Check minimum keypoints requirement
   n_keypoints <- length(keypoints)
+  if (n_keypoints < 2) {
+    cli::cli_abort(
+      "At least 2 keypoints required for summarization, found {n_keypoints}."
+    )
+  }
+
+  # Identify grouping variables
   grps <- attr(data, "groups") |>
     names() |>
     setdiff(c(".rows", "keypoint")) |>
     c("time")
 
-  # --------
-  # DO STUFF!!!
-  # --------
-
-  if (n_keypoints == 1) {
-    cli::cli_alert_info("Minimum 2 keypoints")
-    return(data)
-  } else if (n_keypoints == 2){
-
-  } else if (n_keypoints > 2) {
-
-  }
-
-  data_polygon_pre <- data |>
-    dplyr::group_by(dplyr::across(dplyr::all_of(grps))) |>
-    dplyr::summarise(
-      coords = list(
-        data.frame(x = .data$x, y = .data$y)
-      )
-    ) |>
-    dplyr::mutate(
-      coords = purrr::map(coords, ~ dplyr::bind_rows(.x, .x[1, ]))
-    ) |>
-    suppressWarnings()
-
-  data_polygon <- data_polygon_pre |>
-    dplyr::mutate(
-      # Convert to polygon (needs matrix wrapped in list)
-      polygon = purrr::map(.data$coords, ~ sf::st_polygon(list(as.matrix(.x)))),
-      # Calculate area
-      # area = purrr::map_dbl(.data$polygon, sf::st_area),
-      # Polygon centroid coordinates
-      x = purrr::map_dbl(.data$coords, ~ mean(.x$x, na.rm = TRUE)),
-      y = purrr::map_dbl(.data$coords, ~ mean(.x$y, na.rm = TRUE)),
-      keypoint = name
-    ) |>
-    dplyr::select(!dplyr::all_of("coords")) |>
-    aniframe::as_aniframe()
-
+  # Compute summary statistics
+  # TODO: Add polygon computation and area calculation
+  # TODO: Handle n_keypoints == 2 case differently if needed
   md <- aniframe::get_metadata(data)
 
   data |>
-    dplyr::bind_rows(data_polygon) |>
-    aniframe::as_aniframe() |>
+    dplyr::bind_rows(
+      compute_centroid(
+        data,
+        include_keypoints = keypoints,
+        centroid_name = name
+      )
+    ) |>
+    as_aniframe() |>
     aniframe::set_metadata(metadata = md)
 }

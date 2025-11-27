@@ -7,9 +7,13 @@ aniframe::rad_to_deg
 #' @export
 aniframe::deg_to_rad
 
-#' @importFrom aniframe constrain_angles_radians
+#' @importFrom aniframe wrap_angle
 #' @export
-aniframe::constrain_angles_radians
+aniframe::wrap_angle
+
+#' @importFrom aniframe unwrap_angle
+#' @export
+aniframe::unwrap_angle
 
 #' @importFrom aniframe calculate_angular_difference
 #' @export
@@ -26,3 +30,7 @@ aniframe::is_aniframe
 #' @importFrom aniframe ensure_is_aniframe
 #' @export
 aniframe::ensure_is_aniframe
+
+#' @importFrom aniframe as_aniframe
+#' @export
+aniframe::as_aniframe

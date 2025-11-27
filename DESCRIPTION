@@ -1,7 +1,7 @@
 Package: animetric
 Type: Package
 Title: An R package for calculating movement-based metrics
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person(
       "Mikkel", 
@@ -23,7 +23,9 @@ Imports:
     rlang
 Suggests: 
     circular,
+    data.table,
     knitr,
+    sf,
     testthat (>= 3.0.0)
 Additional_repositories: https://animovement.r-universe.dev
 Config/testthat/edition: 3

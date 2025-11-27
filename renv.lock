@@ -25,7 +25,7 @@
     },
     "aniframe": {
       "Package": "aniframe",
-      "Version": "0.2.1",
+      "Version": "0.2.5",
       "Source": "Repository",
       "Repository": "https://animovement.r-universe.dev",
       "Requirements": [
@@ -35,7 +35,7 @@
         "pillar",
         "rlang"
       ],
-      "Hash": "78da039b57cd1dd5e8b1ac0821bd7c35"
+      "Hash": "92acd53d2184de25996430510384e338"
     },
     "cli": {
       "Package": "cli",
@@ -47,6 +47,17 @@
         "utils"
       ],
       "Hash": "16850760556401a2eeb27d39bd11c9cb"
+    },
+    "data.table": {
+      "Package": "data.table",
+      "Version": "1.17.8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "methods"
+      ],
+      "Hash": "1d991cd6160fa7b1fdbd3689034cbd15"
     },
     "dplyr": {
       "Package": "dplyr",
@@ -141,6 +152,21 @@
         "utils"
       ],
       "Hash": "01f28d4278f15c76cddbea05899c5d6f"
+    },
+    "purrr": {
+      "Package": "purrr",
+      "Version": "1.1.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "cli",
+        "lifecycle",
+        "magrittr",
+        "rlang",
+        "vctrs"
+      ],
+      "Hash": "9240cfb47489133f809918a0d3cc60cb"
     },
     "renv": {
       "Package": "renv",

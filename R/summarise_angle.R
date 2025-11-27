@@ -2,7 +2,7 @@
 #'
 #' The function returns the mean direction of a numeric vector of angles,
 #' wrapping the result to the interval \[0, 2*pi).  It leverages the
-#' `constrain_angles_radians()` and `calculate_angular_difference()` helpers
+#' `wrap_angle()` and `calculate_angular_difference()` helpers
 #' that you already defined.
 #'
 #' @param ang Numeric vector of angles (radians).  May contain values outside
@@ -14,7 +14,7 @@
 #' @export
 mean_angle <- function(ang) {
   ## 1. Normalise all inputs to [0, 2π)
-  ang_mod <- constrain_angles_radians(ang)
+  ang_mod <- wrap_angle(ang)
 
   ## 2. Represent each angle as a unit vector on the circle
   x <- cos(ang_mod)
@@ -30,7 +30,7 @@ mean_angle <- function(ang) {
   ## 5. Convert the raw result to the canonical [0, 2π) interval.
   ##    We could simply do `mu_raw %% (2*pi)`, but using the existing
   ##    helper keeps the style consistent and makes future changes easier.
-  mu <- constrain_angles_radians(mu_raw)
+  mu <- wrap_angle(mu_raw)
 
   ## 6. Edge‑case handling:
   ##    When the resultant vector length is (near) zero (e.g., perfectly
@@ -45,7 +45,7 @@ mean_angle <- function(ang) {
 #'
 #' The function returns the mean direction of a numeric vector of angles,
 #' wrapping the result to the interval \[0, 2*pi).  It leverages the
-#' `constrain_angles_radians()` and `calculate_angular_difference()` helpers
+#' `wrap_angle()` and `calculate_angular_difference()` helpers
 #' that you already defined.
 #'
 #' @param ang Numeric vector of angles (radians).  May contain values outside
@@ -57,7 +57,7 @@ mean_angle <- function(ang) {
 #' @export
 median_angle <- function(ang) {
   ## 1. Normalise all inputs to [0, 2π)
-  ang_mod <- constrain_angles_radians(ang)
+  ang_mod <- wrap_angle(ang)
 
   ## 2. Represent each angle as a unit vector on the circle
   x <- cos(ang_mod)
@@ -73,7 +73,7 @@ median_angle <- function(ang) {
   ## 5. Convert the raw result to the canonical [0, 2π) interval.
   ##    We could simply do `mu_raw %% (2*pi)`, but using the existing
   ##    helper keeps the style consistent and makes future changes easier.
-  mu <- constrain_angles_radians(mu_raw)
+  mu <- wrap_angle(mu_raw)
 
   ## 6. Edge‑case handling:
   ##    When the resultant vector length is (near) zero (e.g., perfectly

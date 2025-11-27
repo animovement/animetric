@@ -1,38 +1,3 @@
-#' Descriptive statistics for circular (angular) data
-#'
-#' This script implements a small toolbox for computing common
-#' descriptive measures on angles expressed in radians.  All functions
-#' assume inputs are numeric vectors and automatically wrap values to
-#' the interval [0, 2*pi).  The quantile routine now follows the
-#' Fisher‑&‑Lee (1995) algorithm, which yields true circular
-#' quantiles (the 0.5‑quantile coincides with the circular median).
-#'
-#' @examples
-#' angles <- runif(200, 0, 2*pi)
-#' circ_mean(angles)
-#' circ_sd(angles)
-#' circ_median(angles)
-#' circ_mad(angles)
-#' circ_quantile(angles, probs = c(0.25, 0.5, 0.75))
-NULL
-
-circ_check <- function(){
-  # Check that circular is installed
-  rlang::check_installed(
-    "circular",
-    reason = "for calculating circular descriptive statistics,",
-    action = function(...) {
-      utils::install.packages(
-        'circular',
-        repos = c(
-          'https://animovement.r-universe.dev',
-          'https://cloud.r-project.org'
-        )
-      )
-    }
-  )
-}
-
 # -------------------------------------------------------------------------
 # Central tendency ---------------------------------------------------------
 
@@ -40,6 +5,7 @@ circ_check <- function(){
 #' @param x Numeric vector of angles in radians
 #' @param na_rm Logical; if TRUE, remove NA values before computation
 #' @return Mean direction (radians) wrapped to [0, 2*pi)
+#' @keywords internal
 circ_mean <- function(x, na_rm = TRUE) {
   circ_check()
 
@@ -70,10 +36,7 @@ circ_mean <- function(x, na_rm = TRUE) {
 #'
 #' @return The circular median as a single numeric value in radians
 #'
-#' @examples
-#' # Angles in radians
-#' angles <- c(0.1, 0.2, 6.2, 6.3)
-#' circ_median(angles)
+#' @keywords internal
 circ_median <- function(x, na_rm = TRUE) {
   circ_check()
 
@@ -89,9 +52,8 @@ circ_median <- function(x, na_rm = TRUE) {
   }
 
   # Use the circular implementation
-  # Use the circular implementation
   y <- x |>
-    constrain_angles_radians() |>
+    aniframe::wrap_angle() |>
     circular::circular() |>
     circular::median.circular()
 
@@ -107,6 +69,7 @@ circ_median <- function(x, na_rm = TRUE) {
 #' @param x Numeric vector of angles (radians)
 #' @param na_rm Logical; if TRUE, remove NA values before computation
 #' @return Circular SD (radians)
+#' @keywords internal
 circ_sd <- function(x, na_rm = TRUE) {
   circ_check()
 
@@ -132,6 +95,7 @@ circ_sd <- function(x, na_rm = TRUE) {
 #' @param x Numeric vector of angles (radians)
 #' @param na_rm Logical; if TRUE, remove NA values before computation
 #' @return MAD (radians)
+#' @keywords internal
 circ_mad <- function(x, na_rm = TRUE) {
   circ_check()
 
@@ -170,6 +134,7 @@ circ_mad <- function(x, na_rm = TRUE) {
 #' @return Vector of quantile angles (radians) wrapped to \[0, 2π).
 #' @references Fisher, N. I. & Lee, A. J. (1995). *Statistical Analysis
 #'   of Circular Data*. Cambridge University Press. Chapter 3.
+#' @keywords internal
 circ_quantile <- function(x, probs = c(0.25, 0.5, 0.75), na_rm = TRUE) {
   circ_check()
 

@@ -16,7 +16,7 @@ A single numeric value in [0, 2*pi) representing the circular mean.
 \description{
 The function returns the mean direction of a numeric vector of angles,
 wrapping the result to the interval [0, 2*pi).  It leverages the
-\code{constrain_angles_radians()} and \code{calculate_angular_difference()} helpers
+\code{wrap_angle()} and \code{calculate_angular_difference()} helpers
 that you already defined.
 }
 \examples{
