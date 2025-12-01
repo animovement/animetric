@@ -27,6 +27,7 @@ reference:
   contents:
   - calculate_kinematics
   - calculate_tortuosity
+  - calculate_nnd
 
 - title: "Summarise"
   desc: These functions return a single value per group, or a full summary.
@@ -43,6 +44,7 @@ reference:
   - compute_sinuosity
   - compute_emax
   - compute_centroid
+  - compute_nnd
 
 - title: "Helpers"
   contents:

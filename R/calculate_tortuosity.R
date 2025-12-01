@@ -72,8 +72,7 @@ calculate_tortuosity <- function(data, window_width = 11L) {
   }
 }
 
-#' @rdname calculate_tortuosity
-#' @export
+#' @keywords internal
 calculate_tortuosity_2d <- function(data, window_width = 11L) {
   # Check that data.table is installed
   dt_check()
@@ -170,8 +169,7 @@ calculate_tortuosity_2d <- function(data, window_width = 11L) {
     dplyr::select(-dplyr::starts_with("."))
 }
 
-#' @rdname calculate_tortuosity
-#' @export
+#' @keywords internal
 calculate_tortuosity_3d <- function(data, window_width = 11L) {
   # Check that data.table is installed
   dt_check()

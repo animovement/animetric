@@ -2,15 +2,9 @@
 % Please edit documentation in R/calculate_tortuosity.R
 \name{calculate_tortuosity}
 \alias{calculate_tortuosity}
-\alias{calculate_tortuosity_2d}
-\alias{calculate_tortuosity_3d}
 \title{Calculate tortuosity metrics over sliding windows}
 \usage{
 calculate_tortuosity(data, window_width = 11L)
-
-calculate_tortuosity_2d(data, window_width = 11L)
-
-calculate_tortuosity_3d(data, window_width = 11L)
 }
 \arguments{
 \item{data}{An aniframe with position coordinates and time. Velocity and
