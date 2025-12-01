@@ -27,13 +27,13 @@
 #'
 #' @export
 compute_nnd <- function(
-    x,
-    y,
-    z = NULL,
-    individual,
-    keypoint = NULL,
-    n = 1L,
-    keypoint_neighbour = NULL
+  x,
+  y,
+  z = NULL,
+  individual,
+  keypoint = NULL,
+  n = 1L,
+  keypoint_neighbour = NULL
 ) {
   n_points <- length(x)
 
@@ -70,14 +70,18 @@ compute_nnd <- function(
     focal_ind <- individual_chr[i]
 
     # Skip if focal individual is NA
-    if (is.na(focal_ind)) next
+    if (is.na(focal_ind)) {
+      next
+    }
 
     dists <- dist_mat[i, ]
 
     # Other individuals (not the focal)
     other_inds <- setdiff(unique_inds, focal_ind)
 
-    if (length(other_inds) < n) next
+    if (length(other_inds) < n) {
+      next
+    }
 
     # For each other individual, find the closest candidate point
     ind_info <- lapply(other_inds, function(other_ind) {
@@ -95,7 +99,9 @@ compute_nnd <- function(
 
     # Find nth nearest individual
     valid_pos <- which(is.finite(min_dists))
-    if (length(valid_pos) < n) next
+    if (length(valid_pos) < n) {
+      next
+    }
 
     ranked <- valid_pos[order(min_dists[valid_pos])]
     nth_pos <- ranked[n]

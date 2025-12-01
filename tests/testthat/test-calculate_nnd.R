@@ -91,9 +91,18 @@ test_that("identifies correct nearest neighbour individual", {
 
   result <- calculate_nnd(data)
 
-  expect_equal(as.character(result$nnd_individual[result$individual == "1"]), "2")
-  expect_equal(as.character(result$nnd_individual[result$individual == "2"]), "1")
-  expect_equal(as.character(result$nnd_individual[result$individual == "3"]), "2")
+  expect_equal(
+    as.character(result$nnd_individual[result$individual == "1"]),
+    "2"
+  )
+  expect_equal(
+    as.character(result$nnd_individual[result$individual == "2"]),
+    "1"
+  )
+  expect_equal(
+    as.character(result$nnd_individual[result$individual == "3"]),
+    "2"
+  )
 })
 
 test_that("filters neighbours by keypoint_neighbour parameter", {
@@ -118,7 +127,9 @@ test_that("filters neighbours by keypoint_neighbour parameter", {
     5
   )
   expect_equal(
-    as.character(result$nnd_keypoint[result$individual == "1" & result$keypoint == "nose"]),
+    as.character(result$nnd_keypoint[
+      result$individual == "1" & result$keypoint == "nose"
+    ]),
     "nose"
   )
 })
@@ -137,7 +148,9 @@ test_that("returns nnd_keypoint column when keypoint values are non-NA", {
   expect_true("nnd_keypoint" %in% names(result))
   # Individual 1's nose (x=0) is closest to individual 2's nose (x=3)
   expect_equal(
-    as.character(result$nnd_keypoint[result$individual == "1" & result$keypoint == "nose"]),
+    as.character(result$nnd_keypoint[
+      result$individual == "1" & result$keypoint == "nose"
+    ]),
     "nose"
   )
 })
@@ -159,9 +172,18 @@ test_that("handles n > 1 for second nearest individual", {
   expect_equal(result$nnd_distance[result$individual == "2"], 15)
   expect_equal(result$nnd_distance[result$individual == "3"], 25)
 
-  expect_equal(as.character(result$nnd_individual[result$individual == "1"]), "3")
-  expect_equal(as.character(result$nnd_individual[result$individual == "2"]), "3")
-  expect_equal(as.character(result$nnd_individual[result$individual == "3"]), "1")
+  expect_equal(
+    as.character(result$nnd_individual[result$individual == "1"]),
+    "3"
+  )
+  expect_equal(
+    as.character(result$nnd_individual[result$individual == "2"]),
+    "3"
+  )
+  expect_equal(
+    as.character(result$nnd_individual[result$individual == "3"]),
+    "1"
+  )
 })
 
 test_that("n = 2 finds second nearest individual, not second nearest point", {
@@ -288,7 +310,14 @@ test_that("handles vector of keypoint_neighbour values", {
   data <- aniframe::aniframe(
     time = c(1, 1, 1, 1, 1, 1),
     individual = c(1, 1, 1, 2, 2, 2),
-    keypoint = c("nose", "left_ear", "right_ear", "nose", "left_ear", "right_ear"),
+    keypoint = c(
+      "nose",
+      "left_ear",
+      "right_ear",
+      "nose",
+      "left_ear",
+      "right_ear"
+    ),
     x = c(0, 1, 2, 10, 11, 8),
     y = c(0, 0, 0, 0, 0, 0)
   )
@@ -301,7 +330,9 @@ test_that("handles vector of keypoint_neighbour values", {
     8
   )
   expect_equal(
-    as.character(result$nnd_keypoint[result$individual == "1" & result$keypoint == "nose"]),
+    as.character(result$nnd_keypoint[
+      result$individual == "1" & result$keypoint == "nose"
+    ]),
     "right_ear"
   )
 })
