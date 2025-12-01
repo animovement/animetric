@@ -336,3 +336,17 @@ test_that("handles vector of keypoint_neighbour values", {
     "right_ear"
   )
 })
+
+test_that("errors when no context columns present", {
+  # Create a mock aniframe without session, trial, or time
+  data <- data.frame(
+    individual = factor(c(1, 2)),
+    keypoint = factor(c(NA, NA)),
+    x = c(0, 10),
+    y = c(0, 0),
+    confidence = c(NA_real_, NA_real_)
+  )
+  class(data) <- c("aniframe", "tbl_df", "tbl", "data.frame")
+
+  expect_error(calculate_nnd(data), "context column")
+})
