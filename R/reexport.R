@@ -7,21 +7,21 @@ aniframe::rad_to_deg
 #' @export
 aniframe::deg_to_rad
 
-#' @importFrom aniframe wrap_angle
+#' @importFrom anispace wrap_angle
 #' @export
-aniframe::wrap_angle
+anispace::wrap_angle
 
-#' @importFrom aniframe unwrap_angle
+#' @importFrom anispace unwrap_angle
 #' @export
-aniframe::unwrap_angle
+anispace::unwrap_angle
 
-#' @importFrom aniframe calculate_angular_difference
+#' @importFrom anispace calculate_angular_difference
 #' @export
-aniframe::calculate_angular_difference
+anispace::calculate_angular_difference
 
-#' @importFrom aniframe diff_angle
+#' @importFrom anispace diff_angle
 #' @export
-aniframe::diff_angle
+anispace::diff_angle
 
 #' @importFrom aniframe is_aniframe
 #' @export

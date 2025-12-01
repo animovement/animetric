@@ -2,24 +2,21 @@
 % Please edit documentation in R/summarise_angle.R
 \name{mean_angle}
 \alias{mean_angle}
-\title{Compute the circular mean of a set of angles (radians)}
+\title{Compute the circular mean of angles}
 \usage{
 mean_angle(ang)
 }
 \arguments{
-\item{ang}{Numeric vector of angles (radians).  May contain values outside
-[0, 2*pi); they are normalised internally.}
+\item{ang}{Numeric vector of angles in radians.}
 }
 \value{
-A single numeric value in [0, 2*pi) representing the circular mean.
+Circular mean in [0, 2*pi).
 }
 \description{
-The function returns the mean direction of a numeric vector of angles,
-wrapping the result to the interval [0, 2*pi).  It leverages the
-\code{wrap_angle()} and \code{calculate_angular_difference()} helpers
-that you already defined.
+Returns the mean direction of a vector of angles in radians,
+wrapped to [0, 2*pi).
 }
 \examples{
-mean_angle(c(pi/2, 1.5 * pi))   # → 0
-mean_angle(c(0, pi))           # → pi
+mean_angle(c(pi/2, 1.5 * pi))
+mean_angle(c(0, pi))
 }

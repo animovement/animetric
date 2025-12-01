@@ -22,7 +22,7 @@ summarise_keypoints <- function(
   add_area = FALSE
 ) {
   # Validate input
-  ensure_is_aniframe(data)
+  aniframe::ensure_is_aniframe(data)
 
   # Resolve keypoint selection
   if (identical(keypoints, "all")) {
@@ -63,6 +63,6 @@ summarise_keypoints <- function(
         centroid_name = name
       )
     ) |>
-    as_aniframe() |>
+    aniframe::as_aniframe() |>
     aniframe::set_metadata(metadata = md)
 }
