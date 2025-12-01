@@ -44,7 +44,7 @@ test_that("calculate_kinematics converts polar to Cartesian and back", {
   ) |>
     aniframe::as_aniframe()
 
-  data_polar <- aniframe::map_to_polar(data_cartesian)
+  data_polar <- anispace::map_to_polar(data_cartesian)
   result <- calculate_kinematics(data_polar)
 
   expect_true(aniframe::is_polar(result))
@@ -62,7 +62,7 @@ test_that("calculate_kinematics converts cylindrical to Cartesian and back", {
   ) |>
     aniframe::as_aniframe()
 
-  data_cylindrical <- aniframe::map_to_cylindrical(data_cartesian)
+  data_cylindrical <- anispace::map_to_cylindrical(data_cartesian)
   result <- calculate_kinematics(data_cylindrical)
 
   expect_true(aniframe::is_cylindrical(result))
@@ -80,7 +80,7 @@ test_that("calculate_kinematics converts spherical to Cartesian and back", {
   ) |>
     aniframe::as_aniframe()
 
-  data_spherical <- aniframe::map_to_spherical(data_cartesian)
+  data_spherical <- anispace::map_to_spherical(data_cartesian)
   result <- calculate_kinematics(data_spherical)
 
   expect_true(aniframe::is_spherical(result))

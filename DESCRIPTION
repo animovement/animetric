@@ -1,7 +1,7 @@
 Package: animetric
 Type: Package
 Title: An R package for calculating movement-based metrics
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     person(
       "Mikkel", 
@@ -16,8 +16,11 @@ URL: http://animovement.dev/animetric/, https://github.com/animovement/animetric
 BugReports: https://github.com/animovement/animetric/issues
 Encoding: UTF-8
 LazyData: true
+Depends:
+    R (>= 4.1.0)
 Imports: 
     aniframe,
+    anispace,
     cli,
     dplyr,
     rlang

@@ -42,12 +42,12 @@
 #' kinematics_polar <- calculate_kinematics(traj_polar)
 #' }
 calculate_kinematics <- function(data) {
-  ensure_is_aniframe(data)
+  aniframe::ensure_is_aniframe(data)
 
   # Convert to Cartesian if needed
   original_system <- aniframe::get_metadata(data)$coordinate_system
   if (!aniframe::is_cartesian(data)) {
-    data <- aniframe::map_to_cartesian(data)
+    data <- anispace::map_to_cartesian(data)
   }
 
   # Calculate kinematics
@@ -59,11 +59,11 @@ calculate_kinematics <- function(data) {
 
   # Convert back if needed
   if (as.character(original_system) == "polar") {
-    data <- aniframe::map_to_polar(data)
+    data <- anispace::map_to_polar(data)
   } else if (as.character(original_system) == "cylindrical") {
-    data <- aniframe::map_to_cylindrical(data)
+    data <- anispace::map_to_cylindrical(data)
   } else if (as.character(original_system) == "spherical") {
-    data <- aniframe::map_to_spherical(data)
+    data <- anispace::map_to_spherical(data)
   }
 
   data

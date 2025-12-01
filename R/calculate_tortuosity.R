@@ -177,7 +177,7 @@ calculate_tortuosity_3d <- function(data, window_width = 11L) {
   dt_check()
 
   # Validate that it is an aniframe
-  ensure_is_aniframe(data)
+  aniframe::ensure_is_aniframe(data)
 
   window_width <- as.integer(window_width)
   if (window_width < 3L) {
