@@ -41,7 +41,7 @@
     },
     "aniframe": {
       "Package": "aniframe",
-      "Version": "0.3.0",
+      "Version": "0.3.1",
       "Source": "Repository",
       "Type": "Package",
       "Title": "An R package providing core data structures for movement data",
@@ -73,14 +73,14 @@
       "Repository": "https://animovement.r-universe.dev",
       "RemoteUrl": "https://github.com/animovement/aniframe",
       "RemoteRef": "HEAD",
-      "RemoteSha": "324354f0c7bf568d23a52b254bfbbc908b0f6124",
+      "RemoteSha": "ffe83978345d6029cf9390555b3c427e132453ae",
       "NeedsCompilation": "no",
       "Author": "Mikkel Roald-Arbøl [aut, cre] (ORCID: <https://orcid.org/0000-0002-9998-0058>)",
       "Maintainer": "Mikkel Roald-Arbøl <animovement.84w1m@passmail.com>"
     },
     "anispace": {
       "Package": "anispace",
-      "Version": "0.1.0",
+      "Version": "0.1.1",
       "Source": "Repository",
       "Type": "Package",
       "Title": "An R package providing spatial transformation methods for movement data",
@@ -112,7 +112,7 @@
       "Repository": "https://animovement.r-universe.dev",
       "RemoteUrl": "https://github.com/animovement/anispace",
       "RemoteRef": "HEAD",
-      "RemoteSha": "81c9d2d99cf2c2f5af0b1b61e42e5c3b2fb42640",
+      "RemoteSha": "b67e3a19f4893ce4bc0a9c61033ac7d46c37985a",
       "NeedsCompilation": "no",
       "Author": "Mikkel Roald-Arbøl [aut, cre] (ORCID: <https://orcid.org/0000-0002-9998-0058>)",
       "Maintainer": "Mikkel Roald-Arbøl <animovement.84w1m@passmail.com>"
