@@ -27,6 +27,7 @@
 #' path. Journal of Theoretical Biology, 229(2), 209-220.
 #'
 #' @export
+#' @aliases summarize_kinematics
 summarise_kinematics <- function(
   data,
   measures = c("median_mad", "mean_sd")

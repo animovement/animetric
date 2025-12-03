@@ -69,8 +69,7 @@ calculate_kinematics <- function(data) {
   data
 }
 
-#' @rdname calculate_kinematics
-#' @export
+#' @keywords internal
 calculate_kinematics_2d <- function(data) {
   ensure_is_aniframe(data)
   data <- calculate_translation_2d(data)
@@ -80,8 +79,7 @@ calculate_kinematics_2d <- function(data) {
     new_aniframe_kin2d()
 }
 
-#' @rdname calculate_kinematics
-#' @export
+#' @keywords internal
 calculate_kinematics_3d <- function(data) {
   ensure_is_aniframe(data)
   data <- calculate_translation_3d(data)

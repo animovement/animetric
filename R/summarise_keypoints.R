@@ -15,6 +15,7 @@
 #' @return An aniframe with the original data plus the new summary keypoint.
 #'
 #' @export
+#' @aliases summarize_keypoints
 summarise_keypoints <- function(
   data,
   keypoints = "all",
