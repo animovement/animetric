@@ -18,10 +18,6 @@ jobs:
           type: "stream"
           topic: "releases"
           content: |
-            **[${{ github.event.release.name }}](${{ github.event.release.html_url }})** has been released!
+            # New [${{ github.repository }}](https://github.com/${{ github.repository }}) Release: **[${{ github.event.release.name }}](${{ github.event.release.html_url }})
 
-            **Tag:** `${{ github.event.release.tag_name }}`
-            **Repository:** [${{ github.repository }}](https://github.com/${{ github.repository }})
-
-            ### Release Notes
             ${{ github.event.release.body }}
