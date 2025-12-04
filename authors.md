@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/animovement/animetric/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/animovement/animetric/blob/v0.3.0/inst/CITATION)
 
 Roald-Arbøl M (2025). “animetric: An R package for calculating
 movement-based metrics.”
