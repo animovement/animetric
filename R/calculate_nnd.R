@@ -85,6 +85,12 @@ calculate_nnd <- function(data, n = 1L, keypoint_neighbour = NULL) {
     }
   }
 
+  if (is_aniframe_kin(data)) {
+    ani_kin <- TRUE
+  } else {
+    ani_kin <- FALSE
+  }
+
   is_3d <- aniframe::is_cartesian_3d(data)
 
   result <- data |>
@@ -106,4 +112,11 @@ calculate_nnd <- function(data, n = 1L, keypoint_neighbour = NULL) {
     dplyr::ungroup() |>
     suppressWarnings() |>
     aniframe::as_aniframe()
+
+  if (ani_kin == TRUE) {
+    result <- result |> 
+      new_aniframe_kin()
+  }
+
+  result
 }
