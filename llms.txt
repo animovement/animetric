@@ -46,20 +46,25 @@ These functions take your aniframe as input and give you results in
 return.
 
 - [`calculate_kinematics()`](http://animovement.dev/animetric/reference/calculate_kinematics.md)
-  [`calculate_kinematics_2d()`](http://animovement.dev/animetric/reference/calculate_kinematics.md)
-  [`calculate_kinematics_3d()`](http://animovement.dev/animetric/reference/calculate_kinematics.md)
   : Calculate kinematic measures from trajectory data
 - [`calculate_tortuosity()`](http://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  [`calculate_tortuosity_2d()`](http://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  [`calculate_tortuosity_3d()`](http://animovement.dev/animetric/reference/calculate_tortuosity.md)
   : Calculate tortuosity metrics over sliding windows
+- [`calculate_nnd()`](http://animovement.dev/animetric/reference/calculate_nnd.md)
+  : Calculate distance to n-th nearest neighbour
 
 ## Summarise
 
 These functions return a single value per group, or a full summary.
 
+- [`summarise_aniframe()`](http://animovement.dev/animetric/reference/summarise_aniframe.md)
+  [`summarize_aniframe()`](http://animovement.dev/animetric/reference/summarise_aniframe.md)
+  : Summarise an aniframe
 - [`summarise_kinematics()`](http://animovement.dev/animetric/reference/summarise_kinematics.md)
-  : Calculate summary statistics
+  [`summarize_kinematics()`](http://animovement.dev/animetric/reference/summarise_kinematics.md)
+  : Calculate kinematic summary statistics
+- [`summarise_tortuosity()`](http://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  [`summarize_tortuosity()`](http://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  : Calculate tortuosity summary statistics
 - [`summarise_keypoints()`](http://animovement.dev/animetric/reference/summarise_keypoints.md)
   : Summarize keypoint data
 
@@ -81,6 +86,8 @@ functions.
   vectors
 - [`compute_centroid()`](http://animovement.dev/animetric/reference/compute_centroid.md)
   : Compute centroid from keypoints
+- [`compute_nnd()`](http://animovement.dev/animetric/reference/compute_nnd.md)
+  : Compute nearest neighbour distances for a single time point
 
 ## Helpers
 

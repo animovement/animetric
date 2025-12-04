@@ -22,5 +22,5 @@ movement-based metrics.”
       year = {2025},
       url = {http://animovement.dev/animetric/},
       abstract = {An R package for calculating movement-based metrics.},
-      version = {0.2.1},
+      version = {0.3.0},
     }

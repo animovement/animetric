@@ -4,13 +4,13 @@
 <url><loc>http://animovement.dev/animetric/LICENSE.html</loc></url>
 <url><loc>http://animovement.dev/animetric/authors.html</loc></url>
 <url><loc>http://animovement.dev/animetric/index.html</loc></url>
+<url><loc>http://animovement.dev/animetric/news/index.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/animetric-package.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/calculate_kinematics.html</loc></url>
+<url><loc>http://animovement.dev/animetric/reference/calculate_nnd.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/calculate_rotation_2d.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/calculate_rotation_3d.html</loc></url>
-<url><loc>http://animovement.dev/animetric/reference/calculate_summaries.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/calculate_tortuosity.html</loc></url>
-<url><loc>http://animovement.dev/animetric/reference/calculate_totals.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/calculate_translation_2d.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/calculate_translation_3d.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/circ_mad.html</loc></url>
@@ -21,17 +21,21 @@
 <url><loc>http://animovement.dev/animetric/reference/compute_centroid.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/compute_emax.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/compute_gradient.html</loc></url>
+<url><loc>http://animovement.dev/animetric/reference/compute_nnd.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/compute_sinuosity.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/compute_straightness.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/differentiate.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/ensure_is_aniframe_kin.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/index.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/is_aniframe_kin.html</loc></url>
+<url><loc>http://animovement.dev/animetric/reference/join_summaries.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/mean_angle.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/median_angle.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/new_aniframe_kin.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/reexports.html</loc></url>
+<url><loc>http://animovement.dev/animetric/reference/summarise_aniframe.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/summarise_keypoints.html</loc></url>
 <url><loc>http://animovement.dev/animetric/reference/summarise_kinematics.html</loc></url>
+<url><loc>http://animovement.dev/animetric/reference/summarise_tortuosity.html</loc></url>
 </urlset>
 

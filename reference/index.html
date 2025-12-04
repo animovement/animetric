@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">animetric</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,6 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/animovement/animetric/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -48,17 +49,24 @@
 
       <dl><dt>
 
-          <code><a href="calculate_kinematics.html">calculate_kinematics()</a></code> <code><a href="calculate_kinematics.html">calculate_kinematics_2d()</a></code> <code><a href="calculate_kinematics.html">calculate_kinematics_3d()</a></code>
+          <code><a href="calculate_kinematics.html">calculate_kinematics()</a></code>
 
         </dt>
         <dd>Calculate kinematic measures from trajectory data</dd>
 
         <dt>
 
-          <code><a href="calculate_tortuosity.html">calculate_tortuosity()</a></code> <code><a href="calculate_tortuosity.html">calculate_tortuosity_2d()</a></code> <code><a href="calculate_tortuosity.html">calculate_tortuosity_3d()</a></code>
+          <code><a href="calculate_tortuosity.html">calculate_tortuosity()</a></code>
 
         </dt>
         <dd>Calculate tortuosity metrics over sliding windows</dd>
+
+        <dt>
+
+          <code><a href="calculate_nnd.html">calculate_nnd()</a></code>
+
+        </dt>
+        <dd>Calculate distance to n-th nearest neighbour</dd>
       </dl></div><div class="section level2">
       <h2 id="summarise">Summarise<a class="anchor" aria-label="anchor" href="#summarise"></a></h2>
 
@@ -71,10 +79,24 @@
 
       <dl><dt>
 
-          <code><a href="summarise_kinematics.html">summarise_kinematics()</a></code>
+          <code><a href="summarise_aniframe.html">summarise_aniframe()</a></code> <code><a href="summarise_aniframe.html">summarize_aniframe()</a></code>
 
         </dt>
-        <dd>Calculate summary statistics</dd>
+        <dd>Summarise an aniframe</dd>
+
+        <dt>
+
+          <code><a href="summarise_kinematics.html">summarise_kinematics()</a></code> <code><a href="summarise_kinematics.html">summarize_kinematics()</a></code>
+
+        </dt>
+        <dd>Calculate kinematic summary statistics</dd>
+
+        <dt>
+
+          <code><a href="summarise_tortuosity.html">summarise_tortuosity()</a></code> <code><a href="summarise_tortuosity.html">summarize_tortuosity()</a></code>
+
+        </dt>
+        <dd>Calculate tortuosity summary statistics</dd>
 
         <dt>
 
@@ -133,6 +155,13 @@
 
         </dt>
         <dd>Compute centroid from keypoints</dd>
+
+        <dt>
+
+          <code><a href="compute_nnd.html">compute_nnd()</a></code>
+
+        </dt>
+        <dd>Compute nearest neighbour distances for a single time point</dd>
       </dl></div><div class="section level2">
       <h2 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
 

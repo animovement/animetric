@@ -7,10 +7,6 @@ over sliding windows, returning a value at each timepoint.
 
 ``` r
 calculate_tortuosity(data, window_width = 11L)
-
-calculate_tortuosity_2d(data, window_width = 11L)
-
-calculate_tortuosity_3d(data, window_width = 11L)
 ```
 
 ## Arguments

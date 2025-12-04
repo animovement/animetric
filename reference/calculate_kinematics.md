@@ -9,10 +9,6 @@ system.
 
 ``` r
 calculate_kinematics(data)
-
-calculate_kinematics_2d(data)
-
-calculate_kinematics_3d(data)
 ```
 
 ## Arguments
