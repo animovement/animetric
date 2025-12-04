@@ -12,9 +12,13 @@
 # - summarise_tortuosity_3d computes net_displacement correctly
 # - straightness is 1 for straight path
 # - straightness is less than 1 for non-straight path
+# - summarise_tortuosity calculates kinematics when given plain aniframe
+# - summarise_tortuosity produces same result for plain vs pre-calculated input
+# - summarise_tortuosity works with plain 3D aniframe
+# - summarise_tortuosity works with grouped plain aniframe
 
 # Helper to create mock 2D kinematics aniframe
-mock_kin_2d <- function(n = 10, grouped = FALSE) {
+mock_kin_2d <- function(n = 10, grouped = FALSE, calculate_kinematics = TRUE) {
   data <- data.frame(
     time = seq_len(n),
     x = cumsum(rnorm(n)),
@@ -28,12 +32,15 @@ mock_kin_2d <- function(n = 10, grouped = FALSE) {
     )
   }
 
-  aniframe::as_aniframe(data) |>
-    calculate_kinematics()
+  data <- aniframe::as_aniframe(data)
+  if (calculate_kinematics == TRUE) {
+    data <- calculate_kinematics(data)
+  }
+  data
 }
 
 # Helper to create mock 3D kinematics aniframe
-mock_kin_3d <- function(n = 10, grouped = FALSE) {
+mock_kin_3d <- function(n = 10, grouped = FALSE, calculate_kinematics = TRUE) {
   data <- data.frame(
     time = seq_len(n),
     x = cumsum(rnorm(n)),
@@ -48,12 +55,15 @@ mock_kin_3d <- function(n = 10, grouped = FALSE) {
     )
   }
 
-  aniframe::as_aniframe(data) |>
-    calculate_kinematics()
+  data <- aniframe::as_aniframe(data)
+  if (calculate_kinematics == TRUE) {
+    data <- calculate_kinematics(data)
+  }
+  data
 }
 
 # Helper to create a straight-line path
-mock_straight_path_2d <- function(n = 10) {
+mock_straight_path_2d <- function(n = 10, calculate_kinematics = TRUE) {
   x <- seq(0, 10, length.out = n)
   y <- seq(0, 10, length.out = n)
 
@@ -63,8 +73,11 @@ mock_straight_path_2d <- function(n = 10) {
     y = y
   )
 
-  aniframe::as_aniframe(data) |>
-    calculate_kinematics()
+  data <- aniframe::as_aniframe(data)
+  if (calculate_kinematics == TRUE) {
+    data <- calculate_kinematics(data)
+  }
+  data
 }
 
 
@@ -246,3 +259,74 @@ test_that("summarise_tortuosity_3d removes internal columns", {
 
   expect_false(any(internal_cols %in% names(result)))
 })
+
+# summarise_tortuosity: auto-calculation ---------------------------------
+
+test_that("summarise_tortuosity calculates kinematics when given plain aniframe", {
+  data <- mock_kin_2d(calculate_kinematics = FALSE)
+  result <- summarise_tortuosity(data)
+
+  expected_cols <- c(
+    "total_path_length",
+    "total_angular_path_length",
+    "net_displacement",
+    "straightness",
+    "sinuosity",
+    "emax"
+  )
+
+  expect_true(all(expected_cols %in% names(result)))
+  expect_equal(nrow(result), 1L)
+})
+
+test_that("summarise_tortuosity produces same result for plain vs pre-calculated input", {
+  set.seed(123)
+  data_plain <- mock_kin_2d(calculate_kinematics = FALSE)
+
+  set.seed(123)
+  data_kin <- mock_kin_2d(calculate_kinematics = FALSE) |>
+    calculate_kinematics() |>
+    calculate_tortuosity()
+
+  result_plain <- summarise_tortuosity(data_plain)
+  result_kin <- summarise_tortuosity(data_kin)
+
+  expect_equal(result_plain$total_path_length, result_kin$total_path_length)
+  expect_equal(result_plain$net_displacement, result_kin$net_displacement)
+  expect_equal(result_plain$straightness, result_kin$straightness)
+})
+
+test_that("summarise_tortuosity works with plain 3D aniframe", {
+  data <- mock_kin_3d(calculate_kinematics = FALSE)
+  result <- summarise_tortuosity(data)
+
+  expected_cols <- c(
+    "total_path_length",
+    "net_displacement",
+    "straightness",
+    "sinuosity",
+    "emax"
+  )
+
+  expect_true(all(expected_cols %in% names(result)))
+  expect_false("total_angular_path_length" %in% names(result))
+  expect_equal(nrow(result), 1L)
+})
+
+test_that("summarise_tortuosity works with grouped plain aniframe", {
+  data <- mock_kin_2d(grouped = TRUE, calculate_kinematics = FALSE)
+  result <- summarise_tortuosity(data)
+
+  expect_equal(nrow(result), 2L)
+  expect_true("individual" %in% names(result))
+  expect_true("total_path_length" %in% names(result))
+})
+
+test_that("summarise_tortuosity works with grouped plain 3D aniframe", {
+  data <- mock_kin_3d(grouped = TRUE, calculate_kinematics = FALSE)
+  result <- summarise_tortuosity(data)
+
+  expect_equal(nrow(result), 2L)
+  expect_true("individual" %in% names(result))
+})
+
