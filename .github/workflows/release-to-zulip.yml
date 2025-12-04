@@ -1,0 +1,27 @@
+name: Post Release Notes to Zulip
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  notify-zulip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send release notification to Zulip
+        uses: zulip/github-actions-zulip/send-message@v1
+        with:
+          api-key: ${{ secrets.ZULIP_API_KEY }}
+          email: "releases-bot@animovement.zulipchat.com"
+          organization-url: "https://animovement.zulipchat.com"
+          to: "announcements"
+          type: "stream"
+          topic: "releases"
+          content: |
+            **[${{ github.event.release.name }}](${{ github.event.release.html_url }})** has been released!
+
+            **Tag:** `${{ github.event.release.tag_name }}`
+            **Repository:** [${{ github.repository }}](https://github.com/${{ github.repository }})
+
+            ### Release Notes
+            ${{ github.event.release.body }}
