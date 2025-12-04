@@ -23,6 +23,7 @@ Imports:
     anispace,
     cli,
     dplyr,
+    purrr,
     rlang
 Suggests: 
     circular,

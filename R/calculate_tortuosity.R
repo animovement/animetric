@@ -64,11 +64,9 @@
 #' }
 calculate_tortuosity <- function(data, window_width = 11L) {
   if (aniframe::is_cartesian_2d(data)) {
-    calculate_tortuosity_2d(data, window_width = window_width) |>
-      aniframe::as_aniframe()
+    calculate_tortuosity_2d(data, window_width = window_width)
   } else if (aniframe::is_cartesian_3d(data)) {
-    calculate_tortuosity_3d(data, window_width = window_width) |>
-      aniframe::as_aniframe()
+    calculate_tortuosity_3d(data, window_width = window_width)
   } else {
     cli::cli_abort("Data must be in Cartesian coordinates (2D or 3D).")
   }
