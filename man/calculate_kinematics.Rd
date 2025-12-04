@@ -2,15 +2,9 @@
 % Please edit documentation in R/calculate_kinematics.R
 \name{calculate_kinematics}
 \alias{calculate_kinematics}
-\alias{calculate_kinematics_2d}
-\alias{calculate_kinematics_3d}
 \title{Calculate kinematic measures from trajectory data}
 \usage{
 calculate_kinematics(data)
-
-calculate_kinematics_2d(data)
-
-calculate_kinematics_3d(data)
 }
 \arguments{
 \item{data}{An aniframe with position coordinates (x/y or x/y/z for Cartesian;

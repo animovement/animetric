@@ -73,3 +73,10 @@ test_that("custom classes appear only once in the class vector", {
   expect_identical(class(kin2d), unique(class(kin2d)))
   expect_identical(class(kin3d), unique(class(kin3d)))
 })
+
+test_that("error when not an aniframe_kin", {
+  df <- aniframe::example_aniframe()
+
+  # Should give an error when it is not an aniframe_kin class
+  expect_error(ensure_is_aniframe_kin(df))
+})

@@ -69,8 +69,7 @@ calculate_kinematics <- function(data) {
   data
 }
 
-#' @rdname calculate_kinematics
-#' @export
+#' @keywords internal
 calculate_kinematics_2d <- function(data) {
   ensure_is_aniframe(data)
   data <- calculate_translation_2d(data)
@@ -80,11 +79,10 @@ calculate_kinematics_2d <- function(data) {
     new_aniframe_kin2d()
 }
 
-#' @rdname calculate_kinematics
-#' @export
+#' @keywords internal
 calculate_kinematics_3d <- function(data) {
   ensure_is_aniframe(data)
-  data <- calculate_translation_3d(data)
+  data <- calculate_translation_3d(data) # TODO: Add 3D rotation summary
   data |>
     new_aniframe_kin() |>
     new_aniframe_kin3d()
@@ -185,57 +183,52 @@ calculate_rotation_2d <- function(data) {
 #' @return The aniframe with added rotational kinematic columns
 #' @keywords internal
 calculate_rotation_3d <- function(data) {
-  data |>
-    dplyr::mutate(
-      # Azimuth: angle in xy-plane (like heading in 2D)
-      azimuth = atan2(.data$v_y, .data$v_x),
-      azimuth = dplyr::if_else(.data$azimuth == pi, 0, .data$azimuth),
-      azimuth_unwrapped = unwrap_angle(.data$azimuth),
-
-      # Elevation: angle from xy-plane
-      elevation = atan2(.data$v_z, sqrt(.data$v_x^2 + .data$v_y^2)),
-      elevation_unwrapped = unwrap_angle(.data$elevation),
-
-      # Angular velocities for each axis
-      angular_velocity_azimuth = differentiate(
-        .data$azimuth_unwrapped,
-        .data$time,
-        order = 1
-      ),
-      angular_velocity_elevation = differentiate(
-        .data$elevation_unwrapped,
-        .data$time,
-        order = 1
-      ),
-
-      # Total angular speed (magnitude)
-      angular_speed = sqrt(
-        .data$angular_velocity_azimuth^2 + .data$angular_velocity_elevation^2
-      ),
-
-      # Angular path lengths
-      angular_path_length_azimuth = cumsum_na(abs(diff(c(
-        0,
-        .data$azimuth_unwrapped
-      )))) -
-        dplyr::first(.data$azimuth_unwrapped),
-      angular_path_length_elevation = cumsum_na(abs(diff(c(
-        0,
-        .data$elevation_unwrapped
-      )))) -
-        dplyr::first(.data$elevation_unwrapped),
-
-      # Angular accelerations
-      angular_acceleration_azimuth = differentiate(
-        .data$azimuth_unwrapped,
-        .data$time,
-        order = 2
-      ),
-      angular_acceleration_elevation = differentiate(
-        .data$elevation_unwrapped,
-        .data$time,
-        order = 2
-      )
-    ) |>
-    dplyr::relocate("angular_speed", .before = "angular_velocity_azimuth")
+  # data |>
+  #   dplyr::mutate(
+  #     # Azimuth: angle in xy-plane (like heading in 2D)
+  #     azimuth = atan2(.data$v_y, .data$v_x),
+  #     azimuth = dplyr::if_else(.data$azimuth == pi, 0, .data$azimuth),
+  #     azimuth_unwrapped = unwrap_angle(.data$azimuth),
+  #     # Elevation: angle from xy-plane
+  #     elevation = atan2(.data$v_z, sqrt(.data$v_x^2 + .data$v_y^2)),
+  #     elevation_unwrapped = unwrap_angle(.data$elevation),
+  #     # Angular velocities for each axis
+  #     angular_velocity_azimuth = differentiate(
+  #       .data$azimuth_unwrapped,
+  #       .data$time,
+  #       order = 1
+  #     ),
+  #     angular_velocity_elevation = differentiate(
+  #       .data$elevation_unwrapped,
+  #       .data$time,
+  #       order = 1
+  #     ),
+  #     # Total angular speed (magnitude)
+  #     angular_speed = sqrt(
+  #       .data$angular_velocity_azimuth^2 + .data$angular_velocity_elevation^2
+  #     ),
+  #     # Angular path lengths
+  #     angular_path_length_azimuth = cumsum_na(abs(diff(c(
+  #       0,
+  #       .data$azimuth_unwrapped
+  #     )))) -
+  #       dplyr::first(.data$azimuth_unwrapped),
+  #     angular_path_length_elevation = cumsum_na(abs(diff(c(
+  #       0,
+  #       .data$elevation_unwrapped
+  #     )))) -
+  #       dplyr::first(.data$elevation_unwrapped),
+  #     # Angular accelerations
+  #     angular_acceleration_azimuth = differentiate(
+  #       .data$azimuth_unwrapped,
+  #       .data$time,
+  #       order = 2
+  #     ),
+  #     angular_acceleration_elevation = differentiate(
+  #       .data$elevation_unwrapped,
+  #       .data$time,
+  #       order = 2
+  #     )
+  #   ) |>
+  #   dplyr::relocate("angular_speed", .before = "angular_velocity_azimuth")
 }

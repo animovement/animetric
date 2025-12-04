@@ -2,32 +2,33 @@
 % Please edit documentation in R/summarise_kinematics.R
 \name{summarise_kinematics}
 \alias{summarise_kinematics}
-\title{Calculate summary statistics}
+\alias{summarize_kinematics}
+\title{Calculate kinematic summary statistics}
 \usage{
-summarise_kinematics(data, measures = c("median_mad", "mean_sd"))
+summarise_kinematics(
+  data,
+  measures = c("median_mad", "mean_sd"),
+  .check = TRUE
+)
+
+summarize_kinematics(
+  data,
+  measures = c("median_mad", "mean_sd"),
+  .check = TRUE
+)
 }
 \arguments{
 \item{data}{A kinematics aniframe (output of \code{calculate_kinematics()})}
 
-\item{measures}{Measures of central tendency and dispersion. Options are
-\code{"median_mad"} (default) and \code{"mean_sd"}.}
+\item{measures}{Measures of central tendency and dispersion for kinematics.
+Options are \code{"median_mad"} (default) and \code{"mean_sd"}.}
+
+\item{.check}{Whether to validate input. Set to \code{FALSE} when called from
+\code{summarise_aniframe()} to avoid redundant checks.}
 }
 \value{
-A summarised data frame with one row per group containing:
-
-\strong{Totals:}
-\itemize{
-\item \code{total_path_length}: Total distance traveled
-}
-
-\strong{Tortuosity metrics:}
-\itemize{
-\item \code{straightness}: Ratio of net displacement to path length (0-1)
-\item \code{sinuosity}: Corrected sinuosity index (Benhamou 2004)
-\item \code{emax}: Maximum expected displacement (dimensionless)
-}
-
-\strong{Central tendency and dispersion} (prefixed with median_/mad_ or mean_/sd_):
+A summarised data frame with one row per group containing central
+tendency and dispersion measures (prefixed with median_/mad_ or mean_/sd_)
 \itemize{
 \item Speed, acceleration
 \item Angular speed, velocity, acceleration (2D only)
@@ -35,10 +36,6 @@ A summarised data frame with one row per group containing:
 }
 }
 \description{
-Calculate summary statistics for tracks, including translational kinematics,
-rotational kinematics, and tortuosity metrics.
-}
-\references{
-Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal's
-path. Journal of Theoretical Biology, 229(2), 209-220.
+Calculate central tendency and dispersion for translational and rotational
+kinematics.
 }

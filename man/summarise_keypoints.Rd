@@ -2,6 +2,7 @@
 % Please edit documentation in R/summarise_keypoints.R
 \name{summarise_keypoints}
 \alias{summarise_keypoints}
+\alias{summarize_keypoints}
 \title{Summarize keypoint data}
 \usage{
 summarise_keypoints(

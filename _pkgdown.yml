@@ -27,11 +27,14 @@ reference:
   contents:
   - calculate_kinematics
   - calculate_tortuosity
+  - calculate_nnd
 
 - title: "Summarise"
   desc: These functions return a single value per group, or a full summary.
   contents:
+  - summarise_aniframe
   - summarise_kinematics
+  - summarise_tortuosity
   - summarise_keypoints
 
 - title: "Compute"
@@ -43,6 +46,7 @@ reference:
   - compute_sinuosity
   - compute_emax
   - compute_centroid
+  - compute_nnd
 
 - title: "Helpers"
   contents:

@@ -14,6 +14,6 @@ is_aniframe_kin <- function(x) {
 #' @keywords internal
 ensure_is_aniframe_kin <- function(x) {
   if (!is_aniframe_kin(x)) {
-    cli::cli_abort("Data is not an aniframe.")
+    cli::cli_abort("Data is not an aniframe_kin class.")
   }
 }
