@@ -16,6 +16,7 @@
 # - Warns when some requested keypoints are not present in data
 # - Groups correctly by session/trial/time
 # - Handles vector of keypoint_neighbour values
+# - Maintains aniframe_kin class
 
 test_that("returns aniframe with correct new columns (2D)", {
   data <- aniframe::aniframe(
@@ -349,4 +350,12 @@ test_that("errors when no context columns present", {
   class(data) <- c("aniframe", "tbl_df", "tbl", "data.frame")
 
   expect_error(calculate_nnd(data), "context column")
+})
+
+test_that("Maintains incoming classes", {
+  data <- aniframe::example_aniframe() |>
+    calculate_kinematics() |>
+    calculate_nnd()
+
+  expect_contains(class(data), "aniframe_kin")
 })

@@ -85,11 +85,7 @@ calculate_nnd <- function(data, n = 1L, keypoint_neighbour = NULL) {
     }
   }
 
-  if (is_aniframe_kin(data)) {
-    ani_kin <- TRUE
-  } else {
-    ani_kin <- FALSE
-  }
+  incoming_classes <- class(data)
 
   is_3d <- aniframe::is_cartesian_3d(data)
 
@@ -113,10 +109,11 @@ calculate_nnd <- function(data, n = 1L, keypoint_neighbour = NULL) {
     suppressWarnings() |>
     aniframe::as_aniframe()
 
-  if (ani_kin == TRUE) {
-    result <- result |> 
-      new_aniframe_kin()
-  }
+  outgoing_classes <- class(result)
+  class(result) <- c(
+    incoming_classes[!incoming_classes %in% outgoing_classes],
+    outgoing_classes
+  )
 
   result
 }
