@@ -189,11 +189,9 @@ calculate_rotation_3d <- function(data) {
   #     azimuth = atan2(.data$v_y, .data$v_x),
   #     azimuth = dplyr::if_else(.data$azimuth == pi, 0, .data$azimuth),
   #     azimuth_unwrapped = unwrap_angle(.data$azimuth),
-
   #     # Elevation: angle from xy-plane
   #     elevation = atan2(.data$v_z, sqrt(.data$v_x^2 + .data$v_y^2)),
   #     elevation_unwrapped = unwrap_angle(.data$elevation),
-
   #     # Angular velocities for each axis
   #     angular_velocity_azimuth = differentiate(
   #       .data$azimuth_unwrapped,
@@ -205,12 +203,10 @@ calculate_rotation_3d <- function(data) {
   #       .data$time,
   #       order = 1
   #     ),
-
   #     # Total angular speed (magnitude)
   #     angular_speed = sqrt(
   #       .data$angular_velocity_azimuth^2 + .data$angular_velocity_elevation^2
   #     ),
-
   #     # Angular path lengths
   #     angular_path_length_azimuth = cumsum_na(abs(diff(c(
   #       0,
@@ -222,7 +218,6 @@ calculate_rotation_3d <- function(data) {
   #       .data$elevation_unwrapped
   #     )))) -
   #       dplyr::first(.data$elevation_unwrapped),
-
   #     # Angular accelerations
   #     angular_acceleration_azimuth = differentiate(
   #       .data$azimuth_unwrapped,

@@ -329,4 +329,3 @@ test_that("summarise_tortuosity works with grouped plain 3D aniframe", {
   expect_equal(nrow(result), 2L)
   expect_true("individual" %in% names(result))
 })
-
