@@ -1,4 +1,4 @@
-name: Post Release Notes to Zulip
+name: Post Release Notes on Zulip
 
 on:
   release:
