@@ -384,13 +384,13 @@ test_that("calculate_tortuosity preserves incoming class", {
     x = cumsum(rnorm(20)),
     y = cumsum(rnorm(20))
   ) |>
-    aniframe::as_aniframe() |> 
+    aniframe::as_aniframe() |>
     calculate_kinematics()
 
   # Add a custom subclass
- class(data) <- c("custom_aniframe", class(data))
+  class(data) <- c("custom_aniframe", class(data))
 
- result <- calculate_tortuosity(data, window_width = 5L)
+  result <- calculate_tortuosity(data, window_width = 5L)
 
   expect_s3_class(result, "custom_aniframe")
   expect_s3_class(result, "aniframe_kin")

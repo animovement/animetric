@@ -66,7 +66,7 @@ calculate_tortuosity <- function(data, window_width = 11L) {
   # Store original class for restoration
   original_class <- class(data)
 
- result <- if (aniframe::is_cartesian_2d(data)) {
+  result <- if (aniframe::is_cartesian_2d(data)) {
     calculate_tortuosity_2d(data, window_width = window_width)
   } else if (aniframe::is_cartesian_3d(data)) {
     calculate_tortuosity_3d(data, window_width = window_width)
