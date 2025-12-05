@@ -63,13 +63,20 @@
 #'   calculate_tortuosity(window_width = 11)
 #' }
 calculate_tortuosity <- function(data, window_width = 11L) {
-  if (aniframe::is_cartesian_2d(data)) {
+  # Store original class for restoration
+  original_class <- class(data)
+
+  result <- if (aniframe::is_cartesian_2d(data)) {
     calculate_tortuosity_2d(data, window_width = window_width)
   } else if (aniframe::is_cartesian_3d(data)) {
     calculate_tortuosity_3d(data, window_width = window_width)
   } else {
     cli::cli_abort("Data must be in Cartesian coordinates (2D or 3D).")
   }
+
+  # Restore original class
+  class(result) <- original_class
+  result
 }
 
 #' @keywords internal
@@ -98,7 +105,7 @@ calculate_tortuosity_2d <- function(data, window_width = 11L) {
   half_w <- window_width %/% 2L
   other_half <- window_width - half_w - 1L
 
-  data2 <- data |>
+  data |>
     dplyr::mutate(
       # Step length between consecutive points
       .step_length = sqrt(
