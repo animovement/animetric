@@ -34,6 +34,7 @@
 #   - Very short paths (length < window_width)
 #   - Stationary points (no movement)
 #   - Single group vs multiple groups
+#   - Class preservation through calculations
 
 # =============================================================================
 # Helper functions for creating test data
@@ -372,5 +373,26 @@ test_that("calculate_tortuosity coerces window_width to integer", {
   # Should work with numeric that can be coerced
   result <- calculate_tortuosity_2d(data, window_width = 5.0)
 
+  expect_s3_class(result, "aniframe")
+})
+
+test_that("calculate_tortuosity preserves incoming class", {
+  # Create a simple aniframe with a custom subclass
+
+  data <- data.frame(
+    time = 1:20,
+    x = cumsum(rnorm(20)),
+    y = cumsum(rnorm(20))
+  ) |>
+    aniframe::as_aniframe() |> 
+    calculate_kinematics()
+
+  # Add a custom subclass
+ class(data) <- c("custom_aniframe", class(data))
+
+ result <- calculate_tortuosity(data, window_width = 5L)
+
+  expect_s3_class(result, "custom_aniframe")
+  expect_s3_class(result, "aniframe_kin")
   expect_s3_class(result, "aniframe")
 })
