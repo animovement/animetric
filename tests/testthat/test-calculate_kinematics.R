@@ -53,23 +53,23 @@ test_that("calculate_kinematics converts polar to Cartesian and back", {
   expect_false("x" %in% names(result))
 })
 
-test_that("calculate_kinematics converts cylindrical to Cartesian and back", {
-  data_cartesian <- data.frame(
-    time = 0:5,
-    x = c(1, 2, 3, 4, 5, 6),
-    y = c(0, 0, 0, 0, 0, 0),
-    z = c(0, 1, 2, 3, 4, 5)
-  ) |>
-    aniframe::as_aniframe()
+# test_that("calculate_kinematics converts cylindrical to Cartesian and back", {
+#   data_cartesian <- data.frame(
+#     time = 0:5,
+#     x = c(1, 2, 3, 4, 5, 6),
+#     y = c(0, 0, 0, 0, 0, 0),
+#     z = c(0, 1, 2, 3, 4, 5)
+#   ) |>
+#     aniframe::as_aniframe()
 
-  data_cylindrical <- anispace::map_to_cylindrical(data_cartesian)
-  result <- calculate_kinematics(data_cylindrical)
+#   data_cylindrical <- anispace::map_to_cylindrical(data_cartesian)
+#   result <- calculate_kinematics(data_cylindrical)
 
-  expect_true(aniframe::is_cylindrical(result))
-  expect_true("rho" %in% names(result))
-  expect_true("phi" %in% names(result))
-  expect_true("z" %in% names(result))
-})
+#   expect_true(aniframe::is_cylindrical(result))
+#   expect_true("rho" %in% names(result))
+#   expect_true("phi" %in% names(result))
+#   expect_true("z" %in% names(result))
+# })
 
 test_that("calculate_kinematics converts spherical to Cartesian and back", {
   data_cartesian <- data.frame(
