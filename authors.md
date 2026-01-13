@@ -10,7 +10,7 @@
 Source:
 [`inst/CITATION`](https://github.com/animovement/animetric/blob/main/inst/CITATION)
 
-Roald-Arbøl M (2025). “animetric: An R package for calculating
+Roald-Arbøl M (2026). “animetric: An R package for calculating
 movement-based metrics.”
 [doi:10.5281/zenodo.17357778](https://doi.org/10.5281/zenodo.17357778),
 <http://animovement.dev/animetric/>.
@@ -19,8 +19,8 @@ movement-based metrics.”
       doi = {10.5281/zenodo.17357778},
       title = {animetric: An R package for calculating movement-based metrics},
       author = {Mikkel Roald-Arbøl},
-      year = {2025},
+      year = {2026},
       url = {http://animovement.dev/animetric/},
       abstract = {An R package for calculating movement-based metrics.},
-      version = {0.3.0},
+      version = {0.3.2},
     }
