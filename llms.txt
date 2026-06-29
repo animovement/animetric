@@ -11,12 +11,14 @@ statistics, and social interaction measures.
 You can install the development version of *animetric* with:
 
 ``` r
+
 install.packages('animetric', repos = c('https://animovement.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 Once you have installed the package, you can load it with:
 
 ``` r
+
 library("animetric")
 ```
 
@@ -35,6 +37,7 @@ bug, feel free to open an issue.
 To cite *animetric* in publications use:
 
 ``` r
+
 citation("animetric")
 ```
 

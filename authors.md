@@ -2,8 +2,8 @@
 
 ## Authors
 
-- **Mikkel Roald-Arbøl**. Author, maintainer.
-  [](https://orcid.org/0000-0002-9998-0058)
+- **[Mikkel Roald-Arbøl](https://roald-arboel.com)**. Author,
+  maintainer. [](https://orcid.org/0000-0002-9998-0058)
 
 ## Citation
 
@@ -12,7 +12,7 @@ Source:
 
 Roald-Arbøl M (2026). “animetric: An R package for calculating
 movement-based metrics.”
-[doi:10.5281/zenodo.17357778](https://doi.org/10.5281/zenodo.17357778),
+[doi:10.5281/zenodo.17357778](https://doi.org/10.5281/zenodo.17357778).
 <http://animovement.dev/animetric/>.
 
     @Misc{animetric,
