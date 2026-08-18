@@ -1,16 +1,16 @@
-# animetric (development version)
-
-## Internal
-
-* Documentation regenerated with roxygen2 8.1.0, matching the rest of the ecosystem. This restyles the `importFrom` block in `NAMESPACE`, renames `RoxygenNote` to `Config/roxygen2/version` in `DESCRIPTION`, links re-exports by topic rather than by name, and picks up the co-author entry that had been missing from the package doc page.
-
-## Bug fixes
-
-* `calculate_nnd()` no longer warns "Unknown or uninitialised column" on frames without a `keypoint` column, and reports an absent `individual` column as absent rather than as all-`NA`. Both came from reading a column with `data$col` before checking it exists: on a frame without it, that returns `NULL` with a warning, and `all(is.na(NULL))` is `TRUE`, so the two cases were indistinguishable. Surfaced by aniframe 0.6.0.9005, which stopped adding a `keypoint` column beside an existing identity (animovement/aniframe#77) — the eleven warnings the test suite had been emitting are gone.
+# animetric 0.4.0 (2026-08-18)
 
 ## Breaking changes
 
-* Removed the `aniframe_kin2d` and `aniframe_kin3d` classes. `calculate_kinematics()` set them, but nothing ever read them — no predicate, no method, no test in any package — and the dimensionality they encoded is already carried by the `coordinate_system` metadata field, so they were a second source of truth that could only ever disagree with the first. Kinematics output still carries `aniframe_kin`, which is the class the `summarise_*()` functions dispatch on.
+* Removed the `aniframe_kin2d` and `aniframe_kin3d` classes. `calculate_kinematics()` set them, but nothing ever read them — no predicate, no method, no test in any package — and the dimensionality they encoded already lives in the `coordinate_system` metadata field. Kinematics output still carries `aniframe_kin`, which is what the `summarise_*()` functions dispatch on.
+
+## Bug fixes
+
+* `calculate_nnd()` checks that the `individual` and `keypoint` columns exist before reading them. `data$col` on a frame without the column returns `NULL` with a warning, and `all(is.na(NULL))` is `TRUE`, so an absent column was reported as an all-`NA` one — and every call warned on the way. Surfaced by aniframe 0.7.0, which no longer adds a `keypoint` column beside an existing identity.
+
+## Internal
+
+* Documentation regenerated with roxygen2 8.1.0, matching the rest of the ecosystem.
 
 # animetric 0.3.0
 
