@@ -39,6 +39,17 @@
 #'
 #' @export
 calculate_nnd <- function(data, n = 1L, keypoint_neighbour = NULL) {
+  # Test for the column before reading it. `data$individual` on a frame
+  # without that column returns NULL *with a warning*, and
+  # `all(is.na(NULL))` is TRUE, so an absent column was reported as an
+  # all-NA one -- and warned on the way.
+  if (!"individual" %in% names(data)) {
+    cli::cli_abort(c(
+      "Column {.var individual} is required but not found in the data.",
+      "i" = "Nearest neighbour distances are measured between individuals."
+    ))
+  }
+
   if (all(is.na(data$individual))) {
     cli::cli_abort(
       "Column {.var individual} contains only {.val NA} values. At least two
@@ -56,14 +67,21 @@ calculate_nnd <- function(data, n = 1L, keypoint_neighbour = NULL) {
     )
   }
 
-  has_keypoint_col <- !all(is.na(data$keypoint))
+  # A frame need not carry a keypoint column at all -- aniframe adds one
+  # only when the data declares no identity of its own.
+  has_keypoint_col <- "keypoint" %in% names(data) && !all(is.na(data$keypoint))
 
   if (!is.null(keypoint_neighbour)) {
     if (!has_keypoint_col) {
-      cli::cli_abort(
-        "Column {.var keypoint} contains only {.val NA} values, but
-        {.arg keypoint_neighbour} was specified."
-      )
+      reason <- if ("keypoint" %in% names(data)) {
+        "Column {.var keypoint} contains only {.val NA} values."
+      } else {
+        "The data has no {.var keypoint} column."
+      }
+      cli::cli_abort(c(
+        "{.arg keypoint_neighbour} was given, but there are no keypoints to match it against.",
+        "x" = reason
+      ))
     }
 
     available_keypoints <- unique(as.character(data$keypoint[

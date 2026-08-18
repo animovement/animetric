@@ -19,8 +19,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{aniframe}{\code{\link[aniframe]{as_aniframe}}, \code{\link[aniframe]{deg_to_rad}}, \code{\link[aniframe]{ensure_is_aniframe}}, \code{\link[aniframe]{is_aniframe}}, \code{\link[aniframe]{rad_to_deg}}}
+  \item{aniframe}{\code{\link[aniframe:as_aniframe]{as_aniframe()}}, \code{\link[aniframe:deg_to_rad]{deg_to_rad()}}, \code{\link[aniframe:ensure_is_aniframe]{ensure_is_aniframe()}}, \code{\link[aniframe:is_aniframe]{is_aniframe()}}, \code{\link[aniframe:rad_to_deg]{rad_to_deg()}}}
 
-  \item{anispace}{\code{\link[anispace]{calculate_angular_difference}}, \code{\link[anispace]{diff_angle}}, \code{\link[anispace]{unwrap_angle}}, \code{\link[anispace]{wrap_angle}}}
+  \item{anispace}{\code{\link[anispace:calculate_angular_difference]{calculate_angular_difference()}}, \code{\link[anispace:diff_angle]{diff_angle()}}, \code{\link[anispace:unwrap_angle]{unwrap_angle()}}, \code{\link[anispace:wrap_angle]{wrap_angle()}}}
 }}
 

@@ -28,14 +28,20 @@ export(summarize_kinematics)
 export(summarize_tortuosity)
 export(unwrap_angle)
 export(wrap_angle)
-importFrom(aniframe,as_aniframe)
-importFrom(aniframe,deg_to_rad)
-importFrom(aniframe,ensure_is_aniframe)
-importFrom(aniframe,is_aniframe)
-importFrom(aniframe,rad_to_deg)
-importFrom(anispace,calculate_angular_difference)
-importFrom(anispace,diff_angle)
-importFrom(anispace,unwrap_angle)
-importFrom(anispace,wrap_angle)
-importFrom(rlang,":=")
-importFrom(rlang,.data)
+importFrom(aniframe,
+  as_aniframe,
+  deg_to_rad,
+  ensure_is_aniframe,
+  is_aniframe,
+  rad_to_deg
+)
+importFrom(anispace,
+  calculate_angular_difference,
+  diff_angle,
+  unwrap_angle,
+  wrap_angle
+)
+importFrom(rlang,
+  ":=",
+  .data
+)
