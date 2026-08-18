@@ -562,3 +562,25 @@ test_that("one-dimensional data errors rather than measuring in a line", {
     "two spatial variables"
   )
 })
+
+test_that("a neighbour restriction matching no rows errors", {
+  # The column is present but carries no usable value, so nothing can
+  # satisfy the restriction. Under the old API this was a keypoint-shaped
+  # special case; it is now the general "nothing matches" error.
+  data <- aniframe::aniframe(
+    time = c(1, 1),
+    individual = c(1, 2),
+    keypoint = c(NA, NA),
+    x = c(0, 10),
+    y = c(0, 0)
+  )
+
+  expect_error(
+    calculate_nnd(
+      data,
+      across = "individual",
+      neighbour = list(keypoint = "nose")
+    ),
+    "No rows match"
+  )
+})
