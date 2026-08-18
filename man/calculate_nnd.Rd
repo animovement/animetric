@@ -2,52 +2,99 @@
 % Please edit documentation in R/calculate_nnd.R
 \name{calculate_nnd}
 \alias{calculate_nnd}
-\title{Calculate distance to n-th nearest neighbour}
+\title{Calculate distance to the n-th nearest neighbour}
 \usage{
-calculate_nnd(data, n = 1L, keypoint_neighbour = NULL)
+calculate_nnd(
+  data,
+  across,
+  n = 1L,
+  within = NULL,
+  focal = NULL,
+  neighbour = NULL,
+  keypoint_neighbour = NULL
+)
 }
 \arguments{
-\item{data}{An aniframe with x, y (and optionally z) coordinates and
-individual identifiers.}
+\item{data}{An aniframe.}
 
-\item{n}{Which neighbour (1 = nearest, 2 = second nearest, etc.).}
+\item{across}{Column whose value must differ between a point and its
+neighbour.}
 
-\item{keypoint_neighbour}{Keypoint(s) on other individuals to consider as
-potential neighbours. Can be a single keypoint or a character vector. If
-NULL (default), considers all keypoints.}
+\item{n}{Which neighbour to return (1 = nearest, 2 = second nearest).
+Ranked by entity, not by point: with \code{n = 2}, the result is the
+closest point on the second-nearest entity.}
+
+\item{within}{Identity columns that must match, added to the temporal
+context.}
+
+\item{focal}{Named list restricting which points are measured from, e.g.
+\code{list(keypoint = "nose")}. \code{NULL} measures from every point.}
+
+\item{neighbour}{Named list restricting which points may be returned as
+a neighbour, e.g. \code{list(keypoint = "tail")}.}
+
+\item{keypoint_neighbour}{Deprecated. Use
+\code{neighbour = list(keypoint = ...)}.}
 }
 \value{
-The input aniframe with additional columns:
+The input aniframe with added columns:
 \itemize{
-\item \code{nnd_distance}: distance to the n-th nearest neighbour
-\item \code{nnd_individual}: individual ID of the n-th nearest neighbour
-\item \code{nnd_keypoint}: keypoint of the neighbour (if keypoint column
-exists)
+\item \code{nnd_distance} — distance to the n-th nearest neighbour
+\item \verb{nnd_<across>} — which entity that neighbour belongs to
+\item \verb{nnd_<variable>} — the neighbour's value for each unconstrained
+identity variable (e.g. \code{nnd_keypoint})
 }
 }
 \description{
-Computes the distance from each point to the n-th nearest point belonging
-to a different individual. Optionally filter by keypoint on neighbouring
-individuals.
+Computes, for each point, the distance to the nearest point belonging to
+a \emph{different} entity — typically a different individual at the same
+moment.
+
+Which columns carry time and position is read from the aniframe's
+\code{variables_when} and \code{variables_where} metadata. The identity columns
+are assigned roles by you, explicitly, because "another animal" and
+"another point on this animal" are different questions and the data
+cannot tell which one you mean.
+}
+\details{
+Every identity variable has one of three roles:
+\itemize{
+\item \strong{\code{across}} — its value must \emph{differ} between a point and its
+neighbour. This is what "another" means: \code{"individual"} for the
+nearest other animal, \code{"keypoint"} for the nearest other point on the
+same animal.
+\item \strong{\code{within}} — its value must \emph{match}. Added to the temporal context,
+which always applies: points are never compared across timepoints,
+observations, sessions or trials.
+\item unnamed — unconstrained. Any value may match any other, which is what
+makes the default any-keypoint-to-any-keypoint.
+}
+
+\code{focal} and \code{neighbour} then restrict which points are measured \emph{from}
+and which are eligible to be measured \emph{to}. Both are named lists of
+column to permitted values, and they are independent, so asymmetric
+questions like nose-to-tail are expressible.
 }
 \examples{
 \dontrun{
-# Distance to nearest individual (any keypoint to any keypoint)
-data |> calculate_nnd()
+# Nearest other individual, any keypoint to any keypoint
+data |> calculate_nnd(across = "individual")
 
-# Distance to nearest nose of another individual
-data |> calculate_nnd(keypoint_neighbour = "nose")
+# Whose tail is my nose nearest to?
+data |> calculate_nnd(
+  across = "individual",
+  focal = list(keypoint = "nose"),
+  neighbour = list(keypoint = "tail")
+)
 
-# Nose-to-nose distance
-data |>
-  calculate_nnd(keypoint_neighbour = "nose") |>
-  dplyr::filter(keypoint == "nose")
+# Nearest keypoint within each individual
+data |> calculate_nnd(across = "keypoint", within = "individual")
 
-# Minimum distance between individuals (across all keypoints)
-data |>
-  calculate_nnd() |>
-  dplyr::group_by(session, trial, time, individual) |>
-  dplyr::slice_min(nnd_distance, n = 1)
+# Each keypoint to the same keypoint on the nearest other individual
+data |> calculate_nnd(across = "individual", within = "keypoint")
 }
 
+}
+\seealso{
+\code{\link[=compute_nnd]{compute_nnd()}} for the vector-level function.
 }

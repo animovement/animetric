@@ -1,5 +1,31 @@
 # animetric (development version)
 
+## Breaking changes
+
+* `calculate_nnd()` now reads the columns it needs from the aniframe's metadata, and takes the identity roles explicitly (#37). It previously hard-coded `individual`, `c("session", "trial", "time")`, `keypoint` and `x`/`y`/`z`, consulting the metadata for none of them.
+
+  That was already producing wrong numbers: `observation` joined `variables_when` in aniframe 0.6.0, but the hard-coded context list never picked it up, so multi-clip data was pooled and each animal could be matched to one in a *different clip* — silently, and with a plausible-looking distance.
+
+  `across` names the column whose value must differ (required — nothing is inferred), `within` names columns that must match on top of the temporal context, and `focal` / `neighbour` restrict which points are measured from and to. Being independent, they express asymmetric questions:
+
+  ```r
+  # whose tail is my nose nearest to?
+  data |> calculate_nnd(
+    across = "individual",
+    focal = list(keypoint = "nose"),
+    neighbour = list(keypoint = "tail")
+  )
+
+  # nearest keypoint within each animal
+  data |> calculate_nnd(across = "keypoint", within = "individual")
+  ```
+
+  Existing calls need `across = "individual"` added. `keypoint_neighbour` still works, with a deprecation warning, and maps to `neighbour = list(keypoint = ...)`.
+
+* Frames identified by `track` or `subject` rather than `individual` now work, as do multi-observation frames. Polar, cylindrical and spherical frames error with a pointer to `anispace::map_to_cartesian()` rather than silently measuring in mixed units.
+
+* `compute_nnd()` takes `across`, `is_focal`, `is_candidate` and `labels` in place of `individual`, `keypoint` and `keypoint_neighbour`, mirroring the generalisation above. Its result names the ranked column (`nnd_across`) which `calculate_nnd()` renames.
+
 ## Internal
 
 * Documentation regenerated with roxygen2 8.1.0, matching the rest of the ecosystem. This restyles the `importFrom` block in `NAMESPACE`, renames `RoxygenNote` to `Config/roxygen2/version` in `DESCRIPTION`, links re-exports by topic rather than by name, and picks up the co-author entry that had been missing from the package doc page.
