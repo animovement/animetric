@@ -1,5 +1,9 @@
 # animetric (development version)
 
+## Bug fixes
+
+* `calculate_nnd()` no longer warns "Unknown or uninitialised column" on frames without a `keypoint` column, and reports an absent `individual` column as absent rather than as all-`NA`. Both came from reading a column with `data$col` before checking it exists: on a frame without it, that returns `NULL` with a warning, and `all(is.na(NULL))` is `TRUE`, so the two cases were indistinguishable. Surfaced by aniframe 0.6.0.9005, which stopped adding a `keypoint` column beside an existing identity (animovement/aniframe#77) — the eleven warnings the test suite had been emitting are gone.
+
 ## Breaking changes
 
 * Removed the `aniframe_kin2d` and `aniframe_kin3d` classes. `calculate_kinematics()` set them, but nothing ever read them — no predicate, no method, no test in any package — and the dimensionality they encoded is already carried by the `coordinate_system` metadata field, so they were a second source of truth that could only ever disagree with the first. Kinematics output still carries `aniframe_kin`, which is the class the `summarise_*()` functions dispatch on.
