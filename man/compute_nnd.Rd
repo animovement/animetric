@@ -2,52 +2,54 @@
 % Please edit documentation in R/compute_nnd.R
 \name{compute_nnd}
 \alias{compute_nnd}
-\title{Compute nearest neighbour distances for a single time point}
+\title{Compute nearest neighbour distances within one group}
 \usage{
 compute_nnd(
   x,
   y,
   z = NULL,
-  individual,
-  keypoint = NULL,
+  across,
   n = 1L,
-  keypoint_neighbour = NULL
+  is_focal = NULL,
+  is_candidate = NULL,
+  labels = NULL
 )
 }
 \arguments{
-\item{x}{Numeric vector of x coordinates.}
+\item{x, y}{Numeric vectors of coordinates.}
 
-\item{y}{Numeric vector of y coordinates.}
+\item{z}{Numeric vector of coordinates, or \code{NULL} for 2D data.}
 
-\item{z}{Numeric vector of z coordinates, or NULL for 2D data.}
+\item{across}{Vector whose value must differ between a focal point and
+its neighbour — the thing being ranked, e.g. individual identity.}
 
-\item{individual}{Factor or vector identifying which individual each point
-belongs to.}
+\item{n}{Which neighbour to return (1 = nearest, 2 = second nearest).}
 
-\item{keypoint}{Factor or vector identifying keypoint labels, or NULL if no
-keypoints.}
+\item{is_focal}{Logical vector marking which points to measure from, or
+\code{NULL} for all of them. Non-focal points get \code{NA} results.}
 
-\item{n}{Which individual to find (1 = nearest, 2 = second nearest, etc.).}
+\item{is_candidate}{Logical vector marking which points may be returned
+as a neighbour, or \code{NULL} for all of them.}
 
-\item{keypoint_neighbour}{Character vector of keypoint(s) to consider as
-valid neighbours, or NULL to consider all.}
+\item{labels}{Named list of vectors describing each point. The matched
+neighbour's value is reported for each, as \verb{nnd_<name>}.}
 }
 \value{
-A tibble with columns:
-\itemize{
-\item \code{nnd_individual}: individual ID of the n-th nearest individual
-\item \code{nnd_keypoint}: keypoint of the closest point on that individual (only
-if \code{keypoint} is not NULL)
-\item \code{nnd_distance}: distance to the closest point on the n-th nearest
-individual
-}
+A tibble with \code{nnd_across} (the value of \code{across} for the
+matched neighbour), one \verb{nnd_<name>} column per entry of \code{labels},
+and \code{nnd_distance}.
 }
 \description{
-Low-level function that computes distances to the nth nearest individual.
-For each focal point, finds the closest point belonging to the nth nearest
-individual (ranked by minimum distance). Called by \code{\link[=calculate_nnd]{calculate_nnd()}} for
-each time point.
+Low-level function behind \code{\link[=calculate_nnd]{calculate_nnd()}}, operating on plain vectors
+for one group of comparable points (typically one timepoint).
+}
+\details{
+For each focal point, candidates are ranked by the value of \code{across}:
+the closest candidate point is found for each distinct value, those
+values are ranked by that distance, and the \code{n}-th is returned. So
+"second nearest" means the second nearest \emph{entity}, not the second
+nearest point.
 }
 \seealso{
-\code{\link[=calculate_nnd]{calculate_nnd()}} for the user-facing aniframe function
+\code{\link[=calculate_nnd]{calculate_nnd()}} for the aniframe-level function.
 }

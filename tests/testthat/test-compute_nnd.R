@@ -6,25 +6,25 @@
 # - Calculates correct Euclidean distances (2D)
 # - Calculates correct Euclidean distances (3D)
 # - Excludes same-individual points from distance calculation
-# - Filters candidates by keypoint_neighbour
+# - Filters candidates by is_candidate
 # - Returns NA distance when no valid neighbours
 # - Returns NA distance when not enough individuals for n
 # - Correctly identifies nth nearest individual
 # - n = 2 finds second nearest individual, not second nearest point
 # - Preserves factor type in individual output
 # - Preserves factor type in keypoint output
-# - Handles empty keypoint_neighbour filter gracefully
+# - Handles an all-FALSE candidate mask gracefully
 # - Handles NA individuals correctly
 
 test_that("returns tibble with correct columns (2D, no keypoints)", {
   result <- compute_nnd(
     x = c(0, 10),
     y = c(0, 0),
-    individual = factor(c(1, 2))
+    across = factor(c(1, 2))
   )
 
   expect_s3_class(result, "tbl_df")
-  expect_named(result, c("nnd_individual", "nnd_distance"))
+  expect_named(result, c("nnd_across", "nnd_distance"))
   expect_equal(nrow(result), 2)
 })
 
@@ -32,12 +32,12 @@ test_that("returns tibble with correct columns (2D, with keypoints)", {
   result <- compute_nnd(
     x = c(0, 10),
     y = c(0, 0),
-    individual = factor(c(1, 2)),
-    keypoint = factor(c("nose", "nose"))
+    across = factor(c(1, 2)),
+    labels = list(keypoint = factor(c("nose", "nose")))
   )
 
   expect_s3_class(result, "tbl_df")
-  expect_named(result, c("nnd_individual", "nnd_keypoint", "nnd_distance"))
+  expect_named(result, c("nnd_across", "nnd_keypoint", "nnd_distance"))
 })
 
 test_that("returns tibble with correct columns (3D)", {
@@ -45,18 +45,18 @@ test_that("returns tibble with correct columns (3D)", {
     x = c(0, 10),
     y = c(0, 0),
     z = c(0, 0),
-    individual = factor(c(1, 2))
+    across = factor(c(1, 2))
   )
 
   expect_s3_class(result, "tbl_df")
-  expect_named(result, c("nnd_individual", "nnd_distance"))
+  expect_named(result, c("nnd_across", "nnd_distance"))
 })
 
 test_that("calculates correct Euclidean distances (2D)", {
   result <- compute_nnd(
     x = c(0, 3),
     y = c(0, 4),
-    individual = factor(c(1, 2))
+    across = factor(c(1, 2))
   )
 
   expect_equal(result$nnd_distance, c(5, 5))
@@ -67,7 +67,7 @@ test_that("calculates correct Euclidean distances (3D)", {
     x = c(0, 2),
     y = c(0, 3),
     z = c(0, 6),
-    individual = factor(c(1, 2))
+    across = factor(c(1, 2))
   )
 
   # sqrt(4 + 9 + 36) = sqrt(49) = 7
@@ -78,7 +78,7 @@ test_that("excludes same-individual points from distance calculation", {
   result <- compute_nnd(
     x = c(0, 1, 10),
     y = c(0, 0, 0),
-    individual = factor(c(1, 1, 2))
+    across = factor(c(1, 1, 2))
   )
 
   # Points 1 & 2 (ind 1): nearest other individual is ind 2 at x=10
@@ -86,7 +86,7 @@ test_that("excludes same-individual points from distance calculation", {
   # Point 2 (x=1): distance to ind 2 is 9
   # Point 3 (ind 2, x=10): nearest ind 1 point is at x=1, distance 9
   expect_equal(result$nnd_distance, c(10, 9, 9))
-  expect_equal(as.character(result$nnd_individual), c("2", "2", "1"))
+  expect_equal(as.character(result$nnd_across), c("2", "2", "1"))
 })
 
 test_that("finds closest point on neighbouring individual", {
@@ -94,20 +94,20 @@ test_that("finds closest point on neighbouring individual", {
   result <- compute_nnd(
     x = c(0, 10, 5),
     y = c(0, 0, 0),
-    individual = factor(c(1, 2, 2))
+    across = factor(c(1, 2, 2))
   )
 
   # Individual 1 (x=0): closest point of ind 2 is at x=5, distance 5
   expect_equal(result$nnd_distance[1], 5)
 })
 
-test_that("filters candidates by keypoint_neighbour", {
+test_that("filters candidates by is_candidate", {
   result <- compute_nnd(
     x = c(0, 10, 100),
     y = c(0, 0, 0),
-    individual = factor(c(1, 2, 2)),
-    keypoint = factor(c("nose", "nose", "tail")),
-    keypoint_neighbour = "tail"
+    across = factor(c(1, 2, 2)),
+    labels = list(keypoint = factor(c("nose", "nose", "tail"))),
+    is_candidate = c(FALSE, FALSE, TRUE)
   )
 
   # Individual 1's nose can only consider individual 2's tail (x=100)
@@ -119,18 +119,18 @@ test_that("returns NA distance when no valid neighbours (same individual)", {
   result <- compute_nnd(
     x = c(0, 10),
     y = c(0, 0),
-    individual = factor(c(1, 1))
+    across = factor(c(1, 1))
   )
 
   expect_true(all(is.na(result$nnd_distance)))
-  expect_true(all(is.na(result$nnd_individual)))
+  expect_true(all(is.na(result$nnd_across)))
 })
 
 test_that("returns NA distance when not enough individuals for n", {
   result <- compute_nnd(
     x = c(0, 10),
     y = c(0, 0),
-    individual = factor(c(1, 2)),
+    across = factor(c(1, 2)),
     n = 2L
   )
 
@@ -141,7 +141,7 @@ test_that("correctly identifies nth nearest individual", {
   result <- compute_nnd(
     x = c(0, 10, 30),
     y = c(0, 0, 0),
-    individual = factor(c(1, 2, 3)),
+    across = factor(c(1, 2, 3)),
     n = 2L
   )
 
@@ -149,7 +149,7 @@ test_that("correctly identifies nth nearest individual", {
   # Individual 2: 2nd nearest is 3 at distance 20
   # Individual 3: 2nd nearest is 1 at distance 30
   expect_equal(result$nnd_distance, c(30, 20, 30))
-  expect_equal(as.character(result$nnd_individual), c("3", "3", "1"))
+  expect_equal(as.character(result$nnd_across), c("3", "3", "1"))
 })
 
 test_that("n = 2 finds second nearest individual, not second nearest point", {
@@ -158,65 +158,65 @@ test_that("n = 2 finds second nearest individual, not second nearest point", {
   result <- compute_nnd(
     x = c(0, 5, 7, 100),
     y = c(0, 0, 0, 0),
-    individual = factor(c(1, 2, 2, 3))
+    across = factor(c(1, 2, 2, 3))
   )
 
   result_n2 <- compute_nnd(
     x = c(0, 5, 7, 100),
     y = c(0, 0, 0, 0),
-    individual = factor(c(1, 2, 2, 3)),
+    across = factor(c(1, 2, 2, 3)),
     n = 2L
   )
 
   # n = 1: Individual 1's nearest is ind 2 at distance 5
   expect_equal(result$nnd_distance[1], 5)
-  expect_equal(as.character(result$nnd_individual[1]), "2")
+  expect_equal(as.character(result$nnd_across[1]), "2")
 
   # n = 2: Individual 1's 2nd nearest is ind 3 at distance 100 (not ind 2's other point)
   expect_equal(result_n2$nnd_distance[1], 100)
-  expect_equal(as.character(result_n2$nnd_individual[1]), "3")
+  expect_equal(as.character(result_n2$nnd_across[1]), "3")
 })
 
 test_that("handles single point per individual", {
   result <- compute_nnd(
     x = c(0, 5, 15),
     y = c(0, 0, 0),
-    individual = factor(c(1, 2, 3))
+    across = factor(c(1, 2, 3))
   )
 
   expect_equal(result$nnd_distance, c(5, 5, 10))
-  expect_equal(as.character(result$nnd_individual), c("2", "1", "2"))
+  expect_equal(as.character(result$nnd_across), c("2", "1", "2"))
 })
 
 test_that("preserves factor type in individual output", {
   result <- compute_nnd(
     x = c(0, 10),
     y = c(0, 0),
-    individual = factor(c("a", "b"))
+    across = factor(c("a", "b"))
   )
 
-  expect_s3_class(result$nnd_individual, "factor")
-  expect_equal(levels(result$nnd_individual), c("a", "b"))
+  expect_s3_class(result$nnd_across, "factor")
+  expect_equal(levels(result$nnd_across), c("a", "b"))
 })
 
 test_that("preserves factor type in keypoint output", {
   result <- compute_nnd(
     x = c(0, 10),
     y = c(0, 0),
-    individual = factor(c(1, 2)),
-    keypoint = factor(c("nose", "tail"))
+    across = factor(c(1, 2)),
+    labels = list(keypoint = factor(c("nose", "tail")))
   )
 
   expect_s3_class(result$nnd_keypoint, "factor")
 })
 
-test_that("handles empty keypoint_neighbour filter gracefully", {
+test_that("handles an all-FALSE candidate mask gracefully", {
   result <- compute_nnd(
     x = c(0, 10),
     y = c(0, 0),
-    individual = factor(c(1, 2)),
-    keypoint = factor(c("nose", "tail")),
-    keypoint_neighbour = "nonexistent"
+    across = factor(c(1, 2)),
+    labels = list(keypoint = factor(c("nose", "tail"))),
+    is_candidate = c(FALSE, FALSE)
   )
 
   expect_true(all(is.na(result$nnd_distance)))
@@ -226,7 +226,7 @@ test_that("handles NA individuals correctly", {
   result <- compute_nnd(
     x = c(0, 10, 20),
     y = c(0, 0, 0),
-    individual = factor(c(NA, 1, 2))
+    across = factor(c(NA, 1, 2))
   )
 
   # NA individual should get NA result
@@ -244,13 +244,52 @@ test_that("returns closest point on nth nearest individual with keypoints", {
   result <- compute_nnd(
     x = c(0, 10, 15, 100),
     y = c(0, 0, 0, 0),
-    individual = factor(c(1, 2, 2, 3)),
-    keypoint = factor(c("nose", "nose", "tail", "nose")),
+    across = factor(c(1, 2, 2, 3)),
+    labels = list(keypoint = factor(c("nose", "nose", "tail", "nose"))),
     n = 2L
   )
 
   # Individual 1: 2nd nearest individual is 3, closest point is nose at x=100
   expect_equal(result$nnd_distance[1], 100)
-  expect_equal(as.character(result$nnd_individual[1]), "3")
+  expect_equal(as.character(result$nnd_across[1]), "3")
   expect_equal(as.character(result$nnd_keypoint[1]), "nose")
+})
+
+test_that("points without a full set of coordinates are not neighbours", {
+  # stats::dist() drops a missing dimension and scales the rest up, so an
+  # NA x would otherwise yield a plausible distance computed from y alone
+  # -- here, 0.
+  result <- compute_nnd(
+    x = c(0, NA, 10),
+    y = c(0, 0, 0),
+    across = factor(c(1, 2, 3))
+  )
+
+  expect_equal(result$nnd_distance[1], 10)
+  expect_equal(as.character(result$nnd_across[1]), "3")
+  expect_true(is.na(result$nnd_distance[2]))
+})
+
+test_that("a neighbour whose only points are unpositioned is unreachable", {
+  result <- compute_nnd(
+    x = c(0, NA),
+    y = c(0, 0),
+    across = factor(c(1, 2))
+  )
+
+  expect_true(all(is.na(result$nnd_distance)))
+})
+
+test_that("is_candidate removes a point from consideration, not from the result", {
+  # Individual 2's only point is barred as a candidate, so individual 1
+  # has no neighbour -- while individual 2 still measures to individual 1.
+  result <- compute_nnd(
+    x = c(0, 10),
+    y = c(0, 0),
+    across = factor(c(1, 2)),
+    is_candidate = c(TRUE, FALSE)
+  )
+
+  expect_true(is.na(result$nnd_distance[1]))
+  expect_equal(result$nnd_distance[2], 10)
 })

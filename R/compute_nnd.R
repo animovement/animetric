@@ -1,131 +1,109 @@
-#' Compute nearest neighbour distances for a single time point
+#' Compute nearest neighbour distances within one group
 #'
-#' Low-level function that computes distances to the nth nearest individual.
-#' For each focal point, finds the closest point belonging to the nth nearest
-#' individual (ranked by minimum distance). Called by [calculate_nnd()] for
-#' each time point.
+#' Low-level function behind [calculate_nnd()], operating on plain vectors
+#' for one group of comparable points (typically one timepoint).
 #'
-#' @param x Numeric vector of x coordinates.
-#' @param y Numeric vector of y coordinates.
-#' @param z Numeric vector of z coordinates, or NULL for 2D data.
-#' @param individual Factor or vector identifying which individual each point
-#'   belongs to.
-#' @param keypoint Factor or vector identifying keypoint labels, or NULL if no
-#'   keypoints.
-#' @param n Which individual to find (1 = nearest, 2 = second nearest, etc.).
-#' @param keypoint_neighbour Character vector of keypoint(s) to consider as
-#'   valid neighbours, or NULL to consider all.
+#' For each focal point, candidates are ranked by the value of `across`:
+#' the closest candidate point is found for each distinct value, those
+#' values are ranked by that distance, and the `n`-th is returned. So
+#' "second nearest" means the second nearest *entity*, not the second
+#' nearest point.
 #'
-#' @return A tibble with columns:
-#'   - `nnd_individual`: individual ID of the n-th nearest individual
-#'   - `nnd_keypoint`: keypoint of the closest point on that individual (only
-#'     if `keypoint` is not NULL)
-#'   - `nnd_distance`: distance to the closest point on the n-th nearest
-#'     individual
+#' @param x,y Numeric vectors of coordinates.
+#' @param z Numeric vector of coordinates, or `NULL` for 2D data.
+#' @param across Vector whose value must differ between a focal point and
+#'   its neighbour — the thing being ranked, e.g. individual identity.
+#' @param n Which neighbour to return (1 = nearest, 2 = second nearest).
+#' @param is_focal Logical vector marking which points to measure from, or
+#'   `NULL` for all of them. Non-focal points get `NA` results.
+#' @param is_candidate Logical vector marking which points may be returned
+#'   as a neighbour, or `NULL` for all of them.
+#' @param labels Named list of vectors describing each point. The matched
+#'   neighbour's value is reported for each, as `nnd_<name>`.
 #'
-#' @seealso [calculate_nnd()] for the user-facing aniframe function
+#' @return A tibble with `nnd_across` (the value of `across` for the
+#'   matched neighbour), one `nnd_<name>` column per entry of `labels`,
+#'   and `nnd_distance`.
+#'
+#' @seealso [calculate_nnd()] for the aniframe-level function.
 #'
 #' @export
 compute_nnd <- function(
   x,
   y,
   z = NULL,
-  individual,
-  keypoint = NULL,
+  across,
   n = 1L,
-  keypoint_neighbour = NULL
+  is_focal = NULL,
+  is_candidate = NULL,
+  labels = NULL
 ) {
   n_points <- length(x)
+  across_chr <- as.character(across)
 
-  # Convert to character for consistent comparison
-  individual_chr <- as.character(individual)
-
-  if (is.null(keypoint) || is.null(keypoint_neighbour)) {
+  if (is.null(is_focal)) {
+    is_focal <- rep(TRUE, n_points)
+  }
+  if (is.null(is_candidate)) {
     is_candidate <- rep(TRUE, n_points)
-  } else {
-    is_candidate <- keypoint %in% keypoint_neighbour
   }
 
-  if (is.null(z)) {
-    coords <- cbind(x, y)
-  } else {
-    coords <- cbind(x, y, z)
-  }
-
+  coords <- if (is.null(z)) cbind(x, y) else cbind(x, y, z)
   dist_mat <- as.matrix(stats::dist(coords))
 
-  # Initialise result vectors
-  result_distance <- rep(NA_real_, n_points)
-  result_neighbour <- individual[rep(NA_integer_, n_points)]
-  result_neighbour_keypoint <- if (!is.null(keypoint)) {
-    keypoint[rep(NA_integer_, n_points)]
-  } else {
-    NULL
-  }
+  # `stats::dist()` does not return NA for a partly-missing coordinate: it
+  # drops the missing dimension and scales the remaining ones up, so a
+  # point with `x = NA` would report a plausible distance computed from
+  # `y` alone. A point without a full set of coordinates has no position,
+  # so it is neither measured from nor offered as a neighbour.
+  positioned <- stats::complete.cases(coords)
+  is_focal <- is_focal & positioned
+  is_candidate <- is_candidate & positioned
 
-  # Get unique individuals (excluding NA)
-  unique_inds <- unique(individual_chr[!is.na(individual_chr)])
+  result_distance <- rep(NA_real_, n_points)
+  result_across <- across[rep(NA_integer_, n_points)]
+  result_labels <- lapply(labels, function(v) v[rep(NA_integer_, n_points)])
+
+  candidate_values <- unique(across_chr[is_candidate & !is.na(across_chr)])
 
   for (i in seq_len(n_points)) {
-    focal_ind <- individual_chr[i]
-
-    # Skip if focal individual is NA
-    if (is.na(focal_ind)) {
+    if (!is_focal[i] || is.na(across_chr[i])) {
       next
     }
 
     dists <- dist_mat[i, ]
-
-    # Other individuals (not the focal)
-    other_inds <- setdiff(unique_inds, focal_ind)
-
-    if (length(other_inds) < n) {
+    other_values <- setdiff(candidate_values, across_chr[i])
+    if (length(other_values) < n) {
       next
     }
 
-    # For each other individual, find the closest candidate point
-    ind_info <- lapply(other_inds, function(other_ind) {
-      other_points <- which(individual_chr == other_ind & is_candidate)
-      if (length(other_points) == 0) {
-        return(list(dist = Inf, idx = NA_integer_))
-      }
-      other_dists <- dists[other_points]
-      min_pos <- which.min(other_dists)
-      list(dist = other_dists[min_pos], idx = other_points[min_pos])
+    # Closest candidate point for each distinct value of `across`. Every
+    # value in `candidate_values` has at least one positioned candidate
+    # point by construction, so each lookup yields a finite distance.
+    closest <- lapply(other_values, function(value) {
+      points <- which(across_chr == value & is_candidate)
+      point_dists <- dists[points]
+      nearest <- which.min(point_dists)
+      list(dist = point_dists[nearest], idx = points[nearest])
     })
 
-    min_dists <- vapply(ind_info, function(x) x$dist, numeric(1))
-    min_idxs <- vapply(ind_info, function(x) x$idx, integer(1))
+    min_dists <- vapply(closest, function(hit) hit$dist, numeric(1))
+    min_idxs <- vapply(closest, function(hit) hit$idx, integer(1))
 
-    # Find nth nearest individual
-    valid_pos <- which(is.finite(min_dists))
-    if (length(valid_pos) < n) {
-      next
-    }
+    nth <- order(min_dists)[n]
+    matched <- min_idxs[nth]
 
-    ranked <- valid_pos[order(min_dists[valid_pos])]
-    nth_pos <- ranked[n]
-    nth_point_idx <- min_idxs[nth_pos]
-
-    result_distance[i] <- min_dists[nth_pos]
-    result_neighbour[i] <- individual[nth_point_idx]
-    if (!is.null(keypoint)) {
-      result_neighbour_keypoint[i] <- keypoint[nth_point_idx]
+    result_distance[i] <- min_dists[nth]
+    result_across[i] <- across[matched]
+    for (nm in names(result_labels)) {
+      result_labels[[nm]][i] <- labels[[nm]][matched]
     }
   }
 
-  result <- dplyr::tibble(
-    nnd_individual = result_neighbour,
-    nnd_distance = result_distance
-  )
-
-  if (!is.null(keypoint)) {
-    result <- dplyr::tibble(
-      nnd_individual = result_neighbour,
-      nnd_keypoint = result_neighbour_keypoint,
-      nnd_distance = result_distance
-    )
+  out <- dplyr::tibble(nnd_across = result_across)
+  for (nm in names(result_labels)) {
+    out[[paste0("nnd_", nm)]] <- result_labels[[nm]]
   }
-
-  result
+  out$nnd_distance <- result_distance
+  out
 }
