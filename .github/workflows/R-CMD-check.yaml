@@ -28,6 +28,11 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      # The project uses renv, whose activate.R sets options(repos) from the
+      # lockfile -- overriding the P3M binary repo that use-public-rspm
+      # configures, so every package was compiled from source on Linux.
+      # CI resolves dependencies from DESCRIPTION, not from the lockfile.
+      RENV_CONFIG_AUTOLOADER_ENABLED: false
 
     steps:
       - uses: actions/checkout@v4
