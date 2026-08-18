@@ -18,12 +18,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
+        # R-devel has no binaries, so it runs on merges to main, not on PRs.
+        config: >-
+          ${{ github.event_name == 'pull_request'
+          && fromJSON('[
+            {"os": "macos-latest", "r": "release"},
+            {"os": "windows-latest", "r": "release"},
+            {"os": "ubuntu-latest", "r": "release"},
+            {"os": "ubuntu-latest", "r": "oldrel-1"}
+          ]')
+          || fromJSON('[
+            {"os": "macos-latest", "r": "release"},
+            {"os": "windows-latest", "r": "release"},
+            {"os": "ubuntu-latest", "r": "devel", "http-user-agent": "release"},
+            {"os": "ubuntu-latest", "r": "release"},
+            {"os": "ubuntu-latest", "r": "oldrel-1"}
+          ]') }}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
