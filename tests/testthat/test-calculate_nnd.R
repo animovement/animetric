@@ -392,3 +392,20 @@ test_that("Maintains incoming classes", {
 
   expect_contains(class(data), "aniframe_kin")
 })
+
+test_that("errors when keypoint_neighbour is given but every keypoint is NA", {
+  # Distinct from an absent column: the column is there, but carries no
+  # usable value, so the two get different messages.
+  data <- aniframe::aniframe(
+    time = c(1, 1),
+    individual = c(1, 2),
+    keypoint = c(NA, NA),
+    x = c(0, 10),
+    y = c(0, 0)
+  )
+
+  expect_error(
+    calculate_nnd(data, keypoint_neighbour = "nose"),
+    "contains only .*NA.* values"
+  )
+})
