@@ -10,17 +10,3 @@ new_aniframe_kin <- function(x) {
   class(x) <- unique(class(x))
   x
 }
-
-#' @keywords internal
-new_aniframe_kin2d <- function(x) {
-  class(x) <- c("aniframe_kin2d", class(x))
-  class(x) <- unique(class(x))
-  x
-}
-
-#' @keywords internal
-new_aniframe_kin3d <- function(x) {
-  class(x) <- c("aniframe_kin3d", class(x))
-  class(x) <- unique(class(x))
-  x
-}

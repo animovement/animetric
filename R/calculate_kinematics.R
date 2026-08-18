@@ -74,18 +74,14 @@ calculate_kinematics_2d <- function(data) {
   ensure_is_aniframe(data)
   data <- calculate_translation_2d(data)
   data <- calculate_rotation_2d(data)
-  data |>
-    new_aniframe_kin() |>
-    new_aniframe_kin2d()
+  new_aniframe_kin(data)
 }
 
 #' @keywords internal
 calculate_kinematics_3d <- function(data) {
   ensure_is_aniframe(data)
   data <- calculate_translation_3d(data) # TODO: Add 3D rotation summary
-  data |>
-    new_aniframe_kin() |>
-    new_aniframe_kin3d()
+  new_aniframe_kin(data)
 }
 
 #' Calculate translational kinematics in 2D
