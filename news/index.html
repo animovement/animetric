@@ -56,6 +56,15 @@
 <h3 id="breaking-changes-0-4-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-4-0"></a></h3>
 <ul><li>Removed the <code>aniframe_kin2d</code> and <code>aniframe_kin3d</code> classes. <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> set them, but nothing ever read them — no predicate, no method, no test in any package — and the dimensionality they encoded already lives in the <code>coordinate_system</code> metadata field. Kinematics output still carries <code>aniframe_kin</code>, which is what the <code>summarise_*()</code> functions dispatch on.</li>
 </ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-4-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-0"></a></h3>
+<ul><li>
+<code><a href="../reference/calculate_nnd.html">calculate_nnd()</a></code> checks that the <code>individual</code> and <code>keypoint</code> columns exist before reading them. <code>data$col</code> on a frame without the column returns <code>NULL</code> with a warning, and <code>all(is.na(NULL))</code> is <code>TRUE</code>, so an absent column was reported as an all-<code>NA</code> one — and every call warned on the way. Surfaced by aniframe 0.7.0, which no longer adds a <code>keypoint</code> column beside an existing identity.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="internal-0-4-0">Internal<a class="anchor" aria-label="anchor" href="#internal-0-4-0"></a></h3>
+<ul><li>Documentation regenerated with roxygen2 8.1.0, matching the rest of the ecosystem.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="animetric-030">animetric 0.3.0<a class="anchor" aria-label="anchor" href="#animetric-030"></a></h2>

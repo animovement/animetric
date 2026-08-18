@@ -12,6 +12,21 @@
   still carries `aniframe_kin`, which is what the `summarise_*()`
   functions dispatch on.
 
+### Bug fixes
+
+- [`calculate_nnd()`](http://animovement.dev/animetric/reference/calculate_nnd.md)
+  checks that the `individual` and `keypoint` columns exist before
+  reading them. `data$col` on a frame without the column returns `NULL`
+  with a warning, and `all(is.na(NULL))` is `TRUE`, so an absent column
+  was reported as an all-`NA` one — and every call warned on the way.
+  Surfaced by aniframe 0.7.0, which no longer adds a `keypoint` column
+  beside an existing identity.
+
+### Internal
+
+- Documentation regenerated with roxygen2 8.1.0, matching the rest of
+  the ecosystem.
+
 ## animetric 0.3.0
 
 This release brings a re-factoring of the `calculate` and `summarise`
