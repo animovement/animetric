@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">animetric</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,10 +51,10 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="animetric-development-version">animetric (development version)<a class="anchor" aria-label="anchor" href="#animetric-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.0" id="animetric-040-2026-08-18">animetric 0.4.0 (2026-08-18)<a class="anchor" aria-label="anchor" href="#animetric-040-2026-08-18"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
-<ul><li>Removed the <code>aniframe_kin2d</code> and <code>aniframe_kin3d</code> classes. <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> set them, but nothing ever read them — no predicate, no method, no test in any package — and the dimensionality they encoded is already carried by the <code>coordinate_system</code> metadata field, so they were a second source of truth that could only ever disagree with the first. Kinematics output still carries <code>aniframe_kin</code>, which is the class the <code>summarise_*()</code> functions dispatch on.</li>
+<h3 id="breaking-changes-0-4-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-4-0"></a></h3>
+<ul><li>Removed the <code>aniframe_kin2d</code> and <code>aniframe_kin3d</code> classes. <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> set them, but nothing ever read them — no predicate, no method, no test in any package — and the dimensionality they encoded already lives in the <code>coordinate_system</code> metadata field. Kinematics output still carries <code>aniframe_kin</code>, which is what the <code>summarise_*()</code> functions dispatch on.</li>
 </ul></div>
 </div>
     <div class="section level2">
