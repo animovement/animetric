@@ -19,6 +19,11 @@ jobs:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # The project uses renv, whose activate.R sets options(repos) from the
+      # lockfile -- overriding the P3M binary repo that use-public-rspm
+      # configures, so every package was compiled from source on Linux.
+      # CI resolves dependencies from DESCRIPTION, not from the lockfile.
+      RENV_CONFIG_AUTOLOADER_ENABLED: false
     permissions:
       contents: write
     steps:
