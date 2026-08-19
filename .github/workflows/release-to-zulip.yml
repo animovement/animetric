@@ -17,7 +17,12 @@ jobs:
           to: "announcements"
           type: "stream"
           topic: "releases"
+          # The heading is the package and its tag, so a shared `releases`
+          # topic stays scannable. The release name follows as a subtitle,
+          # suppressed when it only repeats the tag or "<package> <tag>" --
+          # both naming styles are in use across the ecosystem.
           content: |
-            # New [${{ github.repository }}](https://github.com/${{ github.repository }}) Release: **[${{ github.event.release.name }}](${{ github.event.release.html_url }})
+            # [${{ github.event.repository.name }} ${{ github.event.release.tag_name }}](${{ github.event.release.html_url }})
+            ${{ (github.event.release.name != '' && github.event.release.name != github.event.release.tag_name && github.event.release.name != format('{0} {1}', github.event.repository.name, github.event.release.tag_name)) && format('**{0}**', github.event.release.name) || '' }}
 
             ${{ github.event.release.body }}
