@@ -1,27 +1,34 @@
 ---
-output: github_document
+format:
+  gfm:
+    # Without this, pandoc appends ".png" to extensionless image URLs and every
+    # shields.io / R-universe badge in this README breaks.
+    default-image-extension: ""
+knitr:
+  opts_chunk:
+    fig.path: "man/figures/README-"
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is generated from README.qmd. Please edit that file -->
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
   out.width = "100%"
 )
 # install.packages('animetric', repos = c('https://animovement.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 
-# animetric
+# animetric <a href="https://animovement.dev/animetric/"><img src="man/figures/logo.png" align="right" height="139" alt="animetric hex logo" /></a>
 <!-- badges: start -->
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17357778.svg)](https://doi.org/10.5281/zenodo.17357778)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17818613.svg)](https://doi.org/10.5281/zenodo.17818613)
 [![R-CMD-check](https://github.com/animovement/animetric/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/animovement/animetric/actions/workflows/R-CMD-check.yaml)
 [![animetric status
 badge](https://animovement.r-universe.dev/badges/animetric)](https://animovement.r-universe.dev)
 [![codecov](https://codecov.io/gh/animovement/animetric/graph/badge.svg?token=Pf5n3yzLzK)](https://codecov.io/gh/animovement/animetric)
+[![Chat on Zulip](https://img.shields.io/badge/chat-Zulip-6492FE?logo=zulip&logoColor=white)](https://animovement.zulipchat.com)
 <!-- badges: end -->
 
 *An R package for calculating movement-based metrics*
@@ -42,10 +49,6 @@ Once you have installed the package, you can load it with:
 library("animetric")
 ```
 
-## Status
-> **Warning**
->
-> 🏗️ The package is currently in early development and the interface is subject to change. Feel free to play around and provide feedback.
 
 
 ## Citation {#citation}
@@ -54,6 +57,6 @@ If you enjoy the package, please make sure to cite it. If you find a bug, feel f
 
 To cite *animetric* in publications use:
 
-```{r, eval=FALSE}
+```{r}
 citation("animetric")
 ```
