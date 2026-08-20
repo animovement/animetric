@@ -25,8 +25,8 @@ operator multiple times (\code{order}).  If no explicit time vector is supplied,
 a simple index sequence is used.
 }
 \details{
-The function computes the first‑order derivative using the
-Fornberg‑based scheme implemented in \code{compute_gradient()}.  When
+The function computes the first-order derivative using the
+Fornberg-based scheme implemented in \code{compute_gradient()}.  When
 \code{order > 1}, the gradient is applied iteratively to the result of the
 previous iteration.
 }

@@ -17,6 +17,12 @@
 #'   are the mean of selected keypoints (with NA values removed). Confidence is
 #'   set to NA. Missing coordinate dimensions return NA.
 #'
+#' @examples
+#' af <- aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 3)
+#' compute_centroid(af)
+#'
+#' # A centroid from a subset of keypoints
+#' compute_centroid(af, include_keypoints = c("head", "neck"))
 #' @export
 compute_centroid <- function(
   data,

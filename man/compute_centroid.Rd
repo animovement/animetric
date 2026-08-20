@@ -34,3 +34,10 @@ Calculates the mean position of selected keypoints at each time point.
 The centroid is computed for each combination of grouping variables
 (individual, time, trial/session if present).
 }
+\examples{
+af <- aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 3)
+compute_centroid(af)
+
+# A centroid from a subset of keypoints
+compute_centroid(af, include_keypoints = c("head", "neck"))
+}

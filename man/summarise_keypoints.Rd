@@ -32,3 +32,7 @@ Creates summary statistics across multiple keypoints at each time point.
 Currently supports computing centroids from selected keypoints. Future
 functionality will include polygonal summaries.
 }
+\examples{
+af <- aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 3)
+summarise_keypoints(af)
+}
