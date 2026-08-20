@@ -14,6 +14,14 @@
 #'   - Angular speed, velocity, acceleration (2D only)
 #'   - Heading (2D only, using circular statistics)
 #'
+#' @examples
+#' kin <- calculate_kinematics(
+#'   aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+#' )
+#' summarise_kinematics(kin)
+#'
+#' # Mean and standard deviation instead of median and MAD
+#' summarise_kinematics(kin, measures = "mean_sd")
 #' @export
 #' @aliases summarize_kinematics
 summarise_kinematics <- function(

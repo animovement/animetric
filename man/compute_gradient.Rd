@@ -17,9 +17,16 @@ A numeric vector of the same length as \code{values} containing the
 estimated first derivative at each point.
 }
 \description{
-This helper implements a finite‑difference scheme based on the
+This helper implements a finite-difference scheme based on the
 \strong{Fornberg formula} for interior points when the spacing between
-coordinates is non‑uniform. End points use first‑order forward/backward
+coordinates is non-uniform. End points use first-order forward/backward
 differences.
 }
-\keyword{internal}
+\examples{
+# The derivative of x^2 is 2x, which the interior points recover exactly
+compute_gradient(c(0, 1, 4, 9, 16))
+
+# The spacing between coordinates need not be even
+compute_gradient(c(0, 1, 4, 9), coords = c(0, 1, 3, 6))
+}
+\concept{kinematics}
