@@ -1,23 +1,25 @@
+# Announces releases on Zulip. The logic lives in animovement/.github so it is
+# maintained in one place; only the triggers have to be declared here, because
+# GitHub fires them against this repository.
 name: Post Release Notes on Zulip
 
 on:
   release:
     types: [published]
+  # Lets an already-published release be announced by hand, and lets a failed
+  # announcement be re-sent. Deliberately not done by re-publishing a release:
+  # some repositories also have Zenodo listening for `release` events, which
+  # would mint a duplicate DOI version.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to announce. Leave empty for the latest release."
+        required: false
+        type: string
 
 jobs:
   notify-zulip:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send release notification to Zulip
-        uses: zulip/github-actions-zulip/send-message@v1
-        with:
-          api-key: ${{ secrets.ZULIP_API_KEY }}
-          email: "releases-bot@animovement.zulipchat.com"
-          organization-url: "https://animovement.zulipchat.com"
-          to: "announcements"
-          type: "stream"
-          topic: "releases"
-          content: |
-            # New [${{ github.repository }}](https://github.com/${{ github.repository }}) Release: **[${{ github.event.release.name }}](${{ github.event.release.html_url }})
-
-            ${{ github.event.release.body }}
+    uses: animovement/.github/.github/workflows/release-to-zulip.yml@main
+    with:
+      tag: ${{ inputs.tag }}
+    secrets: inherit
