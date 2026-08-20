@@ -68,7 +68,7 @@ Cybernetics, 97(1), 47-61.
 
 ## See also
 
-- [`calculate_kinematics()`](http://animovement.dev/animetric/reference/calculate_kinematics.md)
+- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
   for computing velocity and heading
 
 ## Examples

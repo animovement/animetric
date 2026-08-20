@@ -24,7 +24,7 @@ summarize_kinematics(
 - data:
 
   A kinematics aniframe (output of
-  [`calculate_kinematics()`](http://animovement.dev/animetric/reference/calculate_kinematics.md))
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md))
 
 - measures:
 
@@ -34,7 +34,7 @@ summarize_kinematics(
 - .check:
 
   Whether to validate input. Set to `FALSE` when called from
-  [`summarise_aniframe()`](http://animovement.dev/animetric/reference/summarise_aniframe.md)
+  [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
   to avoid redundant checks.
 
 ## Value

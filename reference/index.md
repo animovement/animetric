@@ -5,27 +5,27 @@
 These functions take your aniframe as input and give you results in
 return.
 
-- [`calculate_kinematics()`](http://animovement.dev/animetric/reference/calculate_kinematics.md)
+- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
   : Calculate kinematic measures from trajectory data
-- [`calculate_tortuosity()`](http://animovement.dev/animetric/reference/calculate_tortuosity.md)
+- [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
   : Calculate tortuosity metrics over sliding windows
-- [`calculate_nnd()`](http://animovement.dev/animetric/reference/calculate_nnd.md)
+- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
   : Calculate distance to n-th nearest neighbour
 
 ## Summarise
 
 These functions return a single value per group, or a full summary.
 
-- [`summarise_aniframe()`](http://animovement.dev/animetric/reference/summarise_aniframe.md)
-  [`summarize_aniframe()`](http://animovement.dev/animetric/reference/summarise_aniframe.md)
+- [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+  [`summarize_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
   : Summarise an aniframe
-- [`summarise_kinematics()`](http://animovement.dev/animetric/reference/summarise_kinematics.md)
-  [`summarize_kinematics()`](http://animovement.dev/animetric/reference/summarise_kinematics.md)
+- [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
+  [`summarize_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
   : Calculate kinematic summary statistics
-- [`summarise_tortuosity()`](http://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  [`summarize_tortuosity()`](http://animovement.dev/animetric/reference/summarise_tortuosity.md)
+- [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  [`summarize_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
   : Calculate tortuosity summary statistics
-- [`summarise_keypoints()`](http://animovement.dev/animetric/reference/summarise_keypoints.md)
+- [`summarise_keypoints()`](https://animovement.dev/animetric/reference/summarise_keypoints.md)
   : Summarize keypoint data
 
 ## Compute
@@ -33,27 +33,27 @@ These functions return a single value per group, or a full summary.
 These functions are cogs used in `calculate_` and `summarise_`
 functions.
 
-- [`compute_gradient()`](http://animovement.dev/animetric/reference/compute_gradient.md)
+- [`compute_gradient()`](https://animovement.dev/animetric/reference/compute_gradient.md)
   : Compute numerical derivatives on possibly uneven grids
-- [`differentiate()`](http://animovement.dev/animetric/reference/differentiate.md)
+- [`differentiate()`](https://animovement.dev/animetric/reference/differentiate.md)
   : Differentiate a numeric series (optionally repeatedly)
-- [`compute_straightness()`](http://animovement.dev/animetric/reference/compute_straightness.md)
+- [`compute_straightness()`](https://animovement.dev/animetric/reference/compute_straightness.md)
   : Compute straightness index from precomputed vectors
-- [`compute_sinuosity()`](http://animovement.dev/animetric/reference/compute_sinuosity.md)
+- [`compute_sinuosity()`](https://animovement.dev/animetric/reference/compute_sinuosity.md)
   : Compute sinuosity index from precomputed vectors
-- [`compute_emax()`](http://animovement.dev/animetric/reference/compute_emax.md)
+- [`compute_emax()`](https://animovement.dev/animetric/reference/compute_emax.md)
   : Compute E_max (maximum expected displacement) from pre‑computed
   vectors
-- [`compute_centroid()`](http://animovement.dev/animetric/reference/compute_centroid.md)
+- [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
   : Compute centroid from keypoints
-- [`compute_nnd()`](http://animovement.dev/animetric/reference/compute_nnd.md)
+- [`compute_nnd()`](https://animovement.dev/animetric/reference/compute_nnd.md)
   : Compute nearest neighbour distances for a single time point
 
 ## Helpers
 
-- [`is_aniframe_kin()`](http://animovement.dev/animetric/reference/is_aniframe_kin.md)
+- [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
   : Check if object is an aniframe_kin
-- [`mean_angle()`](http://animovement.dev/animetric/reference/mean_angle.md)
+- [`mean_angle()`](https://animovement.dev/animetric/reference/mean_angle.md)
   : Compute the circular mean of angles
-- [`median_angle()`](http://animovement.dev/animetric/reference/median_angle.md)
+- [`median_angle()`](https://animovement.dev/animetric/reference/median_angle.md)
   : Compute the circular median of angles

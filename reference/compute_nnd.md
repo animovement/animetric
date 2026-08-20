@@ -3,7 +3,7 @@
 Low-level function that computes distances to the nth nearest
 individual. For each focal point, finds the closest point belonging to
 the nth nearest individual (ranked by minimum distance). Called by
-[`calculate_nnd()`](http://animovement.dev/animetric/reference/calculate_nnd.md)
+[`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
 for each time point.
 
 ## Usage
@@ -65,5 +65,5 @@ A tibble with columns:
 
 ## See also
 
-[`calculate_nnd()`](http://animovement.dev/animetric/reference/calculate_nnd.md)
+[`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
 for the user-facing aniframe function

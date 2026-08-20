@@ -22,13 +22,6 @@ Once you have installed the package, you can load it with:
 library("animetric")
 ```
 
-## Status
-
-> **Warning**
->
-> 🏗️ The package is currently in early development and the interface is
-> subject to change. Feel free to play around and provide feedback.
-
 ## Citation
 
 If you enjoy the package, please make sure to cite it. If you find a
@@ -39,6 +32,23 @@ To cite *animetric* in publications use:
 ``` r
 
 citation("animetric")
+#> To cite animetric in publications, please cite the animovement toolbox
+#> as a whole (the first entry below). If your work used only animetric,
+#> you may cite the package directly instead (the second entry).
+#> 
+#>   Roald-Arbøl M (2026). "animovement: An R toolbox for analysing
+#>   movement across space and time." doi:10.5281/zenodo.13235277
+#>   <https://doi.org/10.5281/zenodo.13235277>.
+#>   <https://animovement.dev/animovement/>.
+#> 
+#>   Roald-Arbøl M (2026). "animetric: An R package for calculating
+#>   movement-based metrics." doi:10.5281/zenodo.17818613
+#>   <https://doi.org/10.5281/zenodo.17818613>.
+#>   <https://animovement.dev/animetric/>.
+#> 
+#> To see these entries in BibTeX format, use 'print(<citation>,
+#> bibtex=TRUE)', 'toBibtex(.)', or set
+#> 'options(citation.bibtex.max=999)'.
 ```
 
 # Package index
@@ -48,27 +58,27 @@ citation("animetric")
 These functions take your aniframe as input and give you results in
 return.
 
-- [`calculate_kinematics()`](http://animovement.dev/animetric/reference/calculate_kinematics.md)
+- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
   : Calculate kinematic measures from trajectory data
-- [`calculate_tortuosity()`](http://animovement.dev/animetric/reference/calculate_tortuosity.md)
+- [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
   : Calculate tortuosity metrics over sliding windows
-- [`calculate_nnd()`](http://animovement.dev/animetric/reference/calculate_nnd.md)
+- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
   : Calculate distance to n-th nearest neighbour
 
 ## Summarise
 
 These functions return a single value per group, or a full summary.
 
-- [`summarise_aniframe()`](http://animovement.dev/animetric/reference/summarise_aniframe.md)
-  [`summarize_aniframe()`](http://animovement.dev/animetric/reference/summarise_aniframe.md)
+- [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+  [`summarize_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
   : Summarise an aniframe
-- [`summarise_kinematics()`](http://animovement.dev/animetric/reference/summarise_kinematics.md)
-  [`summarize_kinematics()`](http://animovement.dev/animetric/reference/summarise_kinematics.md)
+- [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
+  [`summarize_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
   : Calculate kinematic summary statistics
-- [`summarise_tortuosity()`](http://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  [`summarize_tortuosity()`](http://animovement.dev/animetric/reference/summarise_tortuosity.md)
+- [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  [`summarize_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
   : Calculate tortuosity summary statistics
-- [`summarise_keypoints()`](http://animovement.dev/animetric/reference/summarise_keypoints.md)
+- [`summarise_keypoints()`](https://animovement.dev/animetric/reference/summarise_keypoints.md)
   : Summarize keypoint data
 
 ## Compute
@@ -76,28 +86,28 @@ These functions return a single value per group, or a full summary.
 These functions are cogs used in `calculate_` and `summarise_`
 functions.
 
-- [`compute_gradient()`](http://animovement.dev/animetric/reference/compute_gradient.md)
+- [`compute_gradient()`](https://animovement.dev/animetric/reference/compute_gradient.md)
   : Compute numerical derivatives on possibly uneven grids
-- [`differentiate()`](http://animovement.dev/animetric/reference/differentiate.md)
+- [`differentiate()`](https://animovement.dev/animetric/reference/differentiate.md)
   : Differentiate a numeric series (optionally repeatedly)
-- [`compute_straightness()`](http://animovement.dev/animetric/reference/compute_straightness.md)
+- [`compute_straightness()`](https://animovement.dev/animetric/reference/compute_straightness.md)
   : Compute straightness index from precomputed vectors
-- [`compute_sinuosity()`](http://animovement.dev/animetric/reference/compute_sinuosity.md)
+- [`compute_sinuosity()`](https://animovement.dev/animetric/reference/compute_sinuosity.md)
   : Compute sinuosity index from precomputed vectors
-- [`compute_emax()`](http://animovement.dev/animetric/reference/compute_emax.md)
+- [`compute_emax()`](https://animovement.dev/animetric/reference/compute_emax.md)
   : Compute E_max (maximum expected displacement) from pre‑computed
   vectors
-- [`compute_centroid()`](http://animovement.dev/animetric/reference/compute_centroid.md)
+- [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
   : Compute centroid from keypoints
-- [`compute_nnd()`](http://animovement.dev/animetric/reference/compute_nnd.md)
+- [`compute_nnd()`](https://animovement.dev/animetric/reference/compute_nnd.md)
   : Compute nearest neighbour distances for a single time point
 
 ## Helpers
 
-- [`is_aniframe_kin()`](http://animovement.dev/animetric/reference/is_aniframe_kin.md)
+- [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
   : Check if object is an aniframe_kin
-- [`mean_angle()`](http://animovement.dev/animetric/reference/mean_angle.md)
+- [`mean_angle()`](https://animovement.dev/animetric/reference/mean_angle.md)
   : Compute the circular mean of angles
-- [`median_angle()`](http://animovement.dev/animetric/reference/median_angle.md)
+- [`median_angle()`](https://animovement.dev/animetric/reference/median_angle.md)
   : Compute the circular median of angles
 

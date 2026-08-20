@@ -24,7 +24,7 @@ summarize_aniframe(
 - data:
 
   A kinematics aniframe (output of
-  [`calculate_kinematics()`](http://animovement.dev/animetric/reference/calculate_kinematics.md))
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md))
 
 - type:
 
@@ -42,5 +42,5 @@ A summarised data frame with one row per group.
 
 ## See also
 
-[`summarise_kinematics()`](http://animovement.dev/animetric/reference/summarise_kinematics.md),
-[`summarise_tortuosity()`](http://animovement.dev/animetric/reference/summarise_tortuosity.md)
+[`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md),
+[`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)

@@ -5,7 +5,7 @@
 ### Breaking changes
 
 - Removed the `aniframe_kin2d` and `aniframe_kin3d` classes.
-  [`calculate_kinematics()`](http://animovement.dev/animetric/reference/calculate_kinematics.md)
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
   set them, but nothing ever read them — no predicate, no method, no
   test in any package — and the dimensionality they encoded already
   lives in the `coordinate_system` metadata field. Kinematics output
@@ -14,7 +14,7 @@
 
 ### Bug fixes
 
-- [`calculate_nnd()`](http://animovement.dev/animetric/reference/calculate_nnd.md)
+- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
   checks that the `individual` and `keypoint` columns exist before
   reading them. `data$col` on a frame without the column returns `NULL`
   with a warning, and `all(is.na(NULL))` is `TRUE`, so an absent column
@@ -34,4 +34,4 @@ functions, along with new `tortuosity` metrics and a bucnh of tests. I’m
 also excited to bring on the first social/collective metric: “Nearest
 Neighbour Distance” (NND). The calculations are made thoughout the time
 series with
-[`calculate_nnd()`](http://animovement.dev/animetric/reference/calculate_nnd.md).
+[`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md).

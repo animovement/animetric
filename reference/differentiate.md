@@ -1,7 +1,7 @@
 # Differentiate a numeric series (optionally repeatedly)
 
 Wrapper around
-[`compute_gradient()`](http://animovement.dev/animetric/reference/compute_gradient.md)
+[`compute_gradient()`](https://animovement.dev/animetric/reference/compute_gradient.md)
 that optionally applies the gradient operator multiple times (`order`).
 If no explicit time vector is supplied, a simple index sequence is used.
 
@@ -36,7 +36,7 @@ values.
 
 The function computes the first‑order derivative using the
 Fornberg‑based scheme implemented in
-[`compute_gradient()`](http://animovement.dev/animetric/reference/compute_gradient.md).
+[`compute_gradient()`](https://animovement.dev/animetric/reference/compute_gradient.md).
 When `order > 1`, the gradient is applied iteratively to the result of
 the previous iteration.
 

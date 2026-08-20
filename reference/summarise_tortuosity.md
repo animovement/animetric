@@ -15,7 +15,7 @@ summarize_tortuosity(data)
 - data:
 
   A kinematics aniframe (output of
-  [`calculate_kinematics()`](http://animovement.dev/animetric/reference/calculate_kinematics.md))
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md))
 
 ## Value
 
