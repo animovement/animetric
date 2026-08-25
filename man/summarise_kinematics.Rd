@@ -39,3 +39,12 @@ tendency and dispersion measures (prefixed with median_/mad_ or mean_/sd_)
 Calculate central tendency and dispersion for translational and rotational
 kinematics.
 }
+\examples{
+kin <- calculate_kinematics(
+  aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+)
+summarise_kinematics(kin)
+
+# Mean and standard deviation instead of median and MAD
+summarise_kinematics(kin, measures = "mean_sd")
+}

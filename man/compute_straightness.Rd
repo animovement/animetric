@@ -17,3 +17,10 @@ Numeric vector of straightness values (D/L)
 \description{
 Compute straightness index from precomputed vectors
 }
+\examples{
+# Straight-line displacement over the distance actually travelled
+compute_straightness(5, 10)
+
+# A perfectly straight path scores 1
+compute_straightness(10, 10)
+}

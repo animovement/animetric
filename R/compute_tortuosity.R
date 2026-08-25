@@ -8,6 +8,12 @@
 #' @param path_length Numeric vector of path lengths (L)
 #'
 #' @return Numeric vector of straightness values (D/L)
+#' @examples
+#' # Straight-line displacement over the distance actually travelled
+#' compute_straightness(5, 10)
+#'
+#' # A perfectly straight path scores 1
+#' compute_straightness(10, 10)
 #' @export
 compute_straightness <- function(displacement, path_length) {
   straightness <- displacement / path_length
@@ -22,6 +28,11 @@ compute_straightness <- function(displacement, path_length) {
 #' @param method Either "corrected" (Benhamou 2004) or "original" (Bovet & Benhamou 1988)
 #'
 #' @return Numeric vector of sinuosity values
+#' @examples
+#' compute_sinuosity(mean_step_length = 1.2, mean_cos_turning = 0.8)
+#'
+#' # The original formulation, for comparison with older work
+#' compute_sinuosity(1.2, 0.8, method = "original")
 #' @export
 compute_sinuosity <- function(
   mean_step_length,
@@ -61,6 +72,11 @@ compute_sinuosity <- function(
 #'                           otherwise returns the dimensionless ratio.
 #' @return Numeric vector of E_max values (same length as \code{mean_cos_turning}),
 #'         with \code{NA} for invalid inputs and \code{Inf} for perfectly straight paths.
+#' @examples
+#' compute_emax(mean_cos_turning = 0.8)
+#'
+#' # The dimensional form also accounts for step length
+#' compute_emax(0.8, mean_step_length = 1.2, dimensional = TRUE)
 #' @export
 compute_emax <- function(
   mean_cos_turning,

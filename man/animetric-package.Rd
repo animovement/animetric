@@ -6,6 +6,8 @@
 \alias{animetric-package}
 \title{animetric: An R package for calculating movement-based metrics}
 \description{
+\if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
+
 An R package for calculating movement-based metrics.
 }
 \seealso{

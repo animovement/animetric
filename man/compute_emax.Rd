@@ -21,3 +21,9 @@ with \code{NA} for invalid inputs and \code{Inf} for perfectly straight paths.
 \description{
 Compute E_max (maximum expected displacement) from pre‑computed vectors
 }
+\examples{
+compute_emax(mean_cos_turning = 0.8)
+
+# The dimensional form also accounts for step length
+compute_emax(0.8, mean_step_length = 1.2, dimensional = TRUE)
+}
