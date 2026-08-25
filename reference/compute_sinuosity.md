@@ -30,3 +30,14 @@ compute_sinuosity(
 ## Value
 
 Numeric vector of sinuosity values
+
+## Examples
+
+``` r
+compute_sinuosity(mean_step_length = 1.2, mean_cos_turning = 0.8)
+#> [1] 0.6085806
+
+# The original formulation, for comparison with older work
+compute_sinuosity(1.2, 0.8, method = "original")
+#> [1] 4.082483
+```

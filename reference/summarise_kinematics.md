@@ -48,3 +48,31 @@ mean\_/sd\_)
 - Angular speed, velocity, acceleration (2D only)
 
 - Heading (2D only, using circular statistics)
+
+## Examples
+
+``` r
+kin <- calculate_kinematics(
+  aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+)
+summarise_kinematics(kin)
+#> # A tibble: 1 × 16
+#>   individual keypoint session trial median_speed mad_speed median_acceleration
+#>        <int> <fct>      <int> <int>        <dbl>     <dbl>               <dbl>
+#> 1          1 centroid       1     1         1.16     0.561             0.00709
+#> # ℹ 9 more variables: mad_acceleration <dbl>, median_angular_speed <dbl>,
+#> #   mad_angular_speed <dbl>, median_angular_velocity <dbl>,
+#> #   mad_angular_velocity <dbl>, median_angular_acceleration <dbl>,
+#> #   mad_angular_acceleration <dbl>, median_heading <dbl>, mad_heading <dbl>
+
+# Mean and standard deviation instead of median and MAD
+summarise_kinematics(kin, measures = "mean_sd")
+#> # A tibble: 1 × 16
+#>   individual keypoint session trial mean_speed sd_speed mean_acceleration
+#>        <int> <fct>      <int> <int>      <dbl>    <dbl>             <dbl>
+#> 1          1 centroid       1     1       1.08    0.481            0.0692
+#> # ℹ 9 more variables: sd_acceleration <dbl>, mean_angular_speed <dbl>,
+#> #   sd_angular_speed <dbl>, mean_angular_velocity <dbl>,
+#> #   sd_angular_velocity <dbl>, mean_angular_acceleration <dbl>,
+#> #   sd_angular_acceleration <dbl>, mean_heading <dbl>, sd_heading <dbl>
+```

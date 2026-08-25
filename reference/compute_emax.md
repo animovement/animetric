@@ -28,3 +28,14 @@ compute_emax(mean_cos_turning, mean_step_length = NULL, dimensional = FALSE)
 
 Numeric vector of E_max values (same length as `mean_cos_turning`), with
 `NA` for invalid inputs and `Inf` for perfectly straight paths.
+
+## Examples
+
+``` r
+compute_emax(mean_cos_turning = 0.8)
+#> [1] 3
+
+# The dimensional form also accounts for step length
+compute_emax(0.8, mean_step_length = 1.2, dimensional = TRUE)
+#> [1] 3.6
+```

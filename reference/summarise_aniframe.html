@@ -99,6 +99,33 @@ Options are <code>"median_mad"</code> (default) and <code>"mean_sd"</code>.</p><
     <div class="dont-index"><p><code><a href="summarise_kinematics.html">summarise_kinematics()</a></code>, <code><a href="summarise_tortuosity.html">summarise_tortuosity()</a></code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">kin</span> <span class="op">&lt;-</span> <span class="fu"><a href="calculate_kinematics.html">calculate_kinematics</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">aniframe</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/aniframe/reference/example_aniframe.html" class="external-link">example_aniframe</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fl">20</span>, n_individuals <span class="op">=</span> <span class="fl">1</span>, n_keypoints <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">summarise_aniframe</span><span class="op">(</span><span class="va">kin</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 22</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial median_speed mad_speed median_acceleration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1        0.681     0.627              -<span style="color: #BB0000;">0.123</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: mad_acceleration &lt;dbl&gt;, median_angular_speed &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   mad_angular_speed &lt;dbl&gt;, median_angular_velocity &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   mad_angular_velocity &lt;dbl&gt;, median_angular_acceleration &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   mad_angular_acceleration &lt;dbl&gt;, median_heading &lt;dbl&gt;, mad_heading &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   total_path_length &lt;dbl&gt;, total_angular_path_length &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   net_displacement &lt;dbl&gt;, straightness &lt;dbl&gt;, sinuosity &lt;dbl&gt;, emax &lt;dbl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Tortuosity measures instead of kinematics</span></span></span>
+<span class="r-in"><span><span class="fu">summarise_aniframe</span><span class="op">(</span><span class="fu"><a href="calculate_tortuosity.html">calculate_tortuosity</a></span><span class="op">(</span><span class="va">kin</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"tortuosity"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial total_path_length total_angular_path_length</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1              39.7                      25.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: net_displacement &lt;dbl&gt;, straightness &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sinuosity &lt;dbl&gt;, emax &lt;dbl&gt;</span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

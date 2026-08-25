@@ -84,6 +84,20 @@
 path. Journal of Theoretical Biology, 229(2), 209-220.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">kin</span> <span class="op">&lt;-</span> <span class="fu"><a href="calculate_kinematics.html">calculate_kinematics</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">aniframe</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/aniframe/reference/example_aniframe.html" class="external-link">example_aniframe</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fl">20</span>, n_individuals <span class="op">=</span> <span class="fl">1</span>, n_keypoints <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">summarise_tortuosity</span><span class="op">(</span><span class="fu"><a href="calculate_tortuosity.html">calculate_tortuosity</a></span><span class="op">(</span><span class="va">kin</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial total_path_length total_angular_path_length</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1              24.0                      25.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: net_displacement &lt;dbl&gt;, straightness &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sinuosity &lt;dbl&gt;, emax &lt;dbl&gt;</span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

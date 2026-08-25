@@ -98,6 +98,33 @@ tendency and dispersion measures (prefixed with median_/mad_ or mean_/sd_)</p><u
 <li><p>Heading (2D only, using circular statistics)</p></li>
 </ul></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">kin</span> <span class="op">&lt;-</span> <span class="fu"><a href="calculate_kinematics.html">calculate_kinematics</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">aniframe</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/aniframe/reference/example_aniframe.html" class="external-link">example_aniframe</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fl">20</span>, n_individuals <span class="op">=</span> <span class="fl">1</span>, n_keypoints <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">summarise_kinematics</span><span class="op">(</span><span class="va">kin</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 16</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial median_speed mad_speed median_acceleration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1         1.16     0.561             0.007<span style="text-decoration: underline;">09</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: mad_acceleration &lt;dbl&gt;, median_angular_speed &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   mad_angular_speed &lt;dbl&gt;, median_angular_velocity &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   mad_angular_velocity &lt;dbl&gt;, median_angular_acceleration &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   mad_angular_acceleration &lt;dbl&gt;, median_heading &lt;dbl&gt;, mad_heading &lt;dbl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Mean and standard deviation instead of median and MAD</span></span></span>
+<span class="r-in"><span><span class="fu">summarise_kinematics</span><span class="op">(</span><span class="va">kin</span>, measures <span class="op">=</span> <span class="st">"mean_sd"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 16</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial mean_speed sd_speed mean_acceleration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1       1.08    0.481            0.069<span style="text-decoration: underline;">2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: sd_acceleration &lt;dbl&gt;, mean_angular_speed &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sd_angular_speed &lt;dbl&gt;, mean_angular_velocity &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sd_angular_velocity &lt;dbl&gt;, mean_angular_acceleration &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sd_angular_acceleration &lt;dbl&gt;, mean_heading &lt;dbl&gt;, sd_heading &lt;dbl&gt;</span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -34,8 +34,8 @@ values.
 
 ## Details
 
-The function computes the first‑order derivative using the
-Fornberg‑based scheme implemented in
+The function computes the first-order derivative using the
+Fornberg-based scheme implemented in
 [`compute_gradient()`](https://animovement.dev/animetric/reference/compute_gradient.md).
 When `order > 1`, the gradient is applied iteratively to the result of
 the previous iteration.

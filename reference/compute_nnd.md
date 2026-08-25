@@ -67,3 +67,19 @@ A tibble with columns:
 
 [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
 for the user-facing aniframe function
+
+## Examples
+
+``` r
+compute_nnd(
+  x = c(0, 1, 2),
+  y = c(0, 1, 0),
+  individual = c("a", "b", "c")
+)
+#> # A tibble: 3 × 2
+#>   nnd_individual nnd_distance
+#>   <chr>                 <dbl>
+#> 1 b                      1.41
+#> 2 a                      1.41
+#> 3 b                      1.41
+```
