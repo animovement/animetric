@@ -32,7 +32,7 @@ mock_kin_2d <- function(n = 10, grouped = FALSE, calculate_kinematics = TRUE) {
     )
   }
 
-  data <- aniframe::as_aniframe(data)
+  data <- anicore::as_aniframe(data)
   if (calculate_kinematics == TRUE) {
     data <- calculate_kinematics(data)
   }
@@ -55,7 +55,7 @@ mock_kin_3d <- function(n = 10, grouped = FALSE, calculate_kinematics = TRUE) {
     )
   }
 
-  data <- aniframe::as_aniframe(data)
+  data <- anicore::as_aniframe(data)
   if (calculate_kinematics == TRUE) {
     data <- calculate_kinematics(data)
   }
@@ -73,7 +73,7 @@ mock_straight_path_2d <- function(n = 10, calculate_kinematics = TRUE) {
     y = y
   )
 
-  data <- aniframe::as_aniframe(data)
+  data <- anicore::as_aniframe(data)
   if (calculate_kinematics == TRUE) {
     data <- calculate_kinematics(data)
   }

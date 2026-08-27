@@ -196,7 +196,7 @@ test_that("compute_centroid errors on non-Cartesian data", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    aniframe::as_aniframe() |>
+    anicore::as_aniframe() |>
     anispace::map_to_polar()
 
   expect_error(compute_centroid(data), "Cartesian coordinate system")

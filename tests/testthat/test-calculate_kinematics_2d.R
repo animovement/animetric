@@ -11,7 +11,7 @@ test_that("calculate_kinematics_2d adds all expected columns", {
     x = c(0, 1, 2, 3, 4, 5),
     y = c(0, 0, 0, 0, 0, 0)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -40,7 +40,7 @@ test_that("velocity components match differentiate()", {
     x = seq(0, 2, by = 0.1)^2,
     y = sin(seq(0, 2, by = 0.1))
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -58,7 +58,7 @@ test_that("acceleration components match differentiate()", {
     x = seq(0, 2, by = 0.1)^2,
     y = sin(seq(0, 2, by = 0.1))
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -76,7 +76,7 @@ test_that("speed is calculated correctly from velocity components", {
     x = 0:10 * 3, # v_x = 3
     y = 0:10 * 4 # v_y = 4
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -92,7 +92,7 @@ test_that("acceleration matches differentiate of speed", {
     x = seq(0, 2, by = 0.1)^2,
     y = seq(0, 2, by = 0.1)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -109,7 +109,7 @@ test_that("path_length accumulates distance correctly", {
     x = c(0, 3, 3, 0, 0),
     y = c(0, 0, 4, 4, 0)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -127,7 +127,7 @@ test_that("heading is calculated correctly from velocity", {
     x = c(0, 1, 2, 3, 4, 5),
     y = c(0, 1, 2, 3, 4, 5)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -146,7 +146,7 @@ test_that("angular_velocity matches differentiate of unwrapped heading", {
     x = cos(t),
     y = sin(t)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -167,7 +167,7 @@ test_that("angular_speed is absolute value of angular_velocity", {
     x = cos(t),
     y = sin(t)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -181,7 +181,7 @@ test_that("angular_acceleration matches differentiate of unwrapped heading", {
     x = cos(t),
     y = sin(t)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -201,7 +201,7 @@ test_that("stationary object has zero kinematics", {
     x = rep(5, 6),
     y = rep(3, 6)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 
@@ -216,7 +216,7 @@ test_that("constant velocity has zero acceleration", {
     x = (0:10) * 2,
     y = (0:10) * 3
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_2d(data)
 

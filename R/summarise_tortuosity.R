@@ -22,7 +22,7 @@
 #' @export
 #' @aliases summarize_tortuosity
 summarise_tortuosity <- function(data) {
-  is_3d <- aniframe::is_cartesian_3d(data)
+  is_3d <- anicore::is_cartesian_3d(data)
 
   if (!is_aniframe_kin(data)) {
     data <- data |>

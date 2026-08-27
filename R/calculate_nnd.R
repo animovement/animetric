@@ -105,7 +105,7 @@ calculate_nnd <- function(data, n = 1L, keypoint_neighbour = NULL) {
 
   incoming_classes <- class(data)
 
-  is_3d <- aniframe::is_cartesian_3d(data)
+  is_3d <- anicore::is_cartesian_3d(data)
 
   result <- data |>
     dplyr::group_by(dplyr::across(dplyr::all_of(context_cols))) |>
@@ -125,7 +125,7 @@ calculate_nnd <- function(data, n = 1L, keypoint_neighbour = NULL) {
     ) |>
     dplyr::ungroup() |>
     suppressWarnings() |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   outgoing_classes <- class(result)
   class(result) <- c(

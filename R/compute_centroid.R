@@ -25,9 +25,9 @@ compute_centroid <- function(
   centroid_name = "centroid"
 ) {
   # Validate input
-  aniframe::ensure_is_aniframe(data)
+  anicore::ensure_is_aniframe(data)
 
-  if (!aniframe::is_cartesian(data)) {
+  if (!anicore::is_cartesian(data)) {
     cli::cli_abort("Data must be in a Cartesian coordinate system.")
   }
 
@@ -61,7 +61,7 @@ compute_centroid <- function(
       .groups = "drop"
     ) |>
     dplyr::mutate(keypoint = factor(centroid_name)) |>
-    aniframe::convert_nan_to_na() |>
+    anicore::convert_nan_to_na() |>
     suppressMessages() |>
     suppressWarnings()
 
@@ -70,5 +70,5 @@ compute_centroid <- function(
     centroid <- dplyr::select(centroid, -"z")
   }
 
-  aniframe::as_aniframe(centroid)
+  anicore::as_aniframe(centroid)
 }

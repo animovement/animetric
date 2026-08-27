@@ -7,7 +7,7 @@
 # 2  It preserves the original data‑frame columns
 # 3  The resulting object inherits from `"data.frame"` (or `"tbl_df"` etc.)
 # 4  The class vector contains the class exactly once
-# 5  Objects created from a minimal aniframe (time, x, y) pass `aniframe::as_aniframe()`
+# 5  Objects created from a minimal aniframe (time, x, y) pass `anicore::as_aniframe()`
 # ------------------------------------------------------------------
 
 # Helper: a minimal, valid aniframe‑like data frame
@@ -32,7 +32,7 @@ test_that("new_aniframe_kin creates a proper aniframe_kin object", {
   expect_named(kin, names(df))
 
   # conversion back to aniframe works
-  expect_s3_class(aniframe::as_aniframe(kin), "aniframe")
+  expect_s3_class(anicore::as_aniframe(kin), "aniframe")
 })
 
 test_that("the class appears only once in the class vector", {
@@ -47,7 +47,7 @@ test_that("the class appears only once in the class vector", {
 })
 
 test_that("error when not an aniframe_kin", {
-  df <- aniframe::example_aniframe()
+  df <- anicore::example_aniframe()
 
   # Should give an error when it is not an aniframe_kin class
   expect_error(ensure_is_aniframe_kin(df))

@@ -28,7 +28,7 @@ export(summarize_kinematics)
 export(summarize_tortuosity)
 export(unwrap_angle)
 export(wrap_angle)
-importFrom(aniframe,
+importFrom(anicore,
   as_aniframe,
   deg_to_rad,
   ensure_is_aniframe,

@@ -23,7 +23,7 @@ summarise_keypoints <- function(
   add_area = FALSE
 ) {
   # Validate input
-  aniframe::ensure_is_aniframe(data)
+  anicore::ensure_is_aniframe(data)
 
   # Resolve keypoint selection
   if (identical(keypoints, "all")) {
@@ -54,7 +54,7 @@ summarise_keypoints <- function(
   # Compute summary statistics
   # TODO: Add polygon computation and area calculation
   # TODO: Handle n_keypoints == 2 case differently if needed
-  md <- aniframe::get_metadata(data)
+  md <- anicore::get_metadata(data)
 
   data |>
     dplyr::bind_rows(
@@ -64,6 +64,6 @@ summarise_keypoints <- function(
         centroid_name = name
       )
     ) |>
-    aniframe::as_aniframe() |>
-    aniframe::set_metadata(metadata = md)
+    anicore::as_aniframe() |>
+    anicore::set_metadata(metadata = md)
 }

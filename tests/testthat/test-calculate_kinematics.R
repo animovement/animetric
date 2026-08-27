@@ -10,11 +10,11 @@ test_that("calculate_kinematics preserves Cartesian 2D coordinate system", {
     x = c(0, 1, 2, 3, 4, 5),
     y = c(0, 0, 0, 0, 0, 0)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics(data)
 
-  expect_true(aniframe::is_cartesian_2d(result))
+  expect_true(anicore::is_cartesian_2d(result))
   expect_true("speed" %in% names(result))
   expect_true("heading" %in% names(result))
 })
@@ -26,11 +26,11 @@ test_that("calculate_kinematics preserves Cartesian 3D coordinate system", {
     y = c(0, 0, 0, 0, 0, 0),
     z = c(0, 0, 0, 0, 0, 0)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics(data)
 
-  expect_true(aniframe::is_cartesian_3d(result))
+  expect_true(anicore::is_cartesian_3d(result))
   expect_true("speed" %in% names(result))
   expect_true("v_z" %in% names(result))
 })
@@ -42,12 +42,12 @@ test_that("calculate_kinematics converts polar to Cartesian and back", {
     x = c(1, 2, 3, 4, 5, 6),
     y = c(0, 0, 0, 0, 0, 0)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   data_polar <- anispace::map_to_polar(data_cartesian)
   result <- calculate_kinematics(data_polar)
 
-  expect_true(aniframe::is_polar(result))
+  expect_true(anicore::is_polar(result))
   expect_true("rho" %in% names(result))
   expect_true("phi" %in% names(result))
   expect_false("x" %in% names(result))
@@ -60,12 +60,12 @@ test_that("calculate_kinematics converts polar to Cartesian and back", {
 #     y = c(0, 0, 0, 0, 0, 0),
 #     z = c(0, 1, 2, 3, 4, 5)
 #   ) |>
-#     aniframe::as_aniframe()
+#     anicore::as_aniframe()
 
 #   data_cylindrical <- anispace::map_to_cylindrical(data_cartesian)
 #   result <- calculate_kinematics(data_cylindrical)
 
-#   expect_true(aniframe::is_cylindrical(result))
+#   expect_true(anicore::is_cylindrical(result))
 #   expect_true("rho" %in% names(result))
 #   expect_true("phi" %in% names(result))
 #   expect_true("z" %in% names(result))
@@ -78,12 +78,12 @@ test_that("calculate_kinematics converts spherical to Cartesian and back", {
     y = c(0, 0, 0, 0, 0, 0),
     z = c(0, 1, 2, 3, 4, 5)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   data_spherical <- anispace::map_to_spherical(data_cartesian)
   result <- calculate_kinematics(data_spherical)
 
-  expect_true(aniframe::is_spherical(result))
+  expect_true(anicore::is_spherical(result))
   expect_true("rho" %in% names(result))
   expect_true("phi" %in% names(result))
   expect_true("theta" %in% names(result))

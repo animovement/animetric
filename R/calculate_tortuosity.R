@@ -66,9 +66,9 @@ calculate_tortuosity <- function(data, window_width = 11L) {
   # Store original class for restoration
   original_class <- class(data)
 
-  result <- if (aniframe::is_cartesian_2d(data)) {
+  result <- if (anicore::is_cartesian_2d(data)) {
     calculate_tortuosity_2d(data, window_width = window_width)
-  } else if (aniframe::is_cartesian_3d(data)) {
+  } else if (anicore::is_cartesian_3d(data)) {
     calculate_tortuosity_3d(data, window_width = window_width)
   } else {
     cli::cli_abort("Data must be in Cartesian coordinates (2D or 3D).")
@@ -182,7 +182,7 @@ calculate_tortuosity_3d <- function(data, window_width = 11L) {
   dt_check()
 
   # Validate that it is an aniframe
-  aniframe::ensure_is_aniframe(data)
+  anicore::ensure_is_aniframe(data)
 
   window_width <- as.integer(window_width)
   if (window_width < 3L) {

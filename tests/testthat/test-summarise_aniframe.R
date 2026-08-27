@@ -31,7 +31,7 @@ mock_kin_2d <- function(n = 10, grouped = FALSE) {
     )
   }
 
-  aniframe::as_aniframe(data) |>
+  anicore::as_aniframe(data) |>
     calculate_kinematics()
 }
 
@@ -51,7 +51,7 @@ mock_kin_3d <- function(n = 10, grouped = FALSE) {
     )
   }
 
-  aniframe::as_aniframe(data) |>
+  anicore::as_aniframe(data) |>
     calculate_kinematics()
 }
 

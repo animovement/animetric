@@ -27,7 +27,7 @@ mock_kin_2d <- function(n = 10, grouped = FALSE) {
     )
   }
 
-  aniframe::as_aniframe(data) |>
+  anicore::as_aniframe(data) |>
     calculate_kinematics()
 }
 
@@ -47,7 +47,7 @@ mock_kin_3d <- function(n = 10, grouped = FALSE) {
     )
   }
 
-  aniframe::as_aniframe(data) |>
+  anicore::as_aniframe(data) |>
     calculate_kinematics()
 }
 
@@ -202,7 +202,7 @@ test_that("summarise_kinematics_2d uses circular statistics for heading", {
   # Create data with known heading values
   data <- mock_kin_2d()
   data$heading <- rep(c(-pi + 0.1, pi - 0.1), length.out = nrow(data))
-  data <- aniframe::as_aniframe(data)
+  data <- anicore::as_aniframe(data)
 
   result_median <- summarise_kinematics_2d(data, measures = "median_mad")
   result_mean <- summarise_kinematics_2d(data, measures = "mean_sd")

@@ -38,22 +38,22 @@
 #' kinematics_2d <- calculate_kinematics(traj_2d)
 #'
 #' # Polar data (automatically converted and converted back)
-#' traj_polar <- aniframe::map_to_polar(traj_2d)
+#' traj_polar <- anicore::map_to_polar(traj_2d)
 #' kinematics_polar <- calculate_kinematics(traj_polar)
 #' }
 calculate_kinematics <- function(data) {
-  aniframe::ensure_is_aniframe(data)
+  anicore::ensure_is_aniframe(data)
 
   # Convert to Cartesian if needed
-  original_system <- aniframe::get_metadata(data)$coordinate_system
-  if (!aniframe::is_cartesian(data)) {
+  original_system <- anicore::get_metadata(data)$coordinate_system
+  if (!anicore::is_cartesian(data)) {
     data <- anispace::map_to_cartesian(data)
   }
 
   # Calculate kinematics
-  if (aniframe::is_cartesian_2d(data)) {
+  if (anicore::is_cartesian_2d(data)) {
     data <- calculate_kinematics_2d(data)
-  } else if (aniframe::is_cartesian_3d(data)) {
+  } else if (anicore::is_cartesian_3d(data)) {
     data <- calculate_kinematics_3d(data)
   }
 

@@ -1,11 +1,11 @@
 # Alias required for help links in downstream packages
-#' @importFrom aniframe rad_to_deg
+#' @importFrom anicore rad_to_deg
 #' @export
-aniframe::rad_to_deg
+anicore::rad_to_deg
 
-#' @importFrom aniframe deg_to_rad
+#' @importFrom anicore deg_to_rad
 #' @export
-aniframe::deg_to_rad
+anicore::deg_to_rad
 
 #' @importFrom anispace wrap_angle
 #' @export
@@ -23,14 +23,14 @@ anispace::calculate_angular_difference
 #' @export
 anispace::diff_angle
 
-#' @importFrom aniframe is_aniframe
+#' @importFrom anicore is_aniframe
 #' @export
-aniframe::is_aniframe
+anicore::is_aniframe
 
-#' @importFrom aniframe ensure_is_aniframe
+#' @importFrom anicore ensure_is_aniframe
 #' @export
-aniframe::ensure_is_aniframe
+anicore::ensure_is_aniframe
 
-#' @importFrom aniframe as_aniframe
+#' @importFrom anicore as_aniframe
 #' @export
-aniframe::as_aniframe
+anicore::as_aniframe

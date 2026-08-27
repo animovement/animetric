@@ -173,12 +173,12 @@ test_that("summarise_keypoints preserves metadata", {
     as_aniframe()
 
   metadata <- list(sampling_rate = 30)
-  data <- aniframe::set_metadata(data, metadata = metadata)
+  data <- anicore::set_metadata(data, metadata = metadata)
 
   result <- summarise_keypoints(data)
 
   expect_equal(
-    aniframe::get_metadata(result)$sampling_rate,
+    anicore::get_metadata(result)$sampling_rate,
     metadata$sampling_rate
   )
 })

@@ -26,7 +26,7 @@ summarise_kinematics <- function(
   }
   measures <- match.arg(measures)
 
-  is_3d <- aniframe::is_cartesian_3d(data)
+  is_3d <- anicore::is_cartesian_3d(data)
 
   if (is_3d) {
     summarise_kinematics_3d(data, measures)
