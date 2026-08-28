@@ -1,6 +1,8 @@
-# animetric (development version)
+# animetric 0.5.0 (2026-08-28)
 
 ## Changed
+
+* The minimum `anicore` is 0.8.0, the first version published under that name — the dependency was renamed without a version constraint, so nothing recorded that a pre-rename `aniframe` will not do.
 
 * The core data structures come from `anicore`, which is what the `aniframe` package was renamed to in its 0.8.0 (animovement/anicore#84). The `aniframe` class keeps its name; only the package providing it changed.
 
@@ -62,7 +64,7 @@
 
   Regrouping itself is still allowed; `anicore` already warns that a frame's grouping and its declaration then disagree. This is narrower and firmer: these computations have a precondition, and the error says how to summarise more coarsely — summarise at the declared grouping first, then combine those results.
 
-* `compute_centroid()` carries the source frame's metadata into its result (#47). Sampling rate, units and the rest were dropped, so a centroid arrived claiming to know nothing about the recording it came from.
+* `compute_centroid()` carries the source frame's metadata into its result (#38, #47). Sampling rate, units and the rest were dropped, so a centroid arrived claiming to know nothing about the recording it came from.
 
 * A centroid no longer gains a `confidence` column on frames that do not track one (#47).
 
