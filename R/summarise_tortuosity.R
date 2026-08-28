@@ -19,6 +19,11 @@
 #' Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal's
 #' path. Journal of Theoretical Biology, 229(2), 209-220.
 #'
+#' @examples
+#' kin <- calculate_kinematics(
+#'   anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+#' )
+#' summarise_tortuosity(calculate_tortuosity(kin))
 #' @export
 #' @aliases summarize_tortuosity
 summarise_tortuosity <- function(data) {

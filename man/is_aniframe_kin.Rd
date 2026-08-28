@@ -15,3 +15,12 @@ Logical: TRUE if x inherits from aniframe
 \description{
 Check if object is an aniframe_kin
 }
+\examples{
+kin <- calculate_kinematics(
+  anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+)
+is_aniframe_kin(kin)
+
+# An aniframe without kinematics is not one
+is_aniframe_kin(anicore::example_aniframe(n_obs = 3))
+}

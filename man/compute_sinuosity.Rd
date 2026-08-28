@@ -23,3 +23,9 @@ Numeric vector of sinuosity values
 \description{
 Compute sinuosity index from precomputed vectors
 }
+\examples{
+compute_sinuosity(mean_step_length = 1.2, mean_cos_turning = 0.8)
+
+# The original formulation, for comparison with older work
+compute_sinuosity(1.2, 0.8, method = "original")
+}

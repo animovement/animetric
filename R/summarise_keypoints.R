@@ -14,6 +14,9 @@
 #'
 #' @return An aniframe with the original data plus the new summary keypoint.
 #'
+#' @examples
+#' af <- anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 3)
+#' summarise_keypoints(af)
 #' @export
 #' @aliases summarize_keypoints
 summarise_keypoints <- function(

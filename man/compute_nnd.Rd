@@ -48,6 +48,13 @@ For each focal point, finds the closest point belonging to the nth nearest
 individual (ranked by minimum distance). Called by \code{\link[=calculate_nnd]{calculate_nnd()}} for
 each time point.
 }
+\examples{
+compute_nnd(
+  x = c(0, 1, 2),
+  y = c(0, 1, 0),
+  individual = c("a", "b", "c")
+)
+}
 \seealso{
 \code{\link[=calculate_nnd]{calculate_nnd()}} for the user-facing aniframe function
 }

@@ -33,6 +33,15 @@ A summarised data frame with one row per group.
 Calculate summary statistics for aniframe data by dispatching to specialised
 summary functions.
 }
+\examples{
+kin <- calculate_kinematics(
+  anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+)
+summarise_aniframe(kin)
+
+# Tortuosity measures instead of kinematics
+summarise_aniframe(calculate_tortuosity(kin), type = "tortuosity")
+}
 \seealso{
 \code{\link[=summarise_kinematics]{summarise_kinematics()}}, \code{\link[=summarise_tortuosity]{summarise_tortuosity()}}
 }

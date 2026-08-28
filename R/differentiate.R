@@ -1,8 +1,8 @@
 #' Compute numerical derivatives on possibly uneven grids
 #'
-#' This helper implements a finite‑difference scheme based on the
+#' This helper implements a finite-difference scheme based on the
 #' **Fornberg formula** for interior points when the spacing between
-#' coordinates is non‑uniform. End points use first‑order forward/backward
+#' coordinates is non-uniform. End points use first-order forward/backward
 #' differences.
 #'
 #' @param values Numeric vector of function values.
@@ -10,7 +10,14 @@
 #'   Must be the same length as `values`.
 #' @return A numeric vector of the same length as `values` containing the
 #'   estimated first derivative at each point.
-#' @keywords internal
+#' @family kinematics
+#' @examples
+#' # The derivative of x^2 is 2x, which the interior points recover exactly
+#' compute_gradient(c(0, 1, 4, 9, 16))
+#'
+#' # The spacing between coordinates need not be even
+#' compute_gradient(c(0, 1, 4, 9), coords = c(0, 1, 3, 6))
+#' @export
 compute_gradient <- function(values, coords = NULL) {
   n <- length(values)
 
@@ -71,8 +78,8 @@ compute_gradient <- function(values, coords = NULL) {
 #' @return Numeric vector of the same length as `x` containing the
 #'   differentiated values.
 #' @details
-#'   The function computes the first‑order derivative using the
-#'   Fornberg‑based scheme implemented in `compute_gradient()`.  When
+#'   The function computes the first-order derivative using the
+#'   Fornberg-based scheme implemented in `compute_gradient()`.  When
 #'   `order > 1`, the gradient is applied iteratively to the result of the
 #'   previous iteration.
 #' @examples

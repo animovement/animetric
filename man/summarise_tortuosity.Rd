@@ -30,6 +30,12 @@ A summarised data frame with one row per group containing:
 \description{
 Calculate path length, displacement, and tortuosity metrics.
 }
+\examples{
+kin <- calculate_kinematics(
+  anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+)
+summarise_tortuosity(calculate_tortuosity(kin))
+}
 \references{
 Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal's
 path. Journal of Theoretical Biology, 229(2), 209-220.

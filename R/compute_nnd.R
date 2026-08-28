@@ -25,6 +25,12 @@
 #'
 #' @seealso [calculate_nnd()] for the user-facing aniframe function
 #'
+#' @examples
+#' compute_nnd(
+#'   x = c(0, 1, 2),
+#'   y = c(0, 1, 0),
+#'   individual = c("a", "b", "c")
+#' )
 #' @export
 compute_nnd <- function(
   x,
