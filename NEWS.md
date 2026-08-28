@@ -50,6 +50,18 @@
 
 ## Fixed
 
+* `calculate_kinematics()`, `calculate_tortuosity()` and `summarise_tortuosity()` refuse a frame whose grouping pools several trajectories, rather than answering wrongly (#54). Speed and path length come from successive rows within a group, so a group has to hold one position per moment. Regrouping an aniframe coarsely — every keypoint of an animal together, say — made the distance *between* keypoints count as movement:
+
+  ```r
+  # two keypoints 100 apart, each drifting 1 per frame
+  calculate_kinematics(af)                      # mean speed 1, correct
+  calculate_kinematics(regrouped_by_individual) # mean speed 2.7, silently
+  ```
+
+  Path length accumulates the same way, and `summarise_tortuosity()` takes its last value minus its first — across concatenated trajectories that is a number describing nothing, and it was inflating totals about threefold.
+
+  Regrouping itself is still allowed; `anicore` already warns that a frame's grouping and its declaration then disagree. This is narrower and firmer: these computations have a precondition, and the error says how to summarise more coarsely — summarise at the declared grouping first, then combine those results.
+
 * `compute_centroid()` carries the source frame's metadata into its result (#47). Sampling rate, units and the rest were dropped, so a centroid arrived claiming to know nothing about the recording it came from.
 
 * A centroid no longer gains a `confidence` column on frames that do not track one (#47).
