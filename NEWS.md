@@ -4,8 +4,6 @@
 
 * The core data structures come from `anicore`, which is what the `aniframe` package was renamed to in its 0.8.0 (animovement/anicore#84). The `aniframe` class keeps its name; only the package providing it changed.
 
-## Changed
-
 * The `calculate_kinematics()`, `calculate_nnd()` and `calculate_tortuosity()` examples run rather than sitting in `\dontrun{}`. Each builds its own frame with `anicore::example_aniframe()`; they were wrapped because they referred to an undefined `data`, so they had never been checked against the functions they document.
 
 ## Removed
