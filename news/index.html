@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">animetric</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,10 +50,11 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="animetric-development-version">animetric (development version)<a class="anchor" aria-label="anchor" href="#animetric-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.0" id="animetric-050-2026-08-28">animetric 0.5.0 (2026-08-28)<a class="anchor" aria-label="anchor" href="#animetric-050-2026-08-28"></a></h2>
 <div class="section level3">
-<h3 id="changed-development-version">Changed<a class="anchor" aria-label="anchor" href="#changed-development-version"></a></h3>
-<ul><li><p>The core data structures come from <code>anicore</code>, which is what the <code>aniframe</code> package was renamed to in its 0.8.0 (animovement/anicore#84). The <code>aniframe</code> class keeps its name; only the package providing it changed.</p></li>
+<h3 id="changed-0-5-0">Changed<a class="anchor" aria-label="anchor" href="#changed-0-5-0"></a></h3>
+<ul><li><p>The minimum <code>anicore</code> is 0.8.0, the first version published under that name — the dependency was renamed without a version constraint, so nothing recorded that a pre-rename <code>aniframe</code> will not do.</p></li>
+<li><p>The core data structures come from <code>anicore</code>, which is what the <code>aniframe</code> package was renamed to in its 0.8.0 (animovement/anicore#84). The <code>aniframe</code> class keeps its name; only the package providing it changed.</p></li>
 <li><p>The <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code>, <code><a href="../reference/calculate_nnd.html">calculate_nnd()</a></code> and <code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code> examples run rather than sitting in <code>\dontrun{}</code>. Each builds its own frame with <code><a href="https://animovement.dev/anicore/reference/example_aniframe.html" class="external-link">anicore::example_aniframe()</a></code>; they were wrapped because they referred to an undefined <code>data</code>, so they had never been checked against the functions they document.</p></li>
 <li>
 <p><code><a href="../reference/calculate_nnd.html">calculate_nnd()</a></code> reads the columns it needs from the aniframe’s metadata, and takes the identity roles explicitly (<a href="https://github.com/animovement/animetric/issues/37" class="external-link">#37</a>). It previously hard-coded <code>individual</code>, <code>c("session", "trial", "time")</code>, <code>keypoint</code> and <code>x</code>/<code>y</code>/<code>z</code>, consulting the metadata for none of them.</p>
@@ -87,7 +88,7 @@
 <li><p><code><a href="../reference/compute_centroid.html">compute_centroid()</a></code>’s <code>include_keypoints</code>, <code>exclude_keypoints</code> and <code>centroid_name</code> are renamed <code>include</code>, <code>exclude</code> and <code>name</code>, and it takes the same <code>across</code> (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>). <code>add_area</code> is gone from the summary function: it was never implemented, and area is a different shape of answer that will arrive as its own function rather than a flag.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="fixed-development-version">Fixed<a class="anchor" aria-label="anchor" href="#fixed-development-version"></a></h3>
+<h3 id="fixed-0-5-0">Fixed<a class="anchor" aria-label="anchor" href="#fixed-0-5-0"></a></h3>
 <ul><li>
 <p><code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code>, <code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code> and <code><a href="../reference/summarise_tortuosity.html">summarise_tortuosity()</a></code> refuse a frame whose grouping pools several trajectories, rather than answering wrongly (<a href="https://github.com/animovement/animetric/issues/54" class="external-link">#54</a>). Speed and path length come from successive rows within a group, so a group has to hold one position per moment. Regrouping an aniframe coarsely — every keypoint of an animal together, say — made the distance <em>between</em> keypoints count as movement:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -97,11 +98,11 @@
 <p>Path length accumulates the same way, and <code><a href="../reference/summarise_tortuosity.html">summarise_tortuosity()</a></code> takes its last value minus its first — across concatenated trajectories that is a number describing nothing, and it was inflating totals about threefold.</p>
 <p>Regrouping itself is still allowed; <code>anicore</code> already warns that a frame’s grouping and its declaration then disagree. This is narrower and firmer: these computations have a precondition, and the error says how to summarise more coarsely — summarise at the declared grouping first, then combine those results.</p>
 </li>
-<li><p><code><a href="../reference/compute_centroid.html">compute_centroid()</a></code> carries the source frame’s metadata into its result (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>). Sampling rate, units and the rest were dropped, so a centroid arrived claiming to know nothing about the recording it came from.</p></li>
+<li><p><code><a href="../reference/compute_centroid.html">compute_centroid()</a></code> carries the source frame’s metadata into its result (<a href="https://github.com/animovement/animetric/issues/38" class="external-link">#38</a>, <a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>). Sampling rate, units and the rest were dropped, so a centroid arrived claiming to know nothing about the recording it came from.</p></li>
 <li><p>A centroid no longer gains a <code>confidence</code> column on frames that do not track one (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>).</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="removed-development-version">Removed<a class="anchor" aria-label="anchor" href="#removed-development-version"></a></h3>
+<h3 id="removed-0-5-0">Removed<a class="anchor" aria-label="anchor" href="#removed-0-5-0"></a></h3>
 <ul><li>The re-exports of <code>as_aniframe()</code>, <code>is_aniframe()</code>, <code>ensure_is_aniframe()</code>, <code>deg_to_rad()</code>, <code>rad_to_deg()</code>, <code>wrap_angle()</code>, <code>unwrap_angle()</code>, <code>calculate_angular_difference()</code> and <code>diff_angle()</code>. <strong>Calls to these through <code>animetric::</code> need repointing at <code>anicore::</code> or <code>anispace::</code>.</strong> animetric still uses them internally — it just has no reason to publish another package’s interface as its own, which left the same function documented in two places and animetric’s exports growing whenever anicore’s did.</li>
 </ul></div>
 </div>

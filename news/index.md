@@ -1,8 +1,12 @@
 # Changelog
 
-## animetric (development version)
+## animetric 0.5.0 (2026-08-28)
 
 ### Changed
+
+- The minimum `anicore` is 0.8.0, the first version published under that
+  name — the dependency was renamed without a version constraint, so
+  nothing recorded that a pre-rename `aniframe` will not do.
 
 - The core data structures come from `anicore`, which is what the
   `aniframe` package was renamed to in its 0.8.0
@@ -148,7 +152,8 @@
 
 - [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
   carries the source frame’s metadata into its result
-  ([\#47](https://github.com/animovement/animetric/issues/47)). Sampling
+  ([\#38](https://github.com/animovement/animetric/issues/38),
+  [\#47](https://github.com/animovement/animetric/issues/47)). Sampling
   rate, units and the rest were dropped, so a centroid arrived claiming
   to know nothing about the recording it came from.
 
