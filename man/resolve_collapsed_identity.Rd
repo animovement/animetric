@@ -16,10 +16,10 @@ Character vector naming the columns to collapse.
 }
 \description{
 Which levels are summarised is the caller's to choose, and there is no
-guessing it: \code{variables_what} is documented as coarse to fine, but nothing
-enforces that and orthogonal attributes do not nest at all
-(animovement/anicore#140, animovement/anicore#141). A frame declaring more
-than one identity variable has to be told.
+guessing it: the order of \code{variables_what} is what detection emits rather
+than a hierarchy a frame asserts, and identity variables need not nest at
+all (animovement/anicore#141). A frame declaring more than one identity
+variable has to be told.
 }
 \details{
 A frame declaring exactly one has nothing to be ambiguous about.

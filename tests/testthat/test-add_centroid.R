@@ -214,32 +214,6 @@ test_that("the summary name cannot already be taken", {
     "already a value"
   )
 })
-
-
-# The old name ----
-
-test_that("summarise_keypoints() still works, deprecated", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
-
-  expect_warning(out <- summarise_keypoints(af), "deprecated")
-  expect_equal(out, add_centroid(af, across = "keypoint"))
-})
-
-test_that("its keypoints argument maps onto include", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
-  members <- levels(af$keypoint)
-
-  expect_warning(
-    out <- summarise_keypoints(af, keypoints = members[1:2]),
-    "deprecated"
-  )
-  expect_equal(
-    out,
-    add_centroid(af, across = "keypoint", include = members[1:2])
-  )
-})
-
-
 # The guards on their own ----
 
 test_that("compute_centroid() refuses include across several levels", {
@@ -263,17 +237,5 @@ test_that("across has to be column names", {
   expect_error(
     add_centroid(af, across = character(0)),
     "must name at least one column"
-  )
-})
-
-test_that("the deprecated name needs an identity to collapse", {
-  af <- suppressWarnings(anicore::as_aniframe(
-    data.frame(time = 1:3, x = 1:3, y = 1:3),
-    variables_what = character(0)
-  ))
-
-  expect_error(
-    suppressWarnings(summarise_keypoints)(af),
-    "declares no identity variables"
   )
 })

@@ -50,8 +50,8 @@ test_that("compute_centroid() collapses only the level it is given", {
   expect_setequal(out$x, c(5, 105))
 })
 
-test_that("summarise_keypoints() selects on the declared identity", {
-  out <- summarise_keypoints(custom_af(), name = "mid")
+test_that("add_centroid() selects on the declared identity", {
+  out <- add_centroid(custom_af(), across = "bodypart", name = "mid")
 
   expect_true("mid" %in% as.character(out$bodypart))
   expect_equal(nrow(out), 9)

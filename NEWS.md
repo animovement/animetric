@@ -30,7 +30,7 @@
 
 * `compute_nnd()` takes `across`, `is_focal`, `is_candidate` and `labels` in place of `individual`, `keypoint` and `keypoint_neighbour`, mirroring the generalisation above. Its result names the ranked column (`nnd_across`) which `calculate_nnd()` renames.
 
-* `summarise_keypoints()` is renamed `add_centroid()`, and takes `across` to choose the level it collapses (#47). The old name said `summarise_`, which in this package means collapsing a frame to summary rows — this appends them. It also named the keypoint level, which is only one of the levels a frame can be summarised across.
+* `summarise_keypoints()` is renamed `add_centroid()`, and takes `across` to choose the level it collapses (#47). **The old name is gone rather than deprecated** — it has not been in a release, so nothing can be depending on it. The old name said `summarise_`, which in this package means collapsing a frame to summary rows — this appends them. It also named the keypoint level, which is only one of the levels a frame can be summarised across.
 
   `across` names the identity variables to collapse, so the same question can be asked at any scale. On pose data for a team:
 
@@ -45,8 +45,6 @@
   A collapsed level that did not actually vary keeps its value rather than taking the summary's name — an individual's strain is still its strain, since nothing was averaged over it.
 
   Only identity variables can be collapsed. Collapsing the index or a temporal variable averages over time, which is what the `summarise_*()` family does.
-
-  `summarise_keypoints()` still works, with a deprecation warning, and keeps its old behaviour of collapsing the finest identity.
 
 * `compute_centroid()`'s `include_keypoints`, `exclude_keypoints` and `centroid_name` are renamed `include`, `exclude` and `name`, and it takes the same `across` (#47). `add_area` is gone from the summary function: it was never implemented, and area is a different shape of answer that will arrive as its own function rather than a flag.
 
