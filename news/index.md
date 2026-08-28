@@ -1,5 +1,7 @@
 # Changelog
 
+## animetric (development version)
+
 ## animetric 0.5.0 (2026-08-28)
 
 ### Changed
