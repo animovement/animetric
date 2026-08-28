@@ -2,9 +2,11 @@
 
 ## Changed
 
-* `wrap_angle()` and `unwrap_angle()` are re-exported from `anicore` rather than `anispace`, following their move (animovement/aniframe#128). The re-exports themselves are unchanged.
-
 * The core data structures come from `anicore`, which is what the `aniframe` package was renamed to in its 0.8.0 (animovement/anicore#84). The `aniframe` class keeps its name; only the package providing it changed.
+
+## Removed
+
+* The re-exports of `as_aniframe()`, `is_aniframe()`, `ensure_is_aniframe()`, `deg_to_rad()`, `rad_to_deg()`, `wrap_angle()`, `unwrap_angle()`, `calculate_angular_difference()` and `diff_angle()`. **Calls to these through `animetric::` need repointing at `anicore::` or `anispace::`.** animetric still uses them internally — it just has no reason to publish another package's interface as its own, which left the same function documented in two places and animetric's exports growing whenever anicore's did.
 
 # animetric 0.4.0 (2026-08-18)
 

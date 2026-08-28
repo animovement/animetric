@@ -34,11 +34,11 @@
 #' \dontrun{
 #' # 2D Cartesian data
 #' traj_2d <- data.frame(time = 0:10, x = rnorm(11), y = rnorm(11)) |>
-#'   as_aniframe()
+#'   anicore::as_aniframe()
 #' kinematics_2d <- calculate_kinematics(traj_2d)
 #'
 #' # Polar data (automatically converted and converted back)
-#' traj_polar <- anicore::map_to_polar(traj_2d)
+#' traj_polar <- anispace::map_to_polar(traj_2d)
 #' kinematics_polar <- calculate_kinematics(traj_polar)
 #' }
 calculate_kinematics <- function(data) {
@@ -71,7 +71,7 @@ calculate_kinematics <- function(data) {
 
 #' @keywords internal
 calculate_kinematics_2d <- function(data) {
-  ensure_is_aniframe(data)
+  anicore::ensure_is_aniframe(data)
   data <- calculate_translation_2d(data)
   data <- calculate_rotation_2d(data)
   new_aniframe_kin(data)
@@ -79,7 +79,7 @@ calculate_kinematics_2d <- function(data) {
 
 #' @keywords internal
 calculate_kinematics_3d <- function(data) {
-  ensure_is_aniframe(data)
+  anicore::ensure_is_aniframe(data)
   data <- calculate_translation_3d(data) # TODO: Add 3D rotation summary
   new_aniframe_kin(data)
 }
@@ -147,7 +147,7 @@ calculate_rotation_2d <- function(data) {
     dplyr::mutate(
       heading = atan2(.data$v_y, .data$v_x),
       heading = dplyr::if_else(.data$heading == pi, 0, .data$heading),
-      heading_unwrapped = unwrap_angle(.data$heading),
+      heading_unwrapped = anicore::unwrap_angle(.data$heading),
       angular_path_length = cumsum_na(abs(diff(c(
         0,
         .data$heading_unwrapped
@@ -184,10 +184,10 @@ calculate_rotation_3d <- function(data) {
   #     # Azimuth: angle in xy-plane (like heading in 2D)
   #     azimuth = atan2(.data$v_y, .data$v_x),
   #     azimuth = dplyr::if_else(.data$azimuth == pi, 0, .data$azimuth),
-  #     azimuth_unwrapped = unwrap_angle(.data$azimuth),
+  #     azimuth_unwrapped = anicore::unwrap_angle(.data$azimuth),
   #     # Elevation: angle from xy-plane
   #     elevation = atan2(.data$v_z, sqrt(.data$v_x^2 + .data$v_y^2)),
-  #     elevation_unwrapped = unwrap_angle(.data$elevation),
+  #     elevation_unwrapped = anicore::unwrap_angle(.data$elevation),
   #     # Angular velocities for each axis
   #     angular_velocity_azimuth = differentiate(
   #       .data$azimuth_unwrapped,

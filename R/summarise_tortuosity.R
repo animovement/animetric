@@ -63,7 +63,10 @@ summarise_tortuosity_2d <- function(data) {
       .last_x = dplyr::last(.data$x, na_rm = TRUE),
       .last_y = dplyr::last(.data$y, na_rm = TRUE),
 
-      .mean_cos_turning = mean(cos(diff_angle(.data$heading)), na.rm = TRUE),
+      .mean_cos_turning = mean(
+        cos(anispace::diff_angle(.data$heading)),
+        na.rm = TRUE
+      ),
       .n_steps = sum(!is.na(.data$path_length)) - 1L,
 
       .groups = "drop"

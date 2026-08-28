@@ -41,11 +41,11 @@ discontinuities at ±π.
 \dontrun{
 # 2D Cartesian data
 traj_2d <- data.frame(time = 0:10, x = rnorm(11), y = rnorm(11)) |>
-  as_aniframe()
+  anicore::as_aniframe()
 kinematics_2d <- calculate_kinematics(traj_2d)
 
 # Polar data (automatically converted and converted back)
-traj_polar <- anicore::map_to_polar(traj_2d)
+traj_polar <- anispace::map_to_polar(traj_2d)
 kinematics_polar <- calculate_kinematics(traj_polar)
 }
 }

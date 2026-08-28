@@ -18,7 +18,7 @@ test_that("summarise_keypoints adds centroid to data", {
     y = c(0, 2, 1, 3),
     confidence = rep(0.9, 4)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   result <- summarise_keypoints(data)
 
@@ -36,7 +36,7 @@ test_that("summarise_keypoints uses all keypoints by default", {
     y = c(0, 3, 6),
     confidence = rep(0.9, 3)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   result <- summarise_keypoints(data)
 
@@ -55,7 +55,7 @@ test_that("summarise_keypoints works with specific keypoints", {
     y = c(0, 2, 6),
     confidence = rep(0.9, 3)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   result <- summarise_keypoints(data, keypoints = c("point1", "point2"))
 
@@ -74,7 +74,7 @@ test_that("summarise_keypoints uses custom summary name", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   result <- summarise_keypoints(data, name = "center")
 
@@ -90,7 +90,7 @@ test_that("summarise_keypoints errors on name conflict", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   expect_error(
     summarise_keypoints(data, name = "point1"),
@@ -106,7 +106,7 @@ test_that("summarise_keypoints errors with less than 2 keypoints", {
     y = 1,
     confidence = 0.9
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   expect_error(
     summarise_keypoints(data),
@@ -122,7 +122,7 @@ test_that("summarise_keypoints errors with single specified keypoint", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   expect_error(
     summarise_keypoints(data, keypoints = "point1"),
@@ -138,7 +138,7 @@ test_that("summarise_keypoints works with exactly 2 keypoints", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   result <- summarise_keypoints(data)
 
@@ -154,7 +154,7 @@ test_that("summarise_keypoints works with more than 2 keypoints", {
     y = c(0, 2, 4, 6),
     confidence = rep(0.9, 4)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   result <- summarise_keypoints(data)
 
@@ -170,7 +170,7 @@ test_that("summarise_keypoints preserves metadata", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   metadata <- list(sampling_rate = 30)
   data <- anicore::set_metadata(data, metadata = metadata)
@@ -202,7 +202,7 @@ test_that("summarise_keypoints preserves original data", {
     y = c(0, 2, 4),
     confidence = rep(0.9, 3)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   result <- summarise_keypoints(data)
 
@@ -221,7 +221,7 @@ test_that("summarise_keypoints works across multiple time points", {
     y = 1:6,
     confidence = rep(0.9, 6)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   result <- summarise_keypoints(data)
 

@@ -114,7 +114,7 @@ circ_mad <- function(x, na_rm = TRUE) {
   center <- circ_median(x)
 
   # Calculate absolute angular deviations from the median
-  deviations <- abs(calculate_angular_difference(center, x))
+  deviations <- abs(anispace::calculate_angular_difference(center, x))
 
   # Return the median of these deviations
   stats::median(deviations)

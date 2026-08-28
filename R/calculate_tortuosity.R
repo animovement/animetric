@@ -85,7 +85,7 @@ calculate_tortuosity_2d <- function(data, window_width = 11L) {
   dt_check()
 
   # Validate that it is an aniframe
-  ensure_is_aniframe(data)
+  anicore::ensure_is_aniframe(data)
 
   # Validate window_width
   window_width <- as.integer(window_width)
@@ -114,7 +114,7 @@ calculate_tortuosity_2d <- function(data, window_width = 11L) {
       ),
 
       # Turning angle from heading (already computed from velocity vector)
-      .turning = diff_angle(.data$heading),
+      .turning = anispace::diff_angle(.data$heading),
       .cos_turning = cos(.data$.turning),
 
       # Rolling sums using data.table (fast algorithm, centered window)
