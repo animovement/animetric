@@ -40,6 +40,7 @@
 #' traj_polar <- anispace::map_to_polar(traj_2d)
 #' kinematics_polar <- calculate_kinematics(traj_polar)
 calculate_kinematics <- function(data) {
+  ensure_trajectory_grouping(data)
   anicore::ensure_is_aniframe(data)
 
   # Convert to Cartesian if needed

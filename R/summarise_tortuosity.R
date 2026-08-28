@@ -28,6 +28,7 @@
 #' @aliases summarize_tortuosity
 summarise_tortuosity <- function(data) {
   is_3d <- anicore::is_cartesian_3d(data)
+  ensure_trajectory_grouping(data)
 
   if (!is_aniframe_kin(data)) {
     data <- data |>

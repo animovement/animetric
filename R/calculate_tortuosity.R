@@ -63,6 +63,7 @@
 #'   calculate_kinematics() |>
 #'   calculate_tortuosity(window_width = 11)
 calculate_tortuosity <- function(data, window_width = 11L) {
+  ensure_trajectory_grouping(data)
   # Store original class for restoration
   original_class <- class(data)
 
