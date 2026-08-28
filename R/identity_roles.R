@@ -1,15 +1,23 @@
 # Reading identity from the metadata rather than assuming `keypoint` (#47)
 #
-# `variables_what` is ordered coarse to fine -- model, individual, subject,
-# track, keypoint -- so the last entry is the finest level, and the one a
-# summary collapses across. A frame may declare identity any other way and
-# still be a valid aniframe, so the column has to be looked up rather than
-# named.
+# A frame may declare identity under any names and still be a valid
+# aniframe, so the columns have to be looked up rather than named. Which of
+# them a summary collapses is the caller's to say: `variables_what` order is
+# what detection emits, not a hierarchy a frame asserts, and identity
+# variables need not nest at all (animovement/anicore#141).
 
-#' The finest identity variable a frame declares
+#' The last identity variable a frame declares
 #'
-#' The level a keypoint-style summary collapses across. `variables_what`
-#' runs coarse to fine, so it is the last entry.
+#' Kept for [summarise_keypoints()], which collapsed this level before
+#' [add_centroid()] made the choice explicit, and which keeps doing so
+#' rather than making previously-working code error.
+#'
+#' It is **not** a general way to find "the finest level". Detection emits
+#' `variables_what` coarsest first, so the last entry is the finest for the
+#' names it recognises — but that is a property of how the vector was built,
+#' not something a frame asserts, and identity variables need not nest at
+#' all (animovement/anicore#141). Anything else should take the level from
+#' its caller, as [add_centroid()] does with `across`.
 #'
 #' @param data An aniframe.
 #'
@@ -52,10 +60,10 @@ retained_grouping <- function(data, collapsed) {
 #' The identity variables a summary collapses
 #'
 #' Which levels are summarised is the caller's to choose, and there is no
-#' guessing it: `variables_what` is documented as coarse to fine, but nothing
-#' enforces that and orthogonal attributes do not nest at all
-#' (animovement/anicore#140, animovement/anicore#141). A frame declaring more
-#' than one identity variable has to be told.
+#' guessing it: the order of `variables_what` is what detection emits rather
+#' than a hierarchy a frame asserts, and identity variables need not nest at
+#' all (animovement/anicore#141). A frame declaring more than one identity
+#' variable has to be told.
 #'
 #' A frame declaring exactly one has nothing to be ambiguous about.
 #'

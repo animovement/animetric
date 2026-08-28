@@ -2,7 +2,7 @@
 % Please edit documentation in R/identity_roles.R
 \name{finest_identity}
 \alias{finest_identity}
-\title{The finest identity variable a frame declares}
+\title{The last identity variable a frame declares}
 \usage{
 finest_identity(data, call = rlang::caller_env())
 }
@@ -13,7 +13,16 @@ finest_identity(data, call = rlang::caller_env())
 Length-one character vector naming the column.
 }
 \description{
-The level a keypoint-style summary collapses across. \code{variables_what}
-runs coarse to fine, so it is the last entry.
+Kept for \code{\link[=summarise_keypoints]{summarise_keypoints()}}, which collapsed this level before
+\code{\link[=add_centroid]{add_centroid()}} made the choice explicit, and which keeps doing so
+rather than making previously-working code error.
+}
+\details{
+It is \strong{not} a general way to find "the finest level". Detection emits
+\code{variables_what} coarsest first, so the last entry is the finest for the
+names it recognises — but that is a property of how the vector was built,
+not something a frame asserts, and identity variables need not nest at
+all (animovement/anicore#141). Anything else should take the level from
+its caller, as \code{\link[=add_centroid]{add_centroid()}} does with \code{across}.
 }
 \keyword{internal}
