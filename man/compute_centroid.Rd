@@ -2,42 +2,56 @@
 % Please edit documentation in R/compute_centroid.R
 \name{compute_centroid}
 \alias{compute_centroid}
-\title{Compute centroid from keypoints}
+\title{Compute the centroid of an identity level}
 \usage{
 compute_centroid(
   data,
-  include_keypoints = NULL,
-  exclude_keypoints = NULL,
-  centroid_name = "centroid"
+  across = NULL,
+  include = NULL,
+  exclude = NULL,
+  name = "centroid"
 )
 }
 \arguments{
-\item{data}{An aniframe with Cartesian coordinates (x, y, and/or z columns).}
+\item{data}{An aniframe with Cartesian coordinates.}
 
-\item{include_keypoints}{Character vector of keypoints to include in centroid
-calculation. If NULL (default), all keypoints are used unless
-\code{exclude_keypoints} is specified. Mutually exclusive with \code{exclude_keypoints}.}
+\item{across}{Identity variables to collapse — the dimensions the summary
+ranges over. Defaults to the finest one the frame declares, which is the
+keypoint-style summary. Collapsing every level gives a single point per
+position.}
 
-\item{exclude_keypoints}{Character vector of keypoints to exclude from centroid
-calculation. If NULL (default), no keypoints are excluded. Mutually exclusive
-with \code{include_keypoints}.}
+\item{include, exclude}{Values of the collapsed level to keep or leave out.
+Only meaningful when one level is collapsed.}
 
-\item{centroid_name}{Name for the new centroid keypoint. Default is "centroid".}
+\item{name}{Name for the summary member. Default is \code{"centroid"}.}
 }
 \value{
-An aniframe containing only the centroid keypoint. Coordinate values
-are the mean of selected keypoints (with NA values removed). Confidence is
-set to NA. Missing coordinate dimensions return NA.
+An aniframe containing only the summary member. Coordinate values
+are the mean of the members included, with \code{NA}s removed. Confidence is
+\code{NA}. Missing coordinate dimensions return \code{NA}.
 }
 \description{
-Calculates the mean position of selected keypoints at each time point.
-The centroid is computed for each combination of grouping variables
-(individual, time, trial/session if present).
+The mean position of the members of one identity variable, at each position
+of every other. Which variable is collapsed is the caller's choice: the
+keypoints of an animal, the animals of a team, or any other level the frame
+declares.
 }
 \examples{
-af <- aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 3)
-compute_centroid(af)
+af <- anicore::example_aniframe(n_obs = 20, n_individuals = 2, n_keypoints = 3)
 
-# A centroid from a subset of keypoints
-compute_centroid(af, include_keypoints = c("head", "neck"))
+# The centroid of each animal's keypoints
+compute_centroid(af, across = "keypoint")
+
+# From a subset of them
+compute_centroid(af, across = "keypoint", include = c("head", "neck"))
+
+# The centroid of the animals themselves, one per keypoint
+compute_centroid(af, across = "individual")
+
+# One point for the whole group, per position
+compute_centroid(af, across = c("individual", "keypoint"))
+
+}
+\seealso{
+\code{\link[=add_centroid]{add_centroid()}}, which appends the result to the frame.
 }

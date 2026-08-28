@@ -1,4 +1,4 @@
-# Tests for summarise_keypoints()
+# Tests for suppressWarnings(summarise_keypoints)()
 # - Basic functionality adds centroid
 # - Uses all keypoints by default
 # - Works with specific keypoints
@@ -18,9 +18,9 @@ test_that("summarise_keypoints adds centroid to data", {
     y = c(0, 2, 1, 3),
     confidence = rep(0.9, 4)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   expect_s3_class(result, "aniframe")
   expect_equal(nrow(result), 6)
@@ -36,9 +36,9 @@ test_that("summarise_keypoints uses all keypoints by default", {
     y = c(0, 3, 6),
     confidence = rep(0.9, 3)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   centroid <- result |>
     dplyr::filter(keypoint == "centroid")
@@ -55,9 +55,12 @@ test_that("summarise_keypoints works with specific keypoints", {
     y = c(0, 2, 6),
     confidence = rep(0.9, 3)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
-  result <- summarise_keypoints(data, keypoints = c("point1", "point2"))
+  result <- suppressWarnings(summarise_keypoints)(
+    data,
+    keypoints = c("point1", "point2")
+  )
 
   centroid <- result |>
     dplyr::filter(keypoint == "centroid")
@@ -74,9 +77,9 @@ test_that("summarise_keypoints uses custom summary name", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
-  result <- summarise_keypoints(data, name = "center")
+  result <- suppressWarnings(summarise_keypoints)(data, name = "center")
 
   expect_true("center" %in% result$keypoint)
   expect_false("centroid" %in% result$keypoint)
@@ -90,11 +93,11 @@ test_that("summarise_keypoints errors on name conflict", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   expect_error(
-    summarise_keypoints(data, name = "point1"),
-    "conflicts with existing keypoint"
+    suppressWarnings(summarise_keypoints)(data, name = "point1"),
+    "already a value"
   )
 })
 
@@ -106,11 +109,11 @@ test_that("summarise_keypoints errors with less than 2 keypoints", {
     y = 1,
     confidence = 0.9
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   expect_error(
-    summarise_keypoints(data),
-    "At least 2 keypoints required"
+    suppressWarnings(summarise_keypoints)(data),
+    "at least 2 members"
   )
 })
 
@@ -122,11 +125,11 @@ test_that("summarise_keypoints errors with single specified keypoint", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   expect_error(
-    summarise_keypoints(data, keypoints = "point1"),
-    "At least 2 keypoints required"
+    suppressWarnings(summarise_keypoints)(data, keypoints = "point1"),
+    "at least 2 members"
   )
 })
 
@@ -138,9 +141,9 @@ test_that("summarise_keypoints works with exactly 2 keypoints", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   expect_equal(nrow(result), 3)
   expect_true("centroid" %in% result$keypoint)
@@ -154,9 +157,9 @@ test_that("summarise_keypoints works with more than 2 keypoints", {
     y = c(0, 2, 4, 6),
     confidence = rep(0.9, 4)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   expect_equal(nrow(result), 5)
   expect_true("centroid" %in% result$keypoint)
@@ -170,15 +173,15 @@ test_that("summarise_keypoints preserves metadata", {
     y = c(0, 2),
     confidence = c(0.9, 0.9)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
   metadata <- list(sampling_rate = 30)
-  data <- aniframe::set_metadata(data, metadata = metadata)
+  data <- anicore::set_metadata(data, metadata = metadata)
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   expect_equal(
-    aniframe::get_metadata(result)$sampling_rate,
+    anicore::get_metadata(result)$sampling_rate,
     metadata$sampling_rate
   )
 })
@@ -191,7 +194,7 @@ test_that("summarise_keypoints errors on non-aniframe input", {
     y = c(0, 2)
   )
 
-  expect_error(summarise_keypoints(data))
+  expect_error(suppressWarnings(summarise_keypoints)(data))
 })
 
 test_that("summarise_keypoints preserves original data", {
@@ -202,9 +205,9 @@ test_that("summarise_keypoints preserves original data", {
     y = c(0, 2, 4),
     confidence = rep(0.9, 3)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   original_rows <- result |>
     dplyr::filter(keypoint != "centroid")
@@ -221,9 +224,9 @@ test_that("summarise_keypoints works across multiple time points", {
     y = 1:6,
     confidence = rep(0.9, 6)
   ) |>
-    as_aniframe()
+    anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   centroids <- result |>
     dplyr::filter(keypoint == "centroid")

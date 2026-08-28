@@ -53,7 +53,7 @@ circ_median <- function(x, na_rm = TRUE) {
 
   # Use the circular implementation
   y <- x |>
-    anispace::wrap_angle() |>
+    anicore::wrap_angle() |>
     circular::circular() |>
     circular::median.circular()
 
@@ -114,7 +114,7 @@ circ_mad <- function(x, na_rm = TRUE) {
   center <- circ_median(x)
 
   # Calculate absolute angular deviations from the median
-  deviations <- abs(calculate_angular_difference(center, x))
+  deviations <- abs(anispace::calculate_angular_difference(center, x))
 
   # Return the median of these deviations
   stats::median(deviations)

@@ -12,7 +12,7 @@ test_that("calculate_kinematics_3d adds all expected columns", {
     y = c(0, 0, 0, 0, 0, 0),
     z = c(0, 0, 0, 0, 0, 0)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_3d(data)
 
@@ -38,7 +38,7 @@ test_that("3D velocity components match differentiate()", {
     y = sin(seq(0, 2, by = 0.1)),
     z = seq(0, 2, by = 0.1) * 2
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_3d(data)
 
@@ -59,7 +59,7 @@ test_that("3D acceleration components match differentiate()", {
     y = sin(seq(0, 2, by = 0.1)),
     z = seq(0, 2, by = 0.1) * 3
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_3d(data)
 
@@ -80,7 +80,7 @@ test_that("3D speed is calculated correctly from velocity components", {
     y = (0:10) * 3, # v_y = 3
     z = (0:10) * 6 # v_z = 6
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_3d(data)
 
@@ -97,7 +97,7 @@ test_that("3D acceleration matches differentiate of speed", {
     y = seq(0, 2, by = 0.1),
     z = seq(0, 2, by = 0.1)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_3d(data)
 
@@ -115,7 +115,7 @@ test_that("3D path_length accumulates distance correctly", {
     y = c(0, 0, 4, 4),
     z = c(0, 0, 0, 5)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_3d(data)
 
@@ -135,7 +135,7 @@ test_that("stationary 3D object has zero kinematics", {
     y = rep(3, 6),
     z = rep(2, 6)
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_3d(data)
 
@@ -151,7 +151,7 @@ test_that("constant 3D velocity has zero acceleration", {
     y = (0:10) * 3,
     z = (0:10) * 4
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_3d(data)
 
@@ -168,7 +168,7 @@ test_that("helical motion produces expected velocity structure", {
     y = sin(t),
     z = t
   ) |>
-    aniframe::as_aniframe()
+    anicore::as_aniframe()
 
   result <- calculate_kinematics_3d(data)
 

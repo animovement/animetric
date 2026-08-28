@@ -16,7 +16,7 @@
 #'
 #' @examples
 #' kin <- calculate_kinematics(
-#'   aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+#'   anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 #' )
 #' summarise_kinematics(kin)
 #'
@@ -34,7 +34,7 @@ summarise_kinematics <- function(
   }
   measures <- match.arg(measures)
 
-  is_3d <- aniframe::is_cartesian_3d(data)
+  is_3d <- anicore::is_cartesian_3d(data)
 
   if (is_3d) {
     summarise_kinematics_3d(data, measures)

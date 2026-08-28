@@ -41,7 +41,7 @@ kinematics.
 }
 \examples{
 kin <- calculate_kinematics(
-  aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+  anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 )
 summarise_kinematics(kin)
 
