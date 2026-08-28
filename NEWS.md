@@ -1,5 +1,9 @@
 # animetric 0.4.0 (2026-08-18)
 
+## Changed
+
+* `wrap_angle()` and `unwrap_angle()` are re-exported from `anicore` rather than `anispace`, following their move (animovement/aniframe#128). The re-exports themselves are unchanged.
+
 ## Breaking changes
 
 * Removed the `aniframe_kin2d` and `aniframe_kin3d` classes. `calculate_kinematics()` set them, but nothing ever read them — no predicate, no method, no test in any package — and the dimensionality they encoded already lives in the `coordinate_system` metadata field. Kinematics output still carries `aniframe_kin`, which is what the `summarise_*()` functions dispatch on.

@@ -53,7 +53,7 @@ circ_median <- function(x, na_rm = TRUE) {
 
   # Use the circular implementation
   y <- x |>
-    anispace::wrap_angle() |>
+    anicore::wrap_angle() |>
     circular::circular() |>
     circular::median.circular()
 

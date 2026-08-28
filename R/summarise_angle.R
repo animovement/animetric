@@ -10,13 +10,13 @@
 #' mean_angle(c(0, pi))
 #' @export
 mean_angle <- function(ang) {
-  ang_mod <- anispace::wrap_angle(ang)
+  ang_mod <- anicore::wrap_angle(ang)
 
   x_bar <- mean(cos(ang_mod))
   y_bar <- mean(sin(ang_mod))
 
   mu_raw <- atan2(y_bar, x_bar)
-  anispace::wrap_angle(mu_raw)
+  anicore::wrap_angle(mu_raw)
 }
 
 
@@ -32,11 +32,11 @@ mean_angle <- function(ang) {
 #' median_angle(c(0, pi))
 #' @export
 median_angle <- function(ang) {
-  ang_mod <- anispace::wrap_angle(ang)
+  ang_mod <- anicore::wrap_angle(ang)
 
   x_bar <- stats::median(cos(ang_mod))
   y_bar <- stats::median(sin(ang_mod))
 
   mu_raw <- atan2(y_bar, x_bar)
-  anispace::wrap_angle(mu_raw)
+  anicore::wrap_angle(mu_raw)
 }

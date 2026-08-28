@@ -7,13 +7,13 @@ anicore::rad_to_deg
 #' @export
 anicore::deg_to_rad
 
-#' @importFrom anispace wrap_angle
+#' @importFrom anicore wrap_angle
 #' @export
-anispace::wrap_angle
+anicore::wrap_angle
 
-#' @importFrom anispace unwrap_angle
+#' @importFrom anicore unwrap_angle
 #' @export
-anispace::unwrap_angle
+anicore::unwrap_angle
 
 #' @importFrom anispace calculate_angular_difference
 #' @export

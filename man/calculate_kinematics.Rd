@@ -45,7 +45,7 @@ traj_2d <- data.frame(time = 0:10, x = rnorm(11), y = rnorm(11)) |>
 kinematics_2d <- calculate_kinematics(traj_2d)
 
 # Polar data (automatically converted and converted back)
-traj_polar <- aniframe::map_to_polar(traj_2d)
+traj_polar <- anicore::map_to_polar(traj_2d)
 kinematics_polar <- calculate_kinematics(traj_polar)
 }
 }

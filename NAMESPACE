@@ -33,13 +33,13 @@ importFrom(anicore,
   deg_to_rad,
   ensure_is_aniframe,
   is_aniframe,
-  rad_to_deg
+  rad_to_deg,
+  unwrap_angle,
+  wrap_angle
 )
 importFrom(anispace,
   calculate_angular_difference,
-  diff_angle,
-  unwrap_angle,
-  wrap_angle
+  diff_angle
 )
 importFrom(rlang,
   ":=",
