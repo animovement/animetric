@@ -22,12 +22,12 @@ Logical: TRUE if x inherits from aniframe
 
 ``` r
 kin <- calculate_kinematics(
-  aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+  anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 )
 is_aniframe_kin(kin)
 #> [1] TRUE
 
 # An aniframe without kinematics is not one
-is_aniframe_kin(aniframe::example_aniframe(n_obs = 3))
+is_aniframe_kin(anicore::example_aniframe(n_obs = 3))
 #> [1] FALSE
 ```

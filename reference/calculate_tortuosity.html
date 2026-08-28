@@ -9,7 +9,7 @@ sliding windows, returning a value at each timepoint."><meta property="og:image"
 
     <a class="navbar-brand me-2" href="../index.html">animetric</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,7 +24,7 @@ sliding windows, returning a value at each timepoint."><meta property="og:image"
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-animovement" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="animovement"><span class="fa fab fa-r-project"></span> animovement</button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-animovement"><li><a class="external-link dropdown-item" href="https://animovement.dev/anicheck/">anicheck</a></li>
-    <li><a class="external-link dropdown-item" href="https://animovement.dev/aniframe/">aniframe</a></li>
+    <li><a class="external-link dropdown-item" href="https://animovement.dev/anicore/">aniframe</a></li>
     <li><a class="dropdown-item" href="https://animovement.dev/animetric/">animetric</a></li>
     <li><a class="external-link dropdown-item" href="https://animovement.dev/animovement/">animovement</a></li>
     <li><a class="external-link dropdown-item" href="https://animovement.dev/aniprocess/">aniprocess</a></li>
@@ -121,16 +121,58 @@ Cybernetics, 97(1), 47-61.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">anicore</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/anicore/reference/example_aniframe.html" class="external-link">example_aniframe</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fl">30</span>, n_individuals <span class="op">=</span> <span class="fl">1</span>, n_keypoints <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Kinematics computed automatically if missing</span></span></span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">calculate_tortuosity</span><span class="op">(</span>window_width <span class="op">=</span> <span class="fl">11</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Individuals: 1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Keypoints:   centroid</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Sessions:    1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Trials:      1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    individual keypoint session trial  time       x      y confidence speed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>          1 centroid       1     1     1  0.614   0.749      0.836 2.94 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>          1 centroid       1     1     2 -<span style="color: #BB0000;">0.618</span>  -<span style="color: #BB0000;">1.92</span>       0.835 0.323</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>          1 centroid       1     1     3  0.221   0.236      0.593 1.54 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>          1 centroid       1     1     4  1.13    0.629      0.774 0.802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>          1 centroid       1     1     5  1.81    0.418      0.855 0.906</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>          1 centroid       1     1     6 -<span style="color: #BB0000;">0.083</span><span style="color: #BB0000; text-decoration: underline;">8</span>  1.98       0.914 0.513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>          1 centroid       1     1     7  1.37   -<span style="color: #BB0000;">0.506</span>      0.852 1.57 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>          1 centroid       1     1     8 -<span style="color: #BB0000;">0.627</span>  -<span style="color: #BB0000;">1.11</span>       0.826 0.822</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>          1 centroid       1     1     9 -<span style="color: #BB0000;">0.217</span>  -<span style="color: #BB0000;">0.949</span>      0.521 0.794</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>          1 centroid       1     1    10 -<span style="color: #BB0000;">0.684</span>   0.477      0.649 0.137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: acceleration &lt;dbl&gt;, path_length &lt;dbl&gt;, v_x &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   v_y &lt;dbl&gt;, a_x &lt;dbl&gt;, a_y &lt;dbl&gt;, heading &lt;dbl&gt;, heading_unwrapped &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   angular_speed &lt;dbl&gt;, angular_velocity &lt;dbl&gt;, angular_acceleration &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   angular_path_length &lt;dbl&gt;, straightness &lt;dbl&gt;, sinuosity &lt;dbl&gt;, emax &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Or with kinematics already computed</span></span></span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="calculate_kinematics.html">calculate_kinematics</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">calculate_tortuosity</span><span class="op">(</span>window_width <span class="op">=</span> <span class="fl">11</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Individuals: 1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Keypoints:   centroid</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Sessions:    1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Trials:      1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    individual keypoint session trial  time       x      y confidence speed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>          1 centroid       1     1     1  0.614   0.749      0.836 2.94 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>          1 centroid       1     1     2 -<span style="color: #BB0000;">0.618</span>  -<span style="color: #BB0000;">1.92</span>       0.835 0.323</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>          1 centroid       1     1     3  0.221   0.236      0.593 1.54 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>          1 centroid       1     1     4  1.13    0.629      0.774 0.802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>          1 centroid       1     1     5  1.81    0.418      0.855 0.906</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>          1 centroid       1     1     6 -<span style="color: #BB0000;">0.083</span><span style="color: #BB0000; text-decoration: underline;">8</span>  1.98       0.914 0.513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>          1 centroid       1     1     7  1.37   -<span style="color: #BB0000;">0.506</span>      0.852 1.57 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>          1 centroid       1     1     8 -<span style="color: #BB0000;">0.627</span>  -<span style="color: #BB0000;">1.11</span>       0.826 0.822</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>          1 centroid       1     1     9 -<span style="color: #BB0000;">0.217</span>  -<span style="color: #BB0000;">0.949</span>      0.521 0.794</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>          1 centroid       1     1    10 -<span style="color: #BB0000;">0.684</span>   0.477      0.649 0.137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: acceleration &lt;dbl&gt;, path_length &lt;dbl&gt;, v_x &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   v_y &lt;dbl&gt;, a_x &lt;dbl&gt;, a_y &lt;dbl&gt;, heading &lt;dbl&gt;, heading_unwrapped &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   angular_speed &lt;dbl&gt;, angular_velocity &lt;dbl&gt;, angular_acceleration &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   angular_path_length &lt;dbl&gt;, straightness &lt;dbl&gt;, sinuosity &lt;dbl&gt;, emax &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

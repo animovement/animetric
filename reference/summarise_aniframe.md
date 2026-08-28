@@ -49,13 +49,13 @@ A summarised data frame with one row per group.
 
 ``` r
 kin <- calculate_kinematics(
-  aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+  anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 )
 summarise_aniframe(kin)
 #> # A tibble: 1 × 22
 #>   individual keypoint session trial median_speed mad_speed median_acceleration
 #>        <int> <fct>      <int> <int>        <dbl>     <dbl>               <dbl>
-#> 1          1 centroid       1     1        0.681     0.627              -0.123
+#> 1          1 centroid       1     1        0.889     0.423              0.0499
 #> # ℹ 15 more variables: mad_acceleration <dbl>, median_angular_speed <dbl>,
 #> #   mad_angular_speed <dbl>, median_angular_velocity <dbl>,
 #> #   mad_angular_velocity <dbl>, median_angular_acceleration <dbl>,
@@ -68,7 +68,7 @@ summarise_aniframe(calculate_tortuosity(kin), type = "tortuosity")
 #> # A tibble: 1 × 10
 #>   individual keypoint session trial total_path_length total_angular_path_length
 #>        <int> <fct>      <int> <int>             <dbl>                     <dbl>
-#> 1          1 centroid       1     1              39.7                      25.3
+#> 1          1 centroid       1     1              33.1                      30.6
 #> # ℹ 4 more variables: net_displacement <dbl>, straightness <dbl>,
 #> #   sinuosity <dbl>, emax <dbl>
 ```

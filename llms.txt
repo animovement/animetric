@@ -63,7 +63,7 @@ return.
 - [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
   : Calculate tortuosity metrics over sliding windows
 - [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  : Calculate distance to n-th nearest neighbour
+  : Calculate distance to the n-th nearest neighbour
 
 ## Summarise
 
@@ -78,6 +78,8 @@ These functions return a single value per group, or a full summary.
 - [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
   [`summarize_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
   : Calculate tortuosity summary statistics
+- [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
+  : Add a centroid to an aniframe
 - [`summarise_keypoints()`](https://animovement.dev/animetric/reference/summarise_keypoints.md)
   : Summarize keypoint data
 
@@ -98,9 +100,9 @@ functions.
   : Compute E_max (maximum expected displacement) from pre‑computed
   vectors
 - [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
-  : Compute centroid from keypoints
+  : Compute the centroid of an identity level
 - [`compute_nnd()`](https://animovement.dev/animetric/reference/compute_nnd.md)
-  : Compute nearest neighbour distances for a single time point
+  : Compute nearest neighbour distances within one group
 
 ## Helpers
 

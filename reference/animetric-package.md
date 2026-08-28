@@ -6,7 +6,7 @@ An R package for calculating movement-based metrics.
 
 Useful links:
 
-- <http://animovement.dev/animetric/>
+- <https://animovement.dev/animetric/>
 
 - <https://github.com/animovement/animetric/>
 

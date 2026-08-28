@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">animetric</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,7 +22,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-animovement" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="animovement"><span class="fa fab fa-r-project"></span> animovement</button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-animovement"><li><a class="external-link dropdown-item" href="https://animovement.dev/anicheck/">anicheck</a></li>
-    <li><a class="external-link dropdown-item" href="https://animovement.dev/aniframe/">aniframe</a></li>
+    <li><a class="external-link dropdown-item" href="https://animovement.dev/anicore/">aniframe</a></li>
     <li><a class="dropdown-item" href="https://animovement.dev/animetric/">animetric</a></li>
     <li><a class="external-link dropdown-item" href="https://animovement.dev/animovement/">animovement</a></li>
     <li><a class="external-link dropdown-item" href="https://animovement.dev/aniprocess/">aniprocess</a></li>
@@ -49,6 +49,54 @@
       <small>Source: <a href="https://github.com/animovement/animetric/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="animetric-development-version">animetric (development version)<a class="anchor" aria-label="anchor" href="#animetric-development-version"></a></h2>
+<div class="section level3">
+<h3 id="changed-development-version">Changed<a class="anchor" aria-label="anchor" href="#changed-development-version"></a></h3>
+<ul><li><p>The core data structures come from <code>anicore</code>, which is what the <code>aniframe</code> package was renamed to in its 0.8.0 (animovement/anicore#84). The <code>aniframe</code> class keeps its name; only the package providing it changed.</p></li>
+<li><p>The <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code>, <code><a href="../reference/calculate_nnd.html">calculate_nnd()</a></code> and <code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code> examples run rather than sitting in <code>\dontrun{}</code>. Each builds its own frame with <code><a href="https://animovement.dev/anicore/reference/example_aniframe.html" class="external-link">anicore::example_aniframe()</a></code>; they were wrapped because they referred to an undefined <code>data</code>, so they had never been checked against the functions they document.</p></li>
+<li>
+<p><code><a href="../reference/calculate_nnd.html">calculate_nnd()</a></code> reads the columns it needs from the aniframe’s metadata, and takes the identity roles explicitly (<a href="https://github.com/animovement/animetric/issues/37" class="external-link">#37</a>). It previously hard-coded <code>individual</code>, <code>c("session", "trial", "time")</code>, <code>keypoint</code> and <code>x</code>/<code>y</code>/<code>z</code>, consulting the metadata for none of them.</p>
+<p>That was already producing wrong numbers: <code>observation</code> joined <code>variables_when</code> in aniframe 0.6.0, but the hard-coded context list never picked it up, so multi-clip data was pooled and each animal could be matched to one in a <em>different clip</em> — silently, and with a plausible-looking distance.</p>
+<p><code>across</code> names the column whose value must differ (required — nothing is inferred), <code>within</code> names columns that must match on top of the temporal context, and <code>focal</code> / <code>neighbour</code> restrict which points are measured from and to. Being independent, they express asymmetric questions:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># whose neck is my head nearest to?</span></span>
+<span><span class="va">data</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/calculate_nnd.html">calculate_nnd</a></span><span class="op">(</span></span>
+<span>  across <span class="op">=</span> <span class="st">"individual"</span>,</span>
+<span>  focal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>keypoint <span class="op">=</span> <span class="st">"head"</span><span class="op">)</span>,</span>
+<span>  neighbour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>keypoint <span class="op">=</span> <span class="st">"neck"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># nearest keypoint within each animal</span></span>
+<span><span class="va">data</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/calculate_nnd.html">calculate_nnd</a></span><span class="op">(</span>across <span class="op">=</span> <span class="st">"keypoint"</span>, within <span class="op">=</span> <span class="st">"individual"</span><span class="op">)</span></span></code></pre></div>
+<p>Existing calls need <code>across = "individual"</code> added. <code>keypoint_neighbour</code> still works, with a deprecation warning, and maps to <code>neighbour = list(keypoint = ...)</code>.</p>
+</li>
+<li><p>Frames identified by <code>track</code> or <code>subject</code> rather than <code>individual</code> now work, as do multi-observation frames. Polar, cylindrical and spherical frames error with a pointer to <code><a href="https://animovement.dev/anispace/reference/map_to_cartesian.html" class="external-link">anispace::map_to_cartesian()</a></code> rather than silently measuring in mixed units.</p></li>
+<li><p><code><a href="../reference/compute_nnd.html">compute_nnd()</a></code> takes <code>across</code>, <code>is_focal</code>, <code>is_candidate</code> and <code>labels</code> in place of <code>individual</code>, <code>keypoint</code> and <code>keypoint_neighbour</code>, mirroring the generalisation above. Its result names the ranked column (<code>nnd_across</code>) which <code><a href="../reference/calculate_nnd.html">calculate_nnd()</a></code> renames.</p></li>
+<li>
+<p><code><a href="../reference/summarise_keypoints.html">summarise_keypoints()</a></code> is renamed <code><a href="../reference/add_centroid.html">add_centroid()</a></code>, and takes <code>across</code> to choose the level it collapses (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>). The old name said <code>summarise_</code>, which in this package means collapsing a frame to summary rows — this appends them. It also named the keypoint level, which is only one of the levels a frame can be summarised across.</p>
+<p><code>across</code> names the identity variables to collapse, so the same question can be asked at any scale. On pose data for a team:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/add_centroid.html">add_centroid</a></span><span class="op">(</span><span class="va">af</span>, across <span class="op">=</span> <span class="st">"keypoint"</span><span class="op">)</span>                  <span class="co"># each player's own centre</span></span>
+<span><span class="fu"><a href="../reference/add_centroid.html">add_centroid</a></span><span class="op">(</span><span class="va">af</span>, across <span class="op">=</span> <span class="st">"individual"</span><span class="op">)</span>                <span class="co"># one centre per keypoint, across players</span></span>
+<span><span class="fu"><a href="../reference/add_centroid.html">add_centroid</a></span><span class="op">(</span><span class="va">af</span>, across <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"individual"</span>, <span class="st">"keypoint"</span><span class="op">)</span><span class="op">)</span> <span class="co"># the point the whole team occupies</span></span></code></pre></div>
+<p>It is not guessed. <code>variables_what</code> is documented coarse to fine, but nothing enforces that and attributes like <code>sex</code> or <code>treatment</code> do not nest at all, so a frame declaring more than one identity variable has to be told which to collapse (animovement/anicore#140, animovement/anicore#141). A frame declaring one is unambiguous and needs no argument.</p>
+<p>A collapsed level that did not actually vary keeps its value rather than taking the summary’s name — an individual’s strain is still its strain, since nothing was averaged over it.</p>
+<p>Only identity variables can be collapsed. Collapsing the index or a temporal variable averages over time, which is what the <code>summarise_*()</code> family does.</p>
+<p><code><a href="../reference/summarise_keypoints.html">summarise_keypoints()</a></code> still works, with a deprecation warning, and keeps its old behaviour of collapsing the finest identity.</p>
+</li>
+<li><p><code><a href="../reference/compute_centroid.html">compute_centroid()</a></code>’s <code>include_keypoints</code>, <code>exclude_keypoints</code> and <code>centroid_name</code> are renamed <code>include</code>, <code>exclude</code> and <code>name</code>, and it takes the same <code>across</code> (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>). <code>add_area</code> is gone from the summary function: it was never implemented, and area is a different shape of answer that will arrive as its own function rather than a flag.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixed-development-version">Fixed<a class="anchor" aria-label="anchor" href="#fixed-development-version"></a></h3>
+<ul><li><p><code><a href="../reference/compute_centroid.html">compute_centroid()</a></code> carries the source frame’s metadata into its result (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>). Sampling rate, units and the rest were dropped, so a centroid arrived claiming to know nothing about the recording it came from.</p></li>
+<li><p>A centroid no longer gains a <code>confidence</code> column on frames that do not track one (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>).</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="removed-development-version">Removed<a class="anchor" aria-label="anchor" href="#removed-development-version"></a></h3>
+<ul><li>The re-exports of <code>as_aniframe()</code>, <code>is_aniframe()</code>, <code>ensure_is_aniframe()</code>, <code>deg_to_rad()</code>, <code>rad_to_deg()</code>, <code>wrap_angle()</code>, <code>unwrap_angle()</code>, <code>calculate_angular_difference()</code> and <code>diff_angle()</code>. <strong>Calls to these through <code>animetric::</code> need repointing at <code>anicore::</code> or <code>anispace::</code>.</strong> animetric still uses them internally — it just has no reason to publish another package’s interface as its own, which left the same function documented in two places and animetric’s exports growing whenever anicore’s did.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="animetric-040-2026-08-18">animetric 0.4.0 (2026-08-18)<a class="anchor" aria-label="anchor" href="#animetric-040-2026-08-18"></a></h2>
 <div class="section level3">
@@ -116,7 +164,7 @@
 <li>Summaries: <code><a href="../reference/summarise_kinematics.html">summarise_kinematics()</a></code> and <code><a href="../reference/summarise_keypoints.html">summarise_keypoints()</a></code>.</li>
 <li>
 <code><a href="../reference/is_aniframe_kin.html">is_aniframe_kin()</a></code> to test whether a frame carries kinematics.</li>
-<li>Angle helpers re-exported from aniframe: <code><a href="https://animovement.dev/aniframe/reference/deg_to_rad.html" class="external-link">deg_to_rad()</a></code>, <code><a href="https://animovement.dev/aniframe/reference/rad_to_deg.html" class="external-link">rad_to_deg()</a></code>, <code><a href="https://animovement.dev/anispace/reference/wrap_angle.html" class="external-link">wrap_angle()</a></code>, <code><a href="https://animovement.dev/anispace/reference/unwrap_angle.html" class="external-link">unwrap_angle()</a></code>, <code><a href="https://animovement.dev/anispace/reference/diff_angle.html" class="external-link">diff_angle()</a></code> and <code><a href="https://animovement.dev/anispace/reference/calculate_angular_difference.html" class="external-link">calculate_angular_difference()</a></code>.</li>
+<li>Angle helpers re-exported from aniframe: <code>deg_to_rad()</code>, <code>rad_to_deg()</code>, <code>wrap_angle()</code>, <code>unwrap_angle()</code>, <code>diff_angle()</code> and <code>calculate_angular_difference()</code>.</li>
 </ul></div>
 </div>
     <div class="section level2">

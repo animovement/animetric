@@ -1,17 +1,19 @@
-# Compute centroid from keypoints
+# Compute the centroid of an identity level
 
-Calculates the mean position of selected keypoints at each time point.
-The centroid is computed for each combination of grouping variables
-(individual, time, trial/session if present).
+The mean position of the members of one identity variable, at each
+position of every other. Which variable is collapsed is the caller's
+choice: the keypoints of an animal, the animals of a team, or any other
+level the frame declares.
 
 ## Usage
 
 ``` r
 compute_centroid(
   data,
-  include_keypoints = NULL,
-  exclude_keypoints = NULL,
-  centroid_name = "centroid"
+  across = NULL,
+  include = NULL,
+  exclude = NULL,
+  name = "centroid"
 )
 ```
 
@@ -19,88 +21,126 @@ compute_centroid(
 
 - data:
 
-  An aniframe with Cartesian coordinates (x, y, and/or z columns).
+  An aniframe with Cartesian coordinates.
 
-- include_keypoints:
+- across:
 
-  Character vector of keypoints to include in centroid calculation. If
-  NULL (default), all keypoints are used unless `exclude_keypoints` is
-  specified. Mutually exclusive with `exclude_keypoints`.
+  Identity variables to collapse — the dimensions the summary ranges
+  over. Defaults to the finest one the frame declares, which is the
+  keypoint-style summary. Collapsing every level gives a single point
+  per position.
 
-- exclude_keypoints:
+- include, exclude:
 
-  Character vector of keypoints to exclude from centroid calculation. If
-  NULL (default), no keypoints are excluded. Mutually exclusive with
-  `include_keypoints`.
+  Values of the collapsed level to keep or leave out. Only meaningful
+  when one level is collapsed.
 
-- centroid_name:
+- name:
 
-  Name for the new centroid keypoint. Default is "centroid".
+  Name for the summary member. Default is `"centroid"`.
 
 ## Value
 
-An aniframe containing only the centroid keypoint. Coordinate values are
-the mean of selected keypoints (with NA values removed). Confidence is
-set to NA. Missing coordinate dimensions return NA.
+An aniframe containing only the summary member. Coordinate values are
+the mean of the members included, with `NA`s removed. Confidence is
+`NA`. Missing coordinate dimensions return `NA`.
+
+## See also
+
+[`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md),
+which appends the result to the frame.
 
 ## Examples
 
 ``` r
-af <- aniframe::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 3)
-compute_centroid(af)
-#> # Individuals: 1
-#> # Keypoints:   centroid
-#> # Sessions:    1
-#> # Trials:      1
-#>    individual keypoint session trial  time        x        y confidence
-#>         <int> <fct>      <int> <int> <int>    <dbl>    <dbl>      <dbl>
-#>  1          1 centroid       1     1     1 -0.287   -0.00193         NA
-#>  2          1 centroid       1     1     2 -0.00695  0.0715          NA
-#>  3          1 centroid       1     1     3 -1.26    -0.301           NA
-#>  4          1 centroid       1     1     4  0.160    0.292           NA
-#>  5          1 centroid       1     1     5  0.985    0.723           NA
-#>  6          1 centroid       1     1     6  1.27    -0.430           NA
-#>  7          1 centroid       1     1     7 -0.904   -0.640           NA
-#>  8          1 centroid       1     1     8  0.105    0.457           NA
-#>  9          1 centroid       1     1     9 -0.318    1.03            NA
-#> 10          1 centroid       1     1    10 -1.24    -1.03            NA
-#> 11          1 centroid       1     1    11  0.415   -0.346           NA
-#> 12          1 centroid       1     1    12  0.187   -0.0360          NA
-#> 13          1 centroid       1     1    13  0.701    0.852           NA
-#> 14          1 centroid       1     1    14  0.00391 -0.0855          NA
-#> 15          1 centroid       1     1    15  0.218    0.842           NA
-#> 16          1 centroid       1     1    16 -0.482   -0.802           NA
-#> 17          1 centroid       1     1    17 -1.57     1.15            NA
-#> 18          1 centroid       1     1    18  0.784   -0.244           NA
-#> 19          1 centroid       1     1    19 -0.0439   1.06            NA
-#> 20          1 centroid       1     1    20  0.122    0.483           NA
+af <- anicore::example_aniframe(n_obs = 20, n_individuals = 2, n_keypoints = 3)
 
-# A centroid from a subset of keypoints
-compute_centroid(af, include_keypoints = c("head", "neck"))
-#> # Individuals: 1
+# The centroid of each animal's keypoints
+compute_centroid(af, across = "keypoint")
+#> # Individuals: 1, 2
 #> # Keypoints:   centroid
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time        x       y confidence
-#>         <int> <fct>      <int> <int> <int>    <dbl>   <dbl>      <dbl>
-#>  1          1 centroid       1     1     1 -0.466    0.484          NA
-#>  2          1 centroid       1     1     2  0.309   -0.528          NA
-#>  3          1 centroid       1     1     3 -1.87    -0.932          NA
-#>  4          1 centroid       1     1     4  0.366    0.0538         NA
-#>  5          1 centroid       1     1     5  1.26     0.566          NA
-#>  6          1 centroid       1     1     6  0.525   -0.408          NA
-#>  7          1 centroid       1     1     7 -1.38    -0.322          NA
-#>  8          1 centroid       1     1     8 -0.132    0.839          NA
-#>  9          1 centroid       1     1     9 -0.535    0.436          NA
-#> 10          1 centroid       1     1    10 -0.898   -1.03           NA
-#> 11          1 centroid       1     1    11  0.191    0.0542         NA
-#> 12          1 centroid       1     1    12  0.403    0.784          NA
-#> 13          1 centroid       1     1    13  1.15     0.515          NA
-#> 14          1 centroid       1     1    14 -0.00372 -0.405          NA
-#> 15          1 centroid       1     1    15  0.312    0.267          NA
-#> 16          1 centroid       1     1    16 -0.999   -1.13           NA
-#> 17          1 centroid       1     1    17 -1.22     0.439          NA
-#> 18          1 centroid       1     1    18 -0.166   -0.897          NA
-#> 19          1 centroid       1     1    19  0.115    1.03           NA
-#> 20          1 centroid       1     1    20  0.0766   0.163          NA
+#>    individual keypoint session trial  time       x      y confidence
+#>         <int> <fct>      <int> <int> <int>   <dbl>  <dbl>      <dbl>
+#>  1          1 centroid       1     1     1  0.364   0.506         NA
+#>  2          1 centroid       1     1     2  1.29    1.23          NA
+#>  3          1 centroid       1     1     3 -0.0271  0.885         NA
+#>  4          1 centroid       1     1     4 -0.183  -0.748         NA
+#>  5          1 centroid       1     1     5 -1.10   -0.472         NA
+#>  6          1 centroid       1     1     6 -0.259  -0.845         NA
+#>  7          1 centroid       1     1     7  0.149  -0.322         NA
+#>  8          1 centroid       1     1     8  0.163  -0.325         NA
+#>  9          1 centroid       1     1     9 -1.10   -0.678         NA
+#> 10          1 centroid       1     1    10 -0.199  -0.249         NA
+#> # ℹ 30 more rows
+
+# From a subset of them
+compute_centroid(af, across = "keypoint", include = c("head", "neck"))
+#> # Individuals: 1, 2
+#> # Keypoints:   centroid
+#> # Sessions:    1
+#> # Trials:      1
+#>    individual keypoint session trial  time       x      y confidence
+#>         <int> <fct>      <int> <int> <int>   <dbl>  <dbl>      <dbl>
+#>  1          1 centroid       1     1     1 -0.0431  0.773         NA
+#>  2          1 centroid       1     1     2  1.71    0.732         NA
+#>  3          1 centroid       1     1     3 -1.18    1.25          NA
+#>  4          1 centroid       1     1     4 -0.343  -0.688         NA
+#>  5          1 centroid       1     1     5 -0.652  -0.121         NA
+#>  6          1 centroid       1     1     6 -0.179  -0.388         NA
+#>  7          1 centroid       1     1     7  0.413  -0.512         NA
+#>  8          1 centroid       1     1     8 -0.366  -1.07          NA
+#>  9          1 centroid       1     1     9 -0.885  -1.19          NA
+#> 10          1 centroid       1     1    10 -0.144   0.153         NA
+#> # ℹ 30 more rows
+
+# The centroid of the animals themselves, one per keypoint
+compute_centroid(af, across = "individual")
+#> # Individuals: centroid
+#> # Keypoints:   head, neck, shoulder_right
+#> # Sessions:    1
+#> # Trials:      1
+#>    individual keypoint session trial  time          x       y confidence
+#>    <fct>      <fct>      <int> <int> <int>      <dbl>   <dbl>      <dbl>
+#>  1 centroid   head           1     1     1 -0.861      0.932          NA
+#>  2 centroid   head           1     1     2  0.677      0.713          NA
+#>  3 centroid   head           1     1     3 -0.463      0.449          NA
+#>  4 centroid   head           1     1     4 -0.634     -0.734          NA
+#>  5 centroid   head           1     1     5 -0.297      0.589          NA
+#>  6 centroid   head           1     1     6  0.0000156 -0.486          NA
+#>  7 centroid   head           1     1     7  0.491      0.757          NA
+#>  8 centroid   head           1     1     8 -0.214      0.731          NA
+#>  9 centroid   head           1     1     9 -0.874     -0.138          NA
+#> 10 centroid   head           1     1    10 -1.27       0.0126         NA
+#> # ℹ 50 more rows
+
+# One point for the whole group, per position
+compute_centroid(af, across = c("individual", "keypoint"))
+#> # Individuals: centroid
+#> # Keypoints:   centroid
+#> # Sessions:    1
+#> # Trials:      1
+#>    individual keypoint session trial  time       x       y confidence
+#>    <fct>      <fct>      <int> <int> <int>   <dbl>   <dbl>      <dbl>
+#>  1 centroid   centroid       1     1     1 -0.0444  0.690          NA
+#>  2 centroid   centroid       1     1     2  0.678   0.765          NA
+#>  3 centroid   centroid       1     1     3 -0.301   0.110          NA
+#>  4 centroid   centroid       1     1     4 -0.375  -0.128          NA
+#>  5 centroid   centroid       1     1     5 -0.652  -0.207          NA
+#>  6 centroid   centroid       1     1     6 -0.132  -0.245          NA
+#>  7 centroid   centroid       1     1     7  0.133   0.126          NA
+#>  8 centroid   centroid       1     1     8  0.203  -0.0469         NA
+#>  9 centroid   centroid       1     1     9 -0.821  -0.0460         NA
+#> 10 centroid   centroid       1     1    10 -0.197  -0.0814         NA
+#> 11 centroid   centroid       1     1    11 -0.124   0.532          NA
+#> 12 centroid   centroid       1     1    12 -0.595  -0.0592         NA
+#> 13 centroid   centroid       1     1    13 -0.113   0.258          NA
+#> 14 centroid   centroid       1     1    14 -0.623   0.308          NA
+#> 15 centroid   centroid       1     1    15  0.196  -0.0688         NA
+#> 16 centroid   centroid       1     1    16  0.489  -0.331          NA
+#> 17 centroid   centroid       1     1    17  0.0316 -0.108          NA
+#> 18 centroid   centroid       1     1    18  0.0577  0.206          NA
+#> 19 centroid   centroid       1     1    19  0.294   0.0970         NA
+#> 20 centroid   centroid       1     1    20 -0.357  -0.349          NA
 ```

@@ -1,10 +1,9 @@
-# Compute nearest neighbour distances for a single time point
+# Compute nearest neighbour distances within one group
 
-Low-level function that computes distances to the nth nearest
-individual. For each focal point, finds the closest point belonging to
-the nth nearest individual (ranked by minimum distance). Called by
-[`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-for each time point.
+Low-level function behind
+[`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md),
+operating on plain vectors for one group of comparable points (typically
+one timepoint).
 
 ## Usage
 
@@ -13,73 +12,95 @@ compute_nnd(
   x,
   y,
   z = NULL,
-  individual,
-  keypoint = NULL,
+  across,
   n = 1L,
-  keypoint_neighbour = NULL
+  is_focal = NULL,
+  is_candidate = NULL,
+  labels = NULL
 )
 ```
 
 ## Arguments
 
-- x:
+- x, y:
 
-  Numeric vector of x coordinates.
-
-- y:
-
-  Numeric vector of y coordinates.
+  Numeric vectors of coordinates.
 
 - z:
 
-  Numeric vector of z coordinates, or NULL for 2D data.
+  Numeric vector of coordinates, or `NULL` for 2D data.
 
-- individual:
+- across:
 
-  Factor or vector identifying which individual each point belongs to.
-
-- keypoint:
-
-  Factor or vector identifying keypoint labels, or NULL if no keypoints.
+  Vector whose value must differ between a focal point and its neighbour
+  — the thing being ranked, e.g. individual identity.
 
 - n:
 
-  Which individual to find (1 = nearest, 2 = second nearest, etc.).
+  Which neighbour to return (1 = nearest, 2 = second nearest).
 
-- keypoint_neighbour:
+- is_focal:
 
-  Character vector of keypoint(s) to consider as valid neighbours, or
-  NULL to consider all.
+  Logical vector marking which points to measure from, or `NULL` for all
+  of them. Non-focal points get `NA` results.
+
+- is_candidate:
+
+  Logical vector marking which points may be returned as a neighbour, or
+  `NULL` for all of them.
+
+- labels:
+
+  Named list of vectors describing each point. The matched neighbour's
+  value is reported for each, as `nnd_<name>`.
 
 ## Value
 
-A tibble with columns:
+A tibble with `nnd_across` (the value of `across` for the matched
+neighbour), one `nnd_<name>` column per entry of `labels`, and
+`nnd_distance`.
 
-- `nnd_individual`: individual ID of the n-th nearest individual
+## Details
 
-- `nnd_keypoint`: keypoint of the closest point on that individual (only
-  if `keypoint` is not NULL)
-
-- `nnd_distance`: distance to the closest point on the n-th nearest
-  individual
+For each focal point, candidates are ranked by the value of `across`:
+the closest candidate point is found for each distinct value, those
+values are ranked by that distance, and the `n`-th is returned. So
+"second nearest" means the second nearest *entity*, not the second
+nearest point.
 
 ## See also
 
 [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-for the user-facing aniframe function
+for the aniframe-level function.
 
 ## Examples
 
 ``` r
+# Nearest point belonging to a different individual
 compute_nnd(
   x = c(0, 1, 2),
   y = c(0, 1, 0),
-  individual = c("a", "b", "c")
+  across = c("a", "b", "c")
 )
 #> # A tibble: 3 × 2
-#>   nnd_individual nnd_distance
-#>   <chr>                 <dbl>
-#> 1 b                      1.41
-#> 2 a                      1.41
-#> 3 b                      1.41
+#>   nnd_across nnd_distance
+#>   <chr>             <dbl>
+#> 1 b                  1.41
+#> 2 a                  1.41
+#> 3 b                  1.41
+
+# The second nearest, with the neighbour's label reported back
+compute_nnd(
+  x = c(0, 1, 2),
+  y = c(0, 1, 0),
+  across = c("a", "b", "c"),
+  n = 2L,
+  labels = list(individual = c("a", "b", "c"))
+)
+#> # A tibble: 3 × 3
+#>   nnd_across nnd_individual nnd_distance
+#>   <chr>      <chr>                 <dbl>
+#> 1 c          c                      2   
+#> 2 c          c                      1.41
+#> 3 a          a                      2   
 ```
