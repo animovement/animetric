@@ -6,38 +6,6 @@
 # what detection emits, not a hierarchy a frame asserts, and identity
 # variables need not nest at all (animovement/anicore#141).
 
-#' The last identity variable a frame declares
-#'
-#' Kept for [summarise_keypoints()], which collapsed this level before
-#' [add_centroid()] made the choice explicit, and which keeps doing so
-#' rather than making previously-working code error.
-#'
-#' It is **not** a general way to find "the finest level". Detection emits
-#' `variables_what` coarsest first, so the last entry is the finest for the
-#' names it recognises — but that is a property of how the vector was built,
-#' not something a frame asserts, and identity variables need not nest at
-#' all (animovement/anicore#141). Anything else should take the level from
-#' its caller, as [add_centroid()] does with `across`.
-#'
-#' @param data An aniframe.
-#'
-#' @return Length-one character vector naming the column.
-#' @keywords internal
-finest_identity <- function(data, call = rlang::caller_env()) {
-  what <- anicore::get_variables_what(data)
-  if (length(what) == 0L) {
-    cli::cli_abort(
-      c(
-        "This aniframe declares no identity variables.",
-        "i" = "Summarising across identity needs at least one; see {.fn anicore::set_variables_what}."
-      ),
-      call = call
-    )
-  }
-  what[[length(what)]]
-}
-
-
 #' The columns a summary should keep, having collapsed the finest identity
 #'
 #' Everything the frame groups by except the level being summarised over,
@@ -96,7 +64,9 @@ resolve_collapsed_identity <- function(
       c(
         "This aniframe declares {length(what)} identity variables, so {.arg across} has to say which to collapse.",
         "i" = "It declares {.val {what}}.",
-        "i" = "For example {.code across = {.str {what[[length(what)]]}}}."
+        # Any of them is as good an example as any other; the message has
+        # already listed them, and the last is not special (anicore#141).
+        "i" = "For example {.code across = {.str {what[[1]]}}}."
       ),
       call = call
     )
