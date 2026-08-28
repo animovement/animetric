@@ -70,13 +70,14 @@
   [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
   renames.
 
-- [`summarise_keypoints()`](https://animovement.dev/animetric/reference/summarise_keypoints.md)
-  is renamed
+- `summarise_keypoints()` is renamed
   [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md),
   and takes `across` to choose the level it collapses
-  ([\#47](https://github.com/animovement/animetric/issues/47)). The old
-  name said `summarise_`, which in this package means collapsing a frame
-  to summary rows — this appends them. It also named the keypoint level,
+  ([\#47](https://github.com/animovement/animetric/issues/47)). **The
+  old name is gone rather than deprecated** — it has not been in a
+  release, so nothing can be depending on it. The old name said
+  `summarise_`, which in this package means collapsing a frame to
+  summary rows — this appends them. It also named the keypoint level,
   which is only one of the levels a frame can be summarised across.
 
   `across` names the identity variables to collapse, so the same
@@ -103,10 +104,6 @@
   Only identity variables can be collapsed. Collapsing the index or a
   temporal variable averages over time, which is what the
   `summarise_*()` family does.
-
-  [`summarise_keypoints()`](https://animovement.dev/animetric/reference/summarise_keypoints.md)
-  still works, with a deprecation warning, and keeps its old behaviour
-  of collapsing the finest identity.
 
 - [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)’s
   `include_keypoints`, `exclude_keypoints` and `centroid_name` are
@@ -243,8 +240,7 @@ and summaries.
   [`median_angle()`](https://animovement.dev/animetric/reference/median_angle.md).
 - Summaries:
   [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  and
-  [`summarise_keypoints()`](https://animovement.dev/animetric/reference/summarise_keypoints.md).
+  and `summarise_keypoints()`.
 - [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
   to test whether a frame carries kinematics.
 - Angle helpers re-exported from aniframe: `deg_to_rad()`,

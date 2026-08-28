@@ -59,7 +59,7 @@ summarise_kinematics(kin)
 #> # A tibble: 1 × 16
 #>   individual keypoint session trial median_speed mad_speed median_acceleration
 #>        <int> <fct>      <int> <int>        <dbl>     <dbl>               <dbl>
-#> 1          1 centroid       1     1        0.912     0.423             -0.0100
+#> 1          1 centroid       1     1        0.837     0.581             -0.0164
 #> # ℹ 9 more variables: mad_acceleration <dbl>, median_angular_speed <dbl>,
 #> #   mad_angular_speed <dbl>, median_angular_velocity <dbl>,
 #> #   mad_angular_velocity <dbl>, median_angular_acceleration <dbl>,
@@ -70,7 +70,7 @@ summarise_kinematics(kin, measures = "mean_sd")
 #> # A tibble: 1 × 16
 #>   individual keypoint session trial mean_speed sd_speed mean_acceleration
 #>        <int> <fct>      <int> <int>      <dbl>    <dbl>             <dbl>
-#> 1          1 centroid       1     1      0.886    0.395           0.00981
+#> 1          1 centroid       1     1      0.938    0.469            0.0128
 #> # ℹ 9 more variables: sd_acceleration <dbl>, mean_angular_speed <dbl>,
 #> #   sd_angular_speed <dbl>, mean_angular_velocity <dbl>,
 #> #   sd_angular_velocity <dbl>, mean_angular_acceleration <dbl>,

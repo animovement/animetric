@@ -27,8 +27,6 @@ These functions return a single value per group, or a full summary.
   : Calculate tortuosity summary statistics
 - [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
   : Add a centroid to an aniframe
-- [`summarise_keypoints()`](https://animovement.dev/animetric/reference/summarise_keypoints.md)
-  : Summarize keypoint data
 
 ## Compute
 

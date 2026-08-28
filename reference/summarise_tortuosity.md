@@ -50,7 +50,7 @@ summarise_tortuosity(calculate_tortuosity(kin))
 #> # A tibble: 1 × 10
 #>   individual keypoint session trial total_path_length total_angular_path_length
 #>        <int> <fct>      <int> <int>             <dbl>                     <dbl>
-#> 1          1 centroid       1     1              37.7                      28.9
+#> 1          1 centroid       1     1              31.4                      27.0
 #> # ℹ 4 more variables: net_displacement <dbl>, straightness <dbl>,
 #> #   sinuosity <dbl>, emax <dbl>
 ```
