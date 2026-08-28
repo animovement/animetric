@@ -115,6 +115,37 @@
 
 ### Fixed
 
+- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
+  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
+  and
+  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  refuse a frame whose grouping pools several trajectories, rather than
+  answering wrongly
+  ([\#54](https://github.com/animovement/animetric/issues/54)). Speed
+  and path length come from successive rows within a group, so a group
+  has to hold one position per moment. Regrouping an aniframe coarsely —
+  every keypoint of an animal together, say — made the distance
+  *between* keypoints count as movement:
+
+  ``` r
+
+  # two keypoints 100 apart, each drifting 1 per frame
+  calculate_kinematics(af)                      # mean speed 1, correct
+  calculate_kinematics(regrouped_by_individual) # mean speed 2.7, silently
+  ```
+
+  Path length accumulates the same way, and
+  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  takes its last value minus its first — across concatenated
+  trajectories that is a number describing nothing, and it was inflating
+  totals about threefold.
+
+  Regrouping itself is still allowed; `anicore` already warns that a
+  frame’s grouping and its declaration then disagree. This is narrower
+  and firmer: these computations have a precondition, and the error says
+  how to summarise more coarsely — summarise at the declared grouping
+  first, then combine those results.
+
 - [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
   carries the source frame’s metadata into its result
   ([\#47](https://github.com/animovement/animetric/issues/47)). Sampling

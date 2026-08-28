@@ -88,7 +88,16 @@
 </ul></div>
 <div class="section level3">
 <h3 id="fixed-development-version">Fixed<a class="anchor" aria-label="anchor" href="#fixed-development-version"></a></h3>
-<ul><li><p><code><a href="../reference/compute_centroid.html">compute_centroid()</a></code> carries the source frame’s metadata into its result (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>). Sampling rate, units and the rest were dropped, so a centroid arrived claiming to know nothing about the recording it came from.</p></li>
+<ul><li>
+<p><code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code>, <code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code> and <code><a href="../reference/summarise_tortuosity.html">summarise_tortuosity()</a></code> refuse a frame whose grouping pools several trajectories, rather than answering wrongly (<a href="https://github.com/animovement/animetric/issues/54" class="external-link">#54</a>). Speed and path length come from successive rows within a group, so a group has to hold one position per moment. Regrouping an aniframe coarsely — every keypoint of an animal together, say — made the distance <em>between</em> keypoints count as movement:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># two keypoints 100 apart, each drifting 1 per frame</span></span>
+<span><span class="fu"><a href="../reference/calculate_kinematics.html">calculate_kinematics</a></span><span class="op">(</span><span class="va">af</span><span class="op">)</span>                      <span class="co"># mean speed 1, correct</span></span>
+<span><span class="fu"><a href="../reference/calculate_kinematics.html">calculate_kinematics</a></span><span class="op">(</span><span class="va">regrouped_by_individual</span><span class="op">)</span> <span class="co"># mean speed 2.7, silently</span></span></code></pre></div>
+<p>Path length accumulates the same way, and <code><a href="../reference/summarise_tortuosity.html">summarise_tortuosity()</a></code> takes its last value minus its first — across concatenated trajectories that is a number describing nothing, and it was inflating totals about threefold.</p>
+<p>Regrouping itself is still allowed; <code>anicore</code> already warns that a frame’s grouping and its declaration then disagree. This is narrower and firmer: these computations have a precondition, and the error says how to summarise more coarsely — summarise at the declared grouping first, then combine those results.</p>
+</li>
+<li><p><code><a href="../reference/compute_centroid.html">compute_centroid()</a></code> carries the source frame’s metadata into its result (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>). Sampling rate, units and the rest were dropped, so a centroid arrived claiming to know nothing about the recording it came from.</p></li>
 <li><p>A centroid no longer gains a <code>confidence</code> column on frames that do not track one (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>).</p></li>
 </ul></div>
 <div class="section level3">
