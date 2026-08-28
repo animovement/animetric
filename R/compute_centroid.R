@@ -43,38 +43,44 @@ compute_centroid <- function(
     )
   }
 
+  # Identity, position and the index all come from the frame's declaration.
+  # A valid aniframe may carry them in columns named anything (#47).
+  identity_col <- finest_identity(data)
+  space_cols <- anicore::get_variables_where(data)
+  keep <- retained_grouping(data, identity_col)
+
   # Filter keypoints
   if (!is.null(include_keypoints)) {
-    data <- dplyr::filter(data, .data$keypoint %in% include_keypoints)
+    data <- dplyr::filter(data, .data[[identity_col]] %in% include_keypoints)
   } else if (!is.null(exclude_keypoints)) {
-    data <- dplyr::filter(data, !.data$keypoint %in% exclude_keypoints)
+    data <- dplyr::filter(data, !.data[[identity_col]] %in% exclude_keypoints)
   }
-
-  # Determine available coordinates
-  has_x <- "x" %in% names(data)
-  has_y <- "y" %in% names(data)
-  has_z <- "z" %in% names(data)
 
   # Calculate centroid
   centroid <- data |>
-    dplyr::ungroup(.data$keypoint) |>
-    dplyr::group_by(.data$time, .add = TRUE) |>
+    dplyr::ungroup() |>
+    dplyr::group_by(dplyr::across(dplyr::all_of(keep))) |>
     dplyr::summarise(
-      x = if (has_x) mean(.data$x, na.rm = TRUE) else NA_real_,
-      y = if (has_y) mean(.data$y, na.rm = TRUE) else NA_real_,
-      z = if (has_z) mean(.data$z, na.rm = TRUE) else NA_real_,
+      dplyr::across(
+        dplyr::all_of(space_cols),
+        \(v) mean(v, na.rm = TRUE)
+      ),
       confidence = NA_real_,
       .groups = "drop"
     ) |>
-    dplyr::mutate(keypoint = factor(centroid_name)) |>
+    dplyr::mutate(!!identity_col := factor(centroid_name)) |>
     anicore::convert_nan_to_na() |>
     suppressMessages() |>
     suppressWarnings()
 
-  # Remove z column if not in original data
-  if (!has_z) {
-    centroid <- dplyr::select(centroid, -"z")
-  }
-
-  anicore::as_aniframe(centroid)
+  # Re-declare rather than re-detect. Detection only recognises the standard
+  # identity names, so a frame using its own would have a `keypoint` column
+  # injected and its declaration replaced (#47).
+  anicore::as_aniframe(
+    centroid,
+    variables_what = anicore::get_variables_what(data),
+    variables_when = anicore::get_variables_when(data),
+    variables_where = space_cols,
+    index = anicore::get_index(data)
+  )
 }

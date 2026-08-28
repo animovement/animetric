@@ -28,9 +28,13 @@ summarise_keypoints <- function(
   # Validate input
   anicore::ensure_is_aniframe(data)
 
+  # Which column carries the level being summarised over comes from the
+  # frame's declaration, not from a literal `keypoint` (#47).
+  identity_col <- finest_identity(data)
+
   # Resolve keypoint selection
   if (identical(keypoints, "all")) {
-    keypoints <- unique(data$keypoint)
+    keypoints <- unique(data[[identity_col]])
   }
 
   # Validate name doesn't conflict
@@ -47,12 +51,6 @@ summarise_keypoints <- function(
       "At least 2 keypoints required for summarization, found {n_keypoints}."
     )
   }
-
-  # Identify grouping variables
-  grps <- attr(data, "groups") |>
-    names() |>
-    setdiff(c(".rows", "keypoint")) |>
-    c("time")
 
   # Compute summary statistics
   # TODO: Add polygon computation and area calculation
