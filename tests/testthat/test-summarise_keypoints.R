@@ -1,4 +1,4 @@
-# Tests for summarise_keypoints()
+# Tests for suppressWarnings(summarise_keypoints)()
 # - Basic functionality adds centroid
 # - Uses all keypoints by default
 # - Works with specific keypoints
@@ -20,7 +20,7 @@ test_that("summarise_keypoints adds centroid to data", {
   ) |>
     anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   expect_s3_class(result, "aniframe")
   expect_equal(nrow(result), 6)
@@ -38,7 +38,7 @@ test_that("summarise_keypoints uses all keypoints by default", {
   ) |>
     anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   centroid <- result |>
     dplyr::filter(keypoint == "centroid")
@@ -57,7 +57,10 @@ test_that("summarise_keypoints works with specific keypoints", {
   ) |>
     anicore::as_aniframe()
 
-  result <- summarise_keypoints(data, keypoints = c("point1", "point2"))
+  result <- suppressWarnings(summarise_keypoints)(
+    data,
+    keypoints = c("point1", "point2")
+  )
 
   centroid <- result |>
     dplyr::filter(keypoint == "centroid")
@@ -76,7 +79,7 @@ test_that("summarise_keypoints uses custom summary name", {
   ) |>
     anicore::as_aniframe()
 
-  result <- summarise_keypoints(data, name = "center")
+  result <- suppressWarnings(summarise_keypoints)(data, name = "center")
 
   expect_true("center" %in% result$keypoint)
   expect_false("centroid" %in% result$keypoint)
@@ -93,8 +96,8 @@ test_that("summarise_keypoints errors on name conflict", {
     anicore::as_aniframe()
 
   expect_error(
-    summarise_keypoints(data, name = "point1"),
-    "conflicts with existing keypoint"
+    suppressWarnings(summarise_keypoints)(data, name = "point1"),
+    "already a value"
   )
 })
 
@@ -109,8 +112,8 @@ test_that("summarise_keypoints errors with less than 2 keypoints", {
     anicore::as_aniframe()
 
   expect_error(
-    summarise_keypoints(data),
-    "At least 2 keypoints required"
+    suppressWarnings(summarise_keypoints)(data),
+    "at least 2 members"
   )
 })
 
@@ -125,8 +128,8 @@ test_that("summarise_keypoints errors with single specified keypoint", {
     anicore::as_aniframe()
 
   expect_error(
-    summarise_keypoints(data, keypoints = "point1"),
-    "At least 2 keypoints required"
+    suppressWarnings(summarise_keypoints)(data, keypoints = "point1"),
+    "at least 2 members"
   )
 })
 
@@ -140,7 +143,7 @@ test_that("summarise_keypoints works with exactly 2 keypoints", {
   ) |>
     anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   expect_equal(nrow(result), 3)
   expect_true("centroid" %in% result$keypoint)
@@ -156,7 +159,7 @@ test_that("summarise_keypoints works with more than 2 keypoints", {
   ) |>
     anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   expect_equal(nrow(result), 5)
   expect_true("centroid" %in% result$keypoint)
@@ -175,7 +178,7 @@ test_that("summarise_keypoints preserves metadata", {
   metadata <- list(sampling_rate = 30)
   data <- anicore::set_metadata(data, metadata = metadata)
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   expect_equal(
     anicore::get_metadata(result)$sampling_rate,
@@ -191,7 +194,7 @@ test_that("summarise_keypoints errors on non-aniframe input", {
     y = c(0, 2)
   )
 
-  expect_error(summarise_keypoints(data))
+  expect_error(suppressWarnings(summarise_keypoints)(data))
 })
 
 test_that("summarise_keypoints preserves original data", {
@@ -204,7 +207,7 @@ test_that("summarise_keypoints preserves original data", {
   ) |>
     anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   original_rows <- result |>
     dplyr::filter(keypoint != "centroid")
@@ -223,7 +226,7 @@ test_that("summarise_keypoints works across multiple time points", {
   ) |>
     anicore::as_aniframe()
 
-  result <- summarise_keypoints(data)
+  result <- suppressWarnings(summarise_keypoints)(data)
 
   centroids <- result |>
     dplyr::filter(keypoint == "centroid")

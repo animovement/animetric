@@ -14,7 +14,7 @@ custom_af <- function() {
 }
 
 test_that("compute_centroid() works on a frame with its own identity names", {
-  out <- compute_centroid(custom_af())
+  out <- compute_centroid(custom_af(), across = "bodypart")
 
   expect_equal(as.character(unique(out$bodypart)), "centroid")
   expect_equal(out$x, c(5, 5, 5))
@@ -24,13 +24,13 @@ test_that("compute_centroid() works on a frame with its own identity names", {
 test_that("compute_centroid() keeps the declaration rather than re-detecting", {
   # Detection only recognises the standard identity names, so re-detecting
   # would inject a `keypoint` column and replace the declaration.
-  out <- compute_centroid(custom_af())
+  out <- compute_centroid(custom_af(), across = "bodypart")
 
   expect_equal(anicore::get_variables_what(out), c("animal", "bodypart"))
   expect_false("keypoint" %in% names(out))
 })
 
-test_that("compute_centroid() collapses only the finest identity", {
+test_that("compute_centroid() collapses only the level it is given", {
   af <- anicore::as_aniframe(
     data.frame(
       time = rep(1:2, each = 4),
@@ -42,7 +42,7 @@ test_that("compute_centroid() collapses only the finest identity", {
     variables_what = c("animal", "bodypart")
   )
 
-  out <- compute_centroid(af)
+  out <- compute_centroid(af, across = "bodypart")
 
   # One centroid per animal per timepoint, not one overall.
   expect_equal(nrow(out), 4)
@@ -69,7 +69,7 @@ test_that("a frame with no identity variables is refused by name", {
 test_that("the standard keypoint frame is unaffected", {
   af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
-  out <- compute_centroid(af)
+  out <- compute_centroid(af, across = "keypoint")
 
   expect_equal(as.character(unique(out$keypoint)), "centroid")
   expect_equal(nrow(out), 3)

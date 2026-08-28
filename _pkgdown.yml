@@ -22,6 +22,7 @@ reference:
   - summarise_aniframe
   - summarise_kinematics
   - summarise_tortuosity
+  - add_centroid
   - summarise_keypoints
 
 - title: "Compute"
