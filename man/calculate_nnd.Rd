@@ -31,23 +31,23 @@ to a different individual. Optionally filter by keypoint on neighbouring
 individuals.
 }
 \examples{
-\dontrun{
+data <- anicore::example_aniframe(n_obs = 10, n_individuals = 3, n_keypoints = 3)
+
 # Distance to nearest individual (any keypoint to any keypoint)
 data |> calculate_nnd()
 
-# Distance to nearest nose of another individual
-data |> calculate_nnd(keypoint_neighbour = "nose")
+# Distance to nearest head of another individual
+data |> calculate_nnd(keypoint_neighbour = "head")
 
-# Nose-to-nose distance
+# Head-to-head distance
 data |>
-  calculate_nnd(keypoint_neighbour = "nose") |>
-  dplyr::filter(keypoint == "nose")
+  calculate_nnd(keypoint_neighbour = "head") |>
+  dplyr::filter(keypoint == "head")
 
 # Minimum distance between individuals (across all keypoints)
 data |>
   calculate_nnd() |>
   dplyr::group_by(session, trial, time, individual) |>
   dplyr::slice_min(nnd_distance, n = 1)
-}
 
 }

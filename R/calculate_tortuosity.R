@@ -52,7 +52,8 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' data <- anicore::example_aniframe(n_obs = 30, n_individuals = 1, n_keypoints = 1)
+#'
 #' # Kinematics computed automatically if missing
 #' data |>
 #'   calculate_tortuosity(window_width = 11)
@@ -61,7 +62,6 @@
 #' data |>
 #'   calculate_kinematics() |>
 #'   calculate_tortuosity(window_width = 11)
-#' }
 calculate_tortuosity <- function(data, window_width = 11L) {
   # Store original class for restoration
   original_class <- class(data)

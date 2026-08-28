@@ -42,7 +42,8 @@ The window is centered on each timepoint. At path edges, metrics are
 computed from available data within the truncated window.
 }
 \examples{
-\dontrun{
+data <- anicore::example_aniframe(n_obs = 30, n_individuals = 1, n_keypoints = 1)
+
 # Kinematics computed automatically if missing
 data |>
   calculate_tortuosity(window_width = 11)
@@ -51,7 +52,6 @@ data |>
 data |>
   calculate_kinematics() |>
   calculate_tortuosity(window_width = 11)
-}
 }
 \references{
 Batschelet, E. (1981). Circular statistics in biology. Academic Press.

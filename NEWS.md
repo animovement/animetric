@@ -4,6 +4,10 @@
 
 * The core data structures come from `anicore`, which is what the `aniframe` package was renamed to in its 0.8.0 (animovement/anicore#84). The `aniframe` class keeps its name; only the package providing it changed.
 
+## Changed
+
+* The `calculate_kinematics()`, `calculate_nnd()` and `calculate_tortuosity()` examples run rather than sitting in `\dontrun{}`. Each builds its own frame with `anicore::example_aniframe()`; they were wrapped because they referred to an undefined `data`, so they had never been checked against the functions they document.
+
 ## Removed
 
 * The re-exports of `as_aniframe()`, `is_aniframe()`, `ensure_is_aniframe()`, `deg_to_rad()`, `rad_to_deg()`, `wrap_angle()`, `unwrap_angle()`, `calculate_angular_difference()` and `diff_angle()`. **Calls to these through `animetric::` need repointing at `anicore::` or `anispace::`.** animetric still uses them internally — it just has no reason to publish another package's interface as its own, which left the same function documented in two places and animetric's exports growing whenever anicore's did.
