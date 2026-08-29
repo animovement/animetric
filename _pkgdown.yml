@@ -7,6 +7,8 @@ home:
 template:
   bootstrap: 5
   package: animovementtemplate
+  bslib:
+    primary: "#004F63"
 
 reference:
 - title: "Calculate"
