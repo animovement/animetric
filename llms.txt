@@ -106,8 +106,4 @@ functions.
 
 - [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
   : Check if object is an aniframe_kin
-- [`mean_angle()`](https://animovement.dev/animetric/reference/mean_angle.md)
-  : Compute the circular mean of angles
-- [`median_angle()`](https://animovement.dev/animetric/reference/median_angle.md)
-  : Compute the circular median of angles
 

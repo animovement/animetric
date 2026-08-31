@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">animetric</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,30 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="animetric-development-version">animetric (development version)<a class="anchor" aria-label="anchor" href="#animetric-development-version"></a></h2>
+<div class="section level3">
+<h3 id="removed-development-version">Removed<a class="anchor" aria-label="anchor" href="#removed-development-version"></a></h3>
+<ul><li>
+<p><code>mean_angle()</code> and <code>median_angle()</code> are removed. Use <code><a href="https://animovement.dev/anicore/reference/circ_mean.html" class="external-link">anicore::circ_mean()</a></code> and <code><a href="https://animovement.dev/anicore/reference/circ_median.html" class="external-link">anicore::circ_median()</a></code>, which are attached by <code><a href="https://rdrr.io/r/base/library.html" class="external-link">library(animovement)</a></code> (animovement/anicore#147). The circular statistics live in one place now, and these were the two that had drifted: <code>mean_angle()</code> duplicated <code>circ_mean()</code> exactly, and <code>median_angle()</code> was not a circular median at all.</p>
+<p><code>median_angle()</code> took the median of the sine and cosine components, which is not rotation-equivariant — rotating every angle in a sample by the same amount moved its answer by a different amount, so the result depended on where the circle was cut. <code><a href="https://animovement.dev/anicore/reference/circ_median.html" class="external-link">anicore::circ_median()</a></code> is Fisher’s circular median and does not have that defect, so it is a replacement that returns <strong>different numbers</strong>. Any stored values computed with <code>median_angle()</code> were frame-dependent.</p>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changed-development-version">Changed<a class="anchor" aria-label="anchor" href="#changed-development-version"></a></h3>
+<ul><li><p>The circular summaries in <code><a href="../reference/summarise_kinematics.html">summarise_kinematics()</a></code> come from anicore, and the <code>circular</code> package is no longer needed at all (animovement/anicore#147). It was a soft dependency behind a <code>check_installed()</code> prompt, so the first call to <code><a href="../reference/summarise_kinematics.html">summarise_kinematics()</a></code> on a fresh install used to stop and ask to install a package — for two columns of the summary table.</p></li>
+<li><p><code>mean_heading</code> is reported in <code>[0, 2*pi)</code>, like <code>median_heading</code> already was. It previously came back in <code>(-pi, pi]</code>, so the two summaries of the same column disagreed about where the circle starts; near <code>+/-pi</code> that showed up as a mean of <code>-3.13</code> beside a median of <code>3.15</code>. Both now use the range <code><a href="https://animovement.dev/anicore/reference/wrap_angle.html" class="external-link">anicore::wrap_angle()</a></code> gives by default. The direction is unchanged — only how it is written down.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixed-development-version">Fixed<a class="anchor" aria-label="anchor" href="#fixed-development-version"></a></h3>
+<ul><li>
+<p><strong><code>median_heading</code> could be 180 degrees wrong</strong>, and is now correct (animovement/anicore#147). Where two directions tie for the circular median, the old implementation averaged them arithmetically — it read the tied pair out of an undocumented attribute of <code><a href="https://rdrr.io/pkg/circular/man/median.circular.html" class="external-link">circular::median.circular()</a></code>’s return value and called <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code> on it. When the tie straddles zero, the arithmetic mean of the two is their antipode. Headings tied at 0.1 and 5.8 radians gave 2.95 radians, or 169 degrees, where the answer is 349 degrees:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># the two tied directions, and what each way of averaging them gives</span></span>
+<span><span class="co">#   arithmetic: (0.1 + 5.8) / 2 = 2.95   -&gt; 169 degrees, the antipode</span></span>
+<span><span class="co">#   circular:   anicore::circ_median()   -&gt; 349 degrees</span></span></code></pre></div>
+<p>Nothing signalled it: no <code>NA</code>, no warning, and a plausible direction. Heading distributions straddle zero routinely, so this was not a corner case. <code><a href="https://animovement.dev/anicore/reference/circ_median.html" class="external-link">anicore::circ_median()</a></code> averages tied directions on the circle, and a grid search over the definition — the direction minimising the summed angular distance — confirms which of the two is the median. Any stored <code>median_heading</code> may need recomputing.</p>
+</li>
+<li><p><code>sd_heading</code> is <code>0</code> rather than <code>NaN</code> when the heading never changes. <code><a href="https://rdrr.io/pkg/circular/man/sd.circular.html" class="external-link">circular::sd.circular()</a></code> returns <code>NaN</code> there, because the resultant length of a constant sample can land above 1 in floating point; anicore’s <code>circ_sd()</code> clamps it. A keypoint that does not move produces exactly this (animovement/anicore#147).</p></li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.0" id="animetric-050-2026-08-28">animetric 0.5.0 (2026-08-28)<a class="anchor" aria-label="anchor" href="#animetric-050-2026-08-28"></a></h2>
@@ -63,7 +87,7 @@
 <p><code><a href="../reference/calculate_nnd.html">calculate_nnd()</a></code> reads the columns it needs from the aniframe’s metadata, and takes the identity roles explicitly (<a href="https://github.com/animovement/animetric/issues/37" class="external-link">#37</a>). It previously hard-coded <code>individual</code>, <code>c("session", "trial", "time")</code>, <code>keypoint</code> and <code>x</code>/<code>y</code>/<code>z</code>, consulting the metadata for none of them.</p>
 <p>That was already producing wrong numbers: <code>observation</code> joined <code>variables_when</code> in aniframe 0.6.0, but the hard-coded context list never picked it up, so multi-clip data was pooled and each animal could be matched to one in a <em>different clip</em> — silently, and with a plausible-looking distance.</p>
 <p><code>across</code> names the column whose value must differ (required — nothing is inferred), <code>within</code> names columns that must match on top of the temporal context, and <code>focal</code> / <code>neighbour</code> restrict which points are measured from and to. Being independent, they express asymmetric questions:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># whose neck is my head nearest to?</span></span>
 <span><span class="va">data</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/calculate_nnd.html">calculate_nnd</a></span><span class="op">(</span></span>
 <span>  across <span class="op">=</span> <span class="st">"individual"</span>,</span>
@@ -80,7 +104,7 @@
 <li>
 <p><code>summarise_keypoints()</code> is renamed <code><a href="../reference/add_centroid.html">add_centroid()</a></code>, and takes <code>across</code> to choose the level it collapses (<a href="https://github.com/animovement/animetric/issues/47" class="external-link">#47</a>). <strong>The old name is gone rather than deprecated</strong> — it has not been in a release, so nothing can be depending on it. The old name said <code>summarise_</code>, which in this package means collapsing a frame to summary rows — this appends them. It also named the keypoint level, which is only one of the levels a frame can be summarised across.</p>
 <p><code>across</code> names the identity variables to collapse, so the same question can be asked at any scale. On pose data for a team:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/add_centroid.html">add_centroid</a></span><span class="op">(</span><span class="va">af</span>, across <span class="op">=</span> <span class="st">"keypoint"</span><span class="op">)</span>                  <span class="co"># each player's own centre</span></span>
 <span><span class="fu"><a href="../reference/add_centroid.html">add_centroid</a></span><span class="op">(</span><span class="va">af</span>, across <span class="op">=</span> <span class="st">"individual"</span><span class="op">)</span>                <span class="co"># one centre per keypoint, across players</span></span>
 <span><span class="fu"><a href="../reference/add_centroid.html">add_centroid</a></span><span class="op">(</span><span class="va">af</span>, across <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"individual"</span>, <span class="st">"keypoint"</span><span class="op">)</span><span class="op">)</span> <span class="co"># the point the whole team occupies</span></span></code></pre></div>
@@ -94,7 +118,7 @@
 <h3 id="fixed-0-5-0">Fixed<a class="anchor" aria-label="anchor" href="#fixed-0-5-0"></a></h3>
 <ul><li>
 <p><code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code>, <code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code> and <code><a href="../reference/summarise_tortuosity.html">summarise_tortuosity()</a></code> refuse a frame whose grouping pools several trajectories, rather than answering wrongly (<a href="https://github.com/animovement/animetric/issues/54" class="external-link">#54</a>). Speed and path length come from successive rows within a group, so a group has to hold one position per moment. Regrouping an aniframe coarsely — every keypoint of an animal together, say — made the distance <em>between</em> keypoints count as movement:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># two keypoints 100 apart, each drifting 1 per frame</span></span>
 <span><span class="fu"><a href="../reference/calculate_kinematics.html">calculate_kinematics</a></span><span class="op">(</span><span class="va">af</span><span class="op">)</span>                      <span class="co"># mean speed 1, correct</span></span>
 <span><span class="fu"><a href="../reference/calculate_kinematics.html">calculate_kinematics</a></span><span class="op">(</span><span class="va">regrouped_by_individual</span><span class="op">)</span> <span class="co"># mean speed 2.7, silently</span></span></code></pre></div>
@@ -172,7 +196,7 @@
 <ul><li>Kinematics: <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code>, with <code>calculate_kinematics_2d()</code> and <code>_3d()</code> behind it, and <code><a href="../reference/differentiate.html">differentiate()</a></code>.</li>
 <li>Path complexity: <code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code> with <code>_2d()</code> and <code>_3d()</code> variants, <code><a href="../reference/compute_sinuosity.html">compute_sinuosity()</a></code>, <code><a href="../reference/compute_straightness.html">compute_straightness()</a></code> and <code><a href="../reference/compute_emax.html">compute_emax()</a></code>.</li>
 <li>Spatial summaries: <code><a href="../reference/compute_centroid.html">compute_centroid()</a></code>.</li>
-<li>Circular statistics: <code><a href="../reference/mean_angle.html">mean_angle()</a></code> and <code><a href="../reference/median_angle.html">median_angle()</a></code>.</li>
+<li>Circular statistics: <code>mean_angle()</code> and <code>median_angle()</code>.</li>
 <li>Summaries: <code><a href="../reference/summarise_kinematics.html">summarise_kinematics()</a></code> and <code>summarise_keypoints()</code>.</li>
 <li>
 <code><a href="../reference/is_aniframe_kin.html">is_aniframe_kin()</a></code> to test whether a frame carries kinematics.</li>

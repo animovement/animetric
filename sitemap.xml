@@ -15,11 +15,6 @@
 <url><loc>https://animovement.dev/animetric/reference/calculate_tortuosity.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/calculate_translation_2d.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/calculate_translation_3d.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/circ_mad.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/circ_mean.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/circ_median.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/circ_quantile.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/circ_sd.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_centroid.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_emax.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_gradient.html</loc></url>
@@ -33,8 +28,6 @@
 <url><loc>https://animovement.dev/animetric/reference/index.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/is_aniframe_kin.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/join_summaries.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/mean_angle.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/median_angle.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/new_aniframe_kin.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/nnd_context.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/nnd_coords.html</loc></url>
