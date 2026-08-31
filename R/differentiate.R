@@ -22,7 +22,7 @@ compute_gradient <- function(values, coords = NULL) {
   n <- length(values)
 
   if (is.null(coords)) {
-    coords <- seq_along(1:n)
+    coords <- seq_len(n)
   }
 
   if (n < 2) {
