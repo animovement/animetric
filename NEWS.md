@@ -1,5 +1,31 @@
 # animetric (development version)
 
+## Removed
+
+* `mean_angle()` and `median_angle()` are removed. Use `anicore::circ_mean()` and `anicore::circ_median()`, which are attached by `library(animovement)` (animovement/anicore#147). The circular statistics live in one place now, and these were the two that had drifted: `mean_angle()` duplicated `circ_mean()` exactly, and `median_angle()` was not a circular median at all.
+
+  `median_angle()` took the median of the sine and cosine components, which is not rotation-equivariant — rotating every angle in a sample by the same amount moved its answer by a different amount, so the result depended on where the circle was cut. `anicore::circ_median()` is Fisher's circular median and does not have that defect, so it is a replacement that returns **different numbers**. Any stored values computed with `median_angle()` were frame-dependent.
+
+## Changed
+
+* The circular summaries in `summarise_kinematics()` come from anicore, and the `circular` package is no longer needed at all (animovement/anicore#147). It was a soft dependency behind a `check_installed()` prompt, so the first call to `summarise_kinematics()` on a fresh install used to stop and ask to install a package — for two columns of the summary table.
+
+* `mean_heading` is reported in `[0, 2*pi)`, like `median_heading` already was. It previously came back in `(-pi, pi]`, so the two summaries of the same column disagreed about where the circle starts; near `+/-pi` that showed up as a mean of `-3.13` beside a median of `3.15`. Both now use the range `anicore::wrap_angle()` gives by default. The direction is unchanged — only how it is written down.
+
+## Fixed
+
+* **`median_heading` could be 180 degrees wrong**, and is now correct (animovement/anicore#147). Where two directions tie for the circular median, the old implementation averaged them arithmetically — it read the tied pair out of an undocumented attribute of `circular::median.circular()`'s return value and called `mean()` on it. When the tie straddles zero, the arithmetic mean of the two is their antipode. Headings tied at 0.1 and 5.8 radians gave 2.95 radians, or 169 degrees, where the answer is 349 degrees:
+
+  ```r
+  # the two tied directions, and what each way of averaging them gives
+  #   arithmetic: (0.1 + 5.8) / 2 = 2.95   -> 169 degrees, the antipode
+  #   circular:   anicore::circ_median()   -> 349 degrees
+  ```
+
+  Nothing signalled it: no `NA`, no warning, and a plausible direction. Heading distributions straddle zero routinely, so this was not a corner case. `anicore::circ_median()` averages tied directions on the circle, and a grid search over the definition — the direction minimising the summed angular distance — confirms which of the two is the median. Any stored `median_heading` may need recomputing.
+
+* `sd_heading` is `0` rather than `NaN` when the heading never changes. `circular::sd.circular()` returns `NaN` there, because the resultant length of a constant sample can land above 1 in floating point; anicore's `circ_sd()` clamps it. A keypoint that does not move produces exactly this (animovement/anicore#147).
+
 # animetric 0.5.0 (2026-08-28)
 
 ## Changed

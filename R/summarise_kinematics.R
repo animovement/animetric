@@ -63,8 +63,8 @@ summarise_kinematics_2d <- function(data, measures) {
           ),
           .names = "{.fn}_{.col}"
         ),
-        median_heading = circ_median(.data$heading),
-        mad_heading = circ_mad(.data$heading),
+        median_heading = anicore::circ_median(.data$heading),
+        mad_heading = anicore::circ_mad(.data$heading),
         .groups = "drop"
       )
   } else {
@@ -78,11 +78,8 @@ summarise_kinematics_2d <- function(data, measures) {
           ),
           .names = "{.fn}_{.col}"
         ),
-        mean_heading = as.numeric(mean(
-          circular::circular(.data$heading),
-          na.rm = TRUE
-        )),
-        sd_heading = circ_sd(.data$heading),
+        mean_heading = anicore::circ_mean(.data$heading),
+        sd_heading = anicore::circ_sd(.data$heading),
         .groups = "drop"
       )
   }

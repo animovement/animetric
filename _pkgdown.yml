@@ -40,5 +40,3 @@ reference:
 - title: "Helpers"
   contents:
   - is_aniframe_kin
-  - mean_angle
-  - median_angle
