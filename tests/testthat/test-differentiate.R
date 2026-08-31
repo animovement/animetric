@@ -137,3 +137,16 @@ test_that("differentiate preserves vector length", {
   expect_length(result2, length(x))
   expect_length(result3, length(x))
 })
+
+test_that("compute_gradient() defaults to the sample index as its coordinate", {
+  # The default coordinates are built with seq_len(n) (#65). Comparing against
+  # them explicitly is what pins the branch: seq_along(1:n) agrees for every
+  # n >= 1 and differs only at n = 0, which the `n < 2` guard rejects anyway.
+  values <- c(0, 1, 4, 9)
+
+  expect_equal(compute_gradient(values), c(1, 2, 4, 5))
+  expect_equal(
+    compute_gradient(values),
+    compute_gradient(values, coords = seq_len(length(values)))
+  )
+})
