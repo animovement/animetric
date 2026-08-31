@@ -115,7 +115,7 @@ calculate_tortuosity_2d <- function(data, window_width = 11L) {
       ),
 
       # Turning angle from heading (already computed from velocity vector)
-      .turning = anispace::diff_angle(.data$heading),
+      .turning = anicore::circ_successive_difference(.data$heading),
       .cos_turning = cos(.data$.turning),
 
       # Rolling sums using data.table (fast algorithm, centered window)

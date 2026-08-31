@@ -1,5 +1,21 @@
 # animetric (development version)
 
+## Removed
+
+* `mean_angle()` and `median_angle()` are removed. Use `anicore::circ_mean()` and `anicore::circ_median()`, which are attached by `library(animovement)` (animovement/anicore#147). The circular statistics live in one place now, and these were the two that had drifted: `mean_angle()` duplicated `circ_mean()` exactly, and `median_angle()` was not a circular median at all.
+
+  `median_angle()` took the median of the sine and cosine components, which is not rotation-equivariant — rotating every angle in a sample by the same amount moved its answer by a different amount, so the result depended on where the circle was cut. `anicore::circ_median()` is Fisher's circular median and does not have that defect, so it is a replacement that returns **different numbers**. Any stored values computed with `median_angle()` were frame-dependent.
+
+## Changed
+
+* The circular summaries in `summarise_kinematics()` come from anicore, and the `circular` package is no longer needed at all (animovement/anicore#147). It was a soft dependency behind a `check_installed()` prompt, so the first call to `summarise_kinematics()` on a fresh install used to stop and ask to install a package — for two columns of the summary table.
+
+* `mean_heading` is reported in `[0, 2*pi)`, like `median_heading` already was. It previously came back in `(-pi, pi]`, so the two summaries of the same column disagreed about where the circle starts; near `+/-pi` that showed up as a mean of `-3.13` beside a median of `3.15`. Both now use the range `anicore::wrap_angle()` gives by default. The direction is unchanged — only how it is written down.
+
+## Fixed
+
+* `sd_heading` is `0` rather than `NaN` when the heading never changes. `circular::sd.circular()` returns `NaN` there, because the resultant length of a constant sample can land above 1 in floating point; anicore's `circ_sd()` clamps it. A keypoint that does not move produces exactly this (animovement/anicore#147).
+
 # animetric 0.5.0 (2026-08-28)
 
 ## Changed
