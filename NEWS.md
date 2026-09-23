@@ -8,6 +8,8 @@
 
 ## Changed
 
+* Works with anicore's `anipoint` class and rebuilt accessor API (animovement/anicore#154). `calculate_kinematics()` returns a frame of class `c("aniframe_kin", "anipoint", "aniframe", ...)`.
+
 * The circular summaries in `summarise_kinematics()` come from anicore, and the `circular` package is no longer needed at all (animovement/anicore#147). It was a soft dependency behind a `check_installed()` prompt, so the first call to `summarise_kinematics()` on a fresh install used to stop and ask to install a package — for two columns of the summary table.
 
 * `mean_heading` is reported in `[0, 2*pi)`, like `median_heading` already was. It previously came back in `(-pi, pi]`, so the two summaries of the same column disagreed about where the circle starts; near `+/-pi` that showed up as a mean of `-3.13` beside a median of `3.15`. Both now use the range `anicore::wrap_angle()` gives by default. The direction is unchanged — only how it is written down.

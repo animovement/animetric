@@ -1,5 +1,5 @@
 # ============================================================================
-# CALCULATE FUNCTIONS (aniframe in, aniframe with new columns out)
+# CALCULATE FUNCTIONS (anipoint in, anipoint with new columns out)
 # ============================================================================
 
 #' Calculate tortuosity metrics over sliding windows
@@ -10,12 +10,12 @@
 #' If required kinematic columns are missing, the function will compute them
 #' automatically by calling the appropriate helper functions.
 #'
-#' @param data An aniframe with position coordinates and time. Velocity and
+#' @param data An anipoint with position coordinates and time. Velocity and
 #'   heading columns will be computed if not already present.
 #' @param window_width Size of the sliding window (number of observations).
 #'   Should be an odd number >= 3 for symmetric centering.
 #'
-#' @return The input aniframe with additional columns:
+#' @return The input anipoint with additional columns:
 #'   \describe{
 #'     \item{straightness}{Straightness index (D/L), ranges 0-1}
 #'     \item{sinuosity}{Corrected sinuosity index (Benhamou 2004)}
@@ -52,7 +52,7 @@
 #' @export
 #'
 #' @examples
-#' data <- anicore::example_aniframe(n_obs = 30, n_individuals = 1, n_keypoints = 1)
+#' data <- anicore::example_anipoint(n_obs = 30, n_individuals = 1, n_keypoints = 1)
 #'
 #' # Kinematics computed automatically if missing
 #' data |>
@@ -85,8 +85,8 @@ calculate_tortuosity_2d <- function(data, window_width = 11L) {
   # Check that data.table is installed
   dt_check()
 
-  # Validate that it is an aniframe
-  anicore::ensure_is_aniframe(data)
+  # Validate that it is an anipoint
+  anicore::ensure_is_anipoint(data)
 
   # Validate window_width
   window_width <- as.integer(window_width)
@@ -182,8 +182,8 @@ calculate_tortuosity_3d <- function(data, window_width = 11L) {
   # Check that data.table is installed
   dt_check()
 
-  # Validate that it is an aniframe
-  anicore::ensure_is_aniframe(data)
+  # Validate that it is an anipoint
+  anicore::ensure_is_anipoint(data)
 
   window_width <- as.integer(window_width)
   if (window_width < 3L) {

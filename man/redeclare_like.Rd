@@ -9,16 +9,16 @@ redeclare_like(derived, source, space_cols)
 \arguments{
 \item{derived}{A plain data frame derived from \code{source}.}
 
-\item{source}{The aniframe it came from.}
+\item{source}{The anipoint it came from.}
 
 \item{space_cols}{The spatial columns \code{derived} carries.}
 }
 \value{
-\code{derived} as an aniframe, declared as \code{source} was.
+\code{derived} as an anipoint, declared as \code{source} was.
 }
 \description{
 Detection only recognises the standard identity names, so letting
-\code{as_aniframe()} re-detect gives a frame using its own names an invented
+\code{as_anipoint()} re-detect gives a frame using its own names an invented
 \code{keypoint} column and a replaced declaration (#47). The rest of the
 source's metadata is carried over with it.
 }

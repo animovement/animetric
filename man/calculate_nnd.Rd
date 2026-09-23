@@ -15,7 +15,7 @@ calculate_nnd(
 )
 }
 \arguments{
-\item{data}{An aniframe.}
+\item{data}{An anipoint.}
 
 \item{across}{Column whose value must differ between a point and its
 neighbour.}
@@ -37,7 +37,7 @@ a neighbour, e.g. \code{list(keypoint = "tail")}.}
 \code{neighbour = list(keypoint = ...)}.}
 }
 \value{
-The input aniframe with added columns:
+The input anipoint with added columns:
 \itemize{
 \item \code{nnd_distance} — distance to the n-th nearest neighbour
 \item \verb{nnd_<across>} — which entity that neighbour belongs to
@@ -50,8 +50,8 @@ Computes, for each point, the distance to the nearest point belonging to
 a \emph{different} entity — typically a different individual at the same
 moment.
 
-Which columns carry time and position is read from the aniframe's
-\code{variables_when} and \code{variables_where} metadata. The identity columns
+Which columns carry time and position is read from the anipoint's
+declared variables (see \code{\link[anicore:get_variables]{anicore::get_variables()}}). The identity columns
 are assigned roles by you, explicitly, because "another animal" and
 "another point on this animal" are different questions and the data
 cannot tell which one you mean.
@@ -76,7 +76,7 @@ column to permitted values, and they are independent, so asymmetric
 questions like nose-to-tail are expressible.
 }
 \examples{
-data <- anicore::example_aniframe(
+data <- anicore::example_anipoint(
   n_obs = 5,
   n_individuals = 3,
   n_keypoints = 3

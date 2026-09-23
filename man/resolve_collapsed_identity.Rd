@@ -7,7 +7,7 @@
 resolve_collapsed_identity(data, across = NULL, call = rlang::caller_env())
 }
 \arguments{
-\item{data}{An aniframe.}
+\item{data}{An anipoint.}
 
 \item{across}{Identity variables to collapse, or \code{NULL} for the finest one.}
 }
@@ -16,7 +16,7 @@ Character vector naming the columns to collapse.
 }
 \description{
 Which levels are summarised is the caller's to choose, and there is no
-guessing it: the order of \code{variables_what} is what detection emits rather
+guessing it: the order of the identity keys is what detection emits rather
 than a hierarchy a frame asserts, and identity variables need not nest at
 all (animovement/anicore#141). A frame declaring more than one identity
 variable has to be told.

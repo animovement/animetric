@@ -7,7 +7,7 @@
 nnd_mask(data, values, arg)
 }
 \arguments{
-\item{data}{An aniframe.}
+\item{data}{An anipoint.}
 
 \item{values}{Named list of column to permitted values, or \code{NULL}.}
 

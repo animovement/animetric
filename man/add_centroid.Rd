@@ -2,7 +2,7 @@
 % Please edit documentation in R/add_centroid.R
 \name{add_centroid}
 \alias{add_centroid}
-\title{Add a centroid to an aniframe}
+\title{Add a centroid to an anipoint}
 \usage{
 add_centroid(
   data,
@@ -13,7 +13,7 @@ add_centroid(
 )
 }
 \arguments{
-\item{data}{An aniframe with Cartesian coordinates.}
+\item{data}{An anipoint with Cartesian coordinates.}
 
 \item{across}{Identity variables to collapse — the dimensions the summary
 ranges over. Defaults to the finest one the frame declares. Collapsing
@@ -25,7 +25,7 @@ Only meaningful when one level is collapsed.}
 \item{name}{Name for the new member. Default is \code{"centroid"}.}
 }
 \value{
-The aniframe, with the centroid appended as extra rows. The
+The anipoint, with the centroid appended as extra rows. The
 collapsed identity column comes back as a factor, since it now holds a
 named member that an integer column could not.
 }
@@ -43,7 +43,7 @@ summary's name — an individual's strain is still its strain, since nothing
 was averaged over it.
 }
 \examples{
-af <- anicore::example_aniframe(n_obs = 20, n_individuals = 2, n_keypoints = 3)
+af <- anicore::example_anipoint(n_obs = 20, n_individuals = 2, n_keypoints = 3)
 
 # Each animal gains a centroid keypoint
 add_centroid(af, across = "keypoint")

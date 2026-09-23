@@ -7,7 +7,7 @@
 nnd_coords(data, where)
 }
 \arguments{
-\item{data}{An aniframe.}
+\item{data}{An anipoint.}
 
 \item{where}{Spatial variables the frame declares.}
 }

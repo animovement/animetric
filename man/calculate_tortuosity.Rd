@@ -7,14 +7,14 @@
 calculate_tortuosity(data, window_width = 11L)
 }
 \arguments{
-\item{data}{An aniframe with position coordinates and time. Velocity and
+\item{data}{An anipoint with position coordinates and time. Velocity and
 heading columns will be computed if not already present.}
 
 \item{window_width}{Size of the sliding window (number of observations).
 Should be an odd number >= 3 for symmetric centering.}
 }
 \value{
-The input aniframe with additional columns:
+The input anipoint with additional columns:
 \describe{
 \item{straightness}{Straightness index (D/L), ranges 0-1}
 \item{sinuosity}{Corrected sinuosity index (Benhamou 2004)}
@@ -42,7 +42,7 @@ The window is centered on each timepoint. At path edges, metrics are
 computed from available data within the truncated window.
 }
 \examples{
-data <- anicore::example_aniframe(n_obs = 30, n_individuals = 1, n_keypoints = 1)
+data <- anicore::example_anipoint(n_obs = 30, n_individuals = 1, n_keypoints = 1)
 
 # Kinematics computed automatically if missing
 data |>

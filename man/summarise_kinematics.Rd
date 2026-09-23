@@ -18,7 +18,7 @@ summarize_kinematics(
 )
 }
 \arguments{
-\item{data}{A kinematics aniframe (output of \code{calculate_kinematics()})}
+\item{data}{A kinematics anipoint (output of \code{calculate_kinematics()})}
 
 \item{measures}{Measures of central tendency and dispersion for kinematics.
 Options are \code{"median_mad"} (default) and \code{"mean_sd"}.}
@@ -41,7 +41,7 @@ kinematics.
 }
 \examples{
 kin <- calculate_kinematics(
-  anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+  anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 )
 summarise_kinematics(kin)
 

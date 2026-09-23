@@ -25,7 +25,7 @@
 #'   matched neighbour), one `nnd_<name>` column per entry of `labels`,
 #'   and `nnd_distance`.
 #'
-#' @seealso [calculate_nnd()] for the aniframe-level function.
+#' @seealso [calculate_nnd()] for the anipoint-level function.
 #'
 #' @examples
 #' # Nearest point belonging to a different individual

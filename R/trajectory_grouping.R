@@ -16,20 +16,17 @@
 #' its last value minus its first -- across concatenated trajectories, that
 #' is a number describing nothing.
 #'
-#' Regrouping an aniframe is allowed, and `anicore` warns that its grouping
+#' Regrouping an anipoint is allowed, and `anicore` warns that its grouping
 #' and its declaration then disagree. This is a stronger statement about a
 #' narrower thing: these computations have a precondition, and silently
 #' returning a wrong number is worse than refusing.
 #'
-#' @param data An aniframe.
+#' @param data An anipoint.
 #'
 #' @return `TRUE`, invisibly.
 #' @keywords internal
 ensure_trajectory_grouping <- function(data, call = rlang::caller_env()) {
-  declared <- unique(c(
-    anicore::get_variables_what(data),
-    anicore::get_variables_when(data)
-  ))
+  declared <- anicore::get_keys(data)
   grouping <- dplyr::group_vars(data)
 
   if (setequal(grouping, declared)) {

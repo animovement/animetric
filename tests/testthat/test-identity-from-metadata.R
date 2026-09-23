@@ -1,7 +1,7 @@
 # Identity, position and the index come from the declaration (#47)
 
 custom_af <- function() {
-  anicore::as_aniframe(
+  anicore::as_anipoint(
     data.frame(
       time = rep(1:3, each = 2),
       animal = rep("a1", 6),
@@ -26,12 +26,12 @@ test_that("compute_centroid() keeps the declaration rather than re-detecting", {
   # would inject a `keypoint` column and replace the declaration.
   out <- compute_centroid(custom_af(), across = "bodypart")
 
-  expect_equal(anicore::get_variables_what(out), c("animal", "bodypart"))
+  expect_equal(anicore::get_variables(out, "what"), c("animal", "bodypart"))
   expect_false("keypoint" %in% names(out))
 })
 
 test_that("compute_centroid() collapses only the level it is given", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = rep(1:2, each = 4),
       animal = rep(c("a1", "a1", "a2", "a2"), 2),
@@ -58,7 +58,7 @@ test_that("add_centroid() selects on the declared identity", {
 })
 
 test_that("a frame with no identity variables is refused by name", {
-  af <- suppressWarnings(anicore::as_aniframe(
+  af <- suppressWarnings(anicore::as_anipoint(
     data.frame(time = 1:3, x = 1:3, y = 1:3),
     variables_what = character(0)
   ))
@@ -67,7 +67,7 @@ test_that("a frame with no identity variables is refused by name", {
 })
 
 test_that("the standard keypoint frame is unaffected", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
   out <- compute_centroid(af, across = "keypoint")
 

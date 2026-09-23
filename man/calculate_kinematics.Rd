@@ -7,12 +7,12 @@
 calculate_kinematics(data)
 }
 \arguments{
-\item{data}{An aniframe with position coordinates (x/y or x/y/z for Cartesian;
+\item{data}{An anipoint with position coordinates (x/y or x/y/z for Cartesian;
 rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for spherical)
 and a time column}
 }
 \value{
-An aniframe in the same coordinate system as the input, with added
+An anipoint in the same coordinate system as the input, with added
 kinematic measures. For 2D data, includes translational kinematics
 (velocity components, speed, acceleration, path length) and rotational
 kinematics (heading, angular velocity, angular speed, angular acceleration).
@@ -40,7 +40,7 @@ discontinuities at ±π.
 \examples{
 # 2D Cartesian data
 traj_2d <- data.frame(time = 0:10, x = rnorm(11), y = rnorm(11)) |>
-  anicore::as_aniframe()
+  anicore::as_anipoint()
 kinematics_2d <- calculate_kinematics(traj_2d)
 
 # Polar data (automatically converted and converted back)
