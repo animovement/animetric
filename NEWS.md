@@ -6,6 +6,10 @@
 
   `median_angle()` took the median of the sine and cosine components, which is not rotation-equivariant — rotating every angle in a sample by the same amount moved its answer by a different amount, so the result depended on where the circle was cut. `anicore::circ_median()` is Fisher's circular median and does not have that defect, so it is a replacement that returns **different numbers**. Any stored values computed with `median_angle()` were frame-dependent.
 
+## Fixed
+
+* `calculate_nnd()` keeps the input's metadata, such as `sampling_rate`, and works on frames whose axis columns have custom names. It used to rebuild its result by re-detecting the columns, which dropped both.
+
 ## Changed
 
 * Works with anicore's `anipoint` class and rebuilt accessor API (animovement/anicore#154). `calculate_kinematics()` returns a frame of class `c("aniframe_kin", "anipoint", "aniframe", ...)`.

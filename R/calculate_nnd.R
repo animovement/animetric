@@ -146,7 +146,15 @@ calculate_nnd <- function(
     dplyr::rename_with(function(nm) {
       sub("^nnd_across$", paste0("nnd_", across), nm)
     }) |>
-    anicore::as_anipoint()
+    # Re-declare from the input rather than re-detecting, so renamed axes and
+    # custom keys survive, then restore the metadata detection cannot know.
+    anicore::as_anipoint(
+      variables_what = anicore::get_variables(data, "what"),
+      variables_when = anicore::get_variables(data, "when", "keys"),
+      variables_where = anicore::get_variables(data, "where", "position"),
+      index = anicore::get_index(data)
+    ) |>
+    anicore::set_metadata(metadata = anicore::get_metadata(data))
 
   outgoing_classes <- class(result)
   class(result) <- c(
