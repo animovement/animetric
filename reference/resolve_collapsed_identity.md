@@ -1,7 +1,7 @@
 # The identity variables a summary collapses
 
 Which levels are summarised is the caller's to choose, and there is no
-guessing it: the order of `variables_what` is what detection emits
+guessing it: the order of the identity keys is what detection emits
 rather than a hierarchy a frame asserts, and identity variables need not
 nest at all (animovement/anicore#141). A frame declaring more than one
 identity variable has to be told.
@@ -16,7 +16,7 @@ resolve_collapsed_identity(data, across = NULL, call = rlang::caller_env())
 
 - data:
 
-  An aniframe.
+  An anipoint.
 
 - across:
 

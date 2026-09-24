@@ -12,7 +12,7 @@ nnd_mask(data, values, arg)
 
 - data:
 
-  An aniframe.
+  An anipoint.
 
 - values:
 

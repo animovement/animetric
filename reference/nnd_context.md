@@ -15,7 +15,7 @@ nnd_context(data, variables, within)
 
 - data:
 
-  An aniframe.
+  An anipoint.
 
 - variables:
 

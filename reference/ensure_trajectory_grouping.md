@@ -16,7 +16,7 @@ ensure_trajectory_grouping(data, call = rlang::caller_env())
 
 - data:
 
-  An aniframe.
+  An anipoint.
 
 ## Value
 
@@ -28,7 +28,7 @@ Path length accumulates the same way, and the tortuosity summary takes
 its last value minus its first – across concatenated trajectories, that
 is a number describing nothing.
 
-Regrouping an aniframe is allowed, and `anicore` warns that its grouping
+Regrouping an anipoint is allowed, and `anicore` warns that its grouping
 and its declaration then disagree. This is a stronger statement about a
 narrower thing: these computations have a precondition, and silently
 returning a wrong number is worse than refusing.

@@ -1,7 +1,7 @@
 # Re-declare a derived frame the way its source was declared
 
 Detection only recognises the standard identity names, so letting
-`as_aniframe()` re-detect gives a frame using its own names an invented
+`as_anipoint()` re-detect gives a frame using its own names an invented
 `keypoint` column and a replaced declaration (#47). The rest of the
 source's metadata is carried over with it.
 
@@ -19,7 +19,7 @@ redeclare_like(derived, source, space_cols)
 
 - source:
 
-  The aniframe it came from.
+  The anipoint it came from.
 
 - space_cols:
 
@@ -27,4 +27,4 @@ redeclare_like(derived, source, space_cols)
 
 ## Value
 
-`derived` as an aniframe, declared as `source` was.
+`derived` as an anipoint, declared as `source` was.

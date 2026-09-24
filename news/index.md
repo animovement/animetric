@@ -24,7 +24,20 @@
   replacement that returns **different numbers**. Any stored values
   computed with `median_angle()` were frame-dependent.
 
+### Fixed
+
+- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
+  keeps the input’s metadata, such as `sampling_rate`, and works on
+  frames whose axis columns have custom names. It used to rebuild its
+  result by re-detecting the columns, which dropped both.
+
 ### Changed
+
+- Works with anicore’s `anipoint` class and rebuilt accessor API
+  (animovement/anicore#154).
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  returns a frame of class
+  `c("aniframe_kin", "anipoint", "aniframe", ...)`.
 
 - The circular summaries in
   [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
@@ -50,11 +63,11 @@
   (animovement/anicore#147). Where two directions tie for the circular
   median, the old implementation averaged them arithmetically — it read
   the tied pair out of an undocumented attribute of
-  [`circular::median.circular()`](https://rdrr.io/pkg/circular/man/median.circular.html)’s
-  return value and called [`mean()`](https://rdrr.io/r/base/mean.html)
-  on it. When the tie straddles zero, the arithmetic mean of the two is
-  their antipode. Headings tied at 0.1 and 5.8 radians gave 2.95
-  radians, or 169 degrees, where the answer is 349 degrees:
+  `circular::median.circular()`’s return value and called
+  [`mean()`](https://rdrr.io/r/base/mean.html) on it. When the tie
+  straddles zero, the arithmetic mean of the two is their antipode.
+  Headings tied at 0.1 and 5.8 radians gave 2.95 radians, or 169
+  degrees, where the answer is 349 degrees:
 
   ``` r
 
@@ -73,11 +86,10 @@
   may need recomputing.
 
 - `sd_heading` is `0` rather than `NaN` when the heading never changes.
-  [`circular::sd.circular()`](https://rdrr.io/pkg/circular/man/sd.circular.html)
-  returns `NaN` there, because the resultant length of a constant sample
-  can land above 1 in floating point; anicore’s `circ_sd()` clamps it. A
-  keypoint that does not move produces exactly this
-  (animovement/anicore#147).
+  `circular::sd.circular()` returns `NaN` there, because the resultant
+  length of a constant sample can land above 1 in floating point;
+  anicore’s `circ_sd()` clamps it. A keypoint that does not move
+  produces exactly this (animovement/anicore#147).
 
 ## animetric 0.5.0 (2026-08-28)
 
@@ -99,7 +111,7 @@
   [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
   examples run rather than sitting in `\dontrun{}`. Each builds its own
   frame with
-  [`anicore::example_aniframe()`](https://animovement.dev/anicore/reference/example_aniframe.html);
+  [`anicore::example_aniframe()`](https://animovement.dev/anicore/reference/anicore-deprecated.html);
   they were wrapped because they referred to an undefined `data`, so
   they had never been checked against the functions they document.
 

@@ -12,7 +12,7 @@ ensure_nnd_column(data, value, arg)
 
 - data:
 
-  An aniframe.
+  An anipoint.
 
 - value:
 

@@ -1,6 +1,6 @@
-# The variable roles an aniframe declares
+# The variable roles an anipoint declares
 
-The variable roles an aniframe declares
+The variable roles an anipoint declares
 
 ## Usage
 
@@ -12,7 +12,7 @@ nnd_variables(data)
 
 - data:
 
-  An aniframe.
+  An anipoint.
 
 ## Value
 

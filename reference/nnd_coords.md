@@ -12,7 +12,7 @@ nnd_coords(data, where)
 
 - data:
 
-  An aniframe.
+  An anipoint.
 
 - where:
 

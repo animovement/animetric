@@ -13,7 +13,7 @@ retained_grouping(data, collapsed)
 
 - data:
 
-  An aniframe.
+  An anipoint.
 
 - collapsed:
 

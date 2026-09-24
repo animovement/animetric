@@ -79,7 +79,7 @@ These functions return a single value per group, or a full summary.
   [`summarize_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
   : Calculate tortuosity summary statistics
 - [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
-  : Add a centroid to an aniframe
+  : Add a centroid to an anipoint
 
 ## Compute
 

@@ -13,7 +13,7 @@ calculate_tortuosity(data, window_width = 11L)
 
 - data:
 
-  An aniframe with position coordinates and time. Velocity and heading
+  An anipoint with position coordinates and time. Velocity and heading
   columns will be computed if not already present.
 
 - window_width:
@@ -23,7 +23,7 @@ calculate_tortuosity(data, window_width = 11L)
 
 ## Value
 
-The input aniframe with additional columns:
+The input anipoint with additional columns:
 
 - straightness:
 
@@ -74,7 +74,7 @@ Cybernetics, 97(1), 47-61.
 ## Examples
 
 ``` r
-data <- anicore::example_aniframe(n_obs = 30, n_individuals = 1, n_keypoints = 1)
+data <- anicore::example_anipoint(n_obs = 30, n_individuals = 1, n_keypoints = 1)
 
 # Kinematics computed automatically if missing
 data |>

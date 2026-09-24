@@ -14,7 +14,7 @@ summarize_tortuosity(data)
 
 - data:
 
-  A kinematics aniframe (output of
+  A kinematics anipoint (output of
   [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md))
 
 ## Value
@@ -44,7 +44,7 @@ animal's path. Journal of Theoretical Biology, 229(2), 209-220.
 
 ``` r
 kin <- calculate_kinematics(
-  anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+  anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 )
 summarise_tortuosity(calculate_tortuosity(kin))
 #> # A tibble: 1 × 10

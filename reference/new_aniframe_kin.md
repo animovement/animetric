@@ -12,7 +12,7 @@ new_aniframe_kin(x)
 
 - x:
 
-  A data frame to add aniframe_kin class to
+  An anipoint to add the aniframe_kin class to
 
 ## Value
 

@@ -12,8 +12,8 @@ calculate_translation_3d(data)
 
 - data:
 
-  An aniframe with x, y, z, and time columns
+  An anipoint with x, y, z, and time columns
 
 ## Value
 
-The aniframe with added translational kinematic columns
+The anipoint with added translational kinematic columns

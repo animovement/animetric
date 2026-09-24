@@ -13,8 +13,8 @@ calculate_rotation_2d(data)
 
 - data:
 
-  An aniframe with v_x, v_y, and time columns
+  An anipoint with v_x, v_y, and time columns
 
 ## Value
 
-The aniframe with added rotational kinematic columns
+The anipoint with added rotational kinematic columns

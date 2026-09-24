@@ -70,14 +70,14 @@ for calculations, then converting back to the original system.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>An aniframe with position coordinates (x/y or x/y/z for Cartesian;
+<dd><p>An anipoint with position coordinates (x/y or x/y/z for Cartesian;
 rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for spherical)
 and a time column</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An aniframe in the same coordinate system as the input, with added
+    <p>An anipoint in the same coordinate system as the input, with added
 kinematic measures. For 2D data, includes translational kinematics
 (velocity components, speed, acceleration, path length) and rotational
 kinematics (heading, angular velocity, angular speed, angular acceleration).
@@ -99,7 +99,7 @@ discontinuities at ±π.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># 2D Cartesian data</span></span></span>
 <span class="r-in"><span><span class="va">traj_2d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>time <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">10</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">11</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">11</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">anicore</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/anicore/reference/as_aniframe.html" class="external-link">as_aniframe</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">anicore</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/anicore/reference/as_anipoint.html" class="external-link">as_anipoint</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">kinematics_2d</span> <span class="op">&lt;-</span> <span class="fu">calculate_kinematics</span><span class="op">(</span><span class="va">traj_2d</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Polar data (automatically converted and converted back)</span></span></span>

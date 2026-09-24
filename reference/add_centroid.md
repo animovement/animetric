@@ -1,4 +1,4 @@
-# Add a centroid to an aniframe
+# Add a centroid to an anipoint
 
 Appends the centroid of one identity level to the frame, as a new member
 of that level. The rest of the data is returned untouched.
@@ -29,7 +29,7 @@ add_centroid(
 
 - data:
 
-  An aniframe with Cartesian coordinates.
+  An anipoint with Cartesian coordinates.
 
 - across:
 
@@ -48,7 +48,7 @@ add_centroid(
 
 ## Value
 
-The aniframe, with the centroid appended as extra rows. The collapsed
+The anipoint, with the centroid appended as extra rows. The collapsed
 identity column comes back as a factor, since it now holds a named
 member that an integer column could not.
 
@@ -60,7 +60,7 @@ which returns the centroid on its own.
 ## Examples
 
 ``` r
-af <- anicore::example_aniframe(n_obs = 20, n_individuals = 2, n_keypoints = 3)
+af <- anicore::example_anipoint(n_obs = 20, n_individuals = 2, n_keypoints = 3)
 
 # Each animal gains a centroid keypoint
 add_centroid(af, across = "keypoint")

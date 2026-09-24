@@ -4,11 +4,12 @@ Computes, for each point, the distance to the nearest point belonging to
 a *different* entity — typically a different individual at the same
 moment.
 
-Which columns carry time and position is read from the aniframe's
-`variables_when` and `variables_where` metadata. The identity columns
-are assigned roles by you, explicitly, because "another animal" and
-"another point on this animal" are different questions and the data
-cannot tell which one you mean.
+Which columns carry time and position is read from the anipoint's
+declared variables (see
+[`anicore::get_variables()`](https://animovement.dev/anicore/reference/variables.html)).
+The identity columns are assigned roles by you, explicitly, because
+"another animal" and "another point on this animal" are different
+questions and the data cannot tell which one you mean.
 
 ## Usage
 
@@ -28,7 +29,7 @@ calculate_nnd(
 
 - data:
 
-  An aniframe.
+  An anipoint.
 
 - across:
 
@@ -60,7 +61,7 @@ calculate_nnd(
 
 ## Value
 
-The input aniframe with added columns:
+The input anipoint with added columns:
 
 - `nnd_distance` — distance to the n-th nearest neighbour
 
@@ -98,7 +99,7 @@ for the vector-level function.
 ## Examples
 
 ``` r
-data <- anicore::example_aniframe(
+data <- anicore::example_anipoint(
   n_obs = 5,
   n_individuals = 3,
   n_keypoints = 3

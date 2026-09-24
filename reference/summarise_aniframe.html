@@ -77,7 +77,7 @@ summary functions.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A kinematics aniframe (output of <code><a href="calculate_kinematics.html">calculate_kinematics()</a></code>)</p></dd>
+<dd><p>A kinematics anipoint (output of <code><a href="calculate_kinematics.html">calculate_kinematics()</a></code>)</p></dd>
 
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
@@ -102,7 +102,7 @@ Options are <code>"median_mad"</code> (default) and <code>"mean_sd"</code>.</p><
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">kin</span> <span class="op">&lt;-</span> <span class="fu"><a href="calculate_kinematics.html">calculate_kinematics</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="fu">anicore</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/anicore/reference/example_aniframe.html" class="external-link">example_aniframe</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fl">20</span>, n_individuals <span class="op">=</span> <span class="fl">1</span>, n_keypoints <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">anicore</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/anicore/reference/example_anipoint.html" class="external-link">example_anipoint</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fl">20</span>, n_individuals <span class="op">=</span> <span class="fl">1</span>, n_keypoints <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">summarise_aniframe</span><span class="op">(</span><span class="va">kin</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 22</span></span>

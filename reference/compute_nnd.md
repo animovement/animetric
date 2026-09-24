@@ -71,7 +71,7 @@ nearest point.
 ## See also
 
 [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-for the aniframe-level function.
+for the anipoint-level function.
 
 ## Examples
 

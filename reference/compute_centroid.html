@@ -79,7 +79,7 @@ declares.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>An aniframe with Cartesian coordinates.</p></dd>
+<dd><p>An anipoint with Cartesian coordinates.</p></dd>
 
 
 <dt id="arg-across">across<a class="anchor" aria-label="anchor" href="#arg-across"></a></dt>
@@ -100,7 +100,7 @@ Only meaningful when one level is collapsed.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An aniframe containing only the summary member. Coordinate values
+    <p>An anipoint containing only the summary member. Coordinate values
 are the mean of the members included, with <code>NA</code>s removed. Confidence is
 <code>NA</code>. Missing coordinate dimensions return <code>NA</code>.</p>
     </div>
@@ -111,7 +111,7 @@ are the mean of the members included, with <code>NA</code>s removed. Confidence 
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">af</span> <span class="op">&lt;-</span> <span class="fu">anicore</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/anicore/reference/example_aniframe.html" class="external-link">example_aniframe</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fl">20</span>, n_individuals <span class="op">=</span> <span class="fl">2</span>, n_keypoints <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">af</span> <span class="op">&lt;-</span> <span class="fu">anicore</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/anicore/reference/example_anipoint.html" class="external-link">example_anipoint</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fl">20</span>, n_individuals <span class="op">=</span> <span class="fl">2</span>, n_keypoints <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The centroid of each animal's keypoints</span></span></span>
 <span class="r-in"><span><span class="fu">compute_centroid</span><span class="op">(</span><span class="va">af</span>, across <span class="op">=</span> <span class="st">"keypoint"</span><span class="op">)</span></span></span>

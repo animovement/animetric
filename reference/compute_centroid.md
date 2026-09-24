@@ -21,7 +21,7 @@ compute_centroid(
 
 - data:
 
-  An aniframe with Cartesian coordinates.
+  An anipoint with Cartesian coordinates.
 
 - across:
 
@@ -41,7 +41,7 @@ compute_centroid(
 
 ## Value
 
-An aniframe containing only the summary member. Coordinate values are
+An anipoint containing only the summary member. Coordinate values are
 the mean of the members included, with `NA`s removed. Confidence is
 `NA`. Missing coordinate dimensions return `NA`.
 
@@ -53,7 +53,7 @@ which appends the result to the frame.
 ## Examples
 
 ``` r
-af <- anicore::example_aniframe(n_obs = 20, n_individuals = 2, n_keypoints = 3)
+af <- anicore::example_anipoint(n_obs = 20, n_individuals = 2, n_keypoints = 3)
 
 # The centroid of each animal's keypoints
 compute_centroid(af, across = "keypoint")
