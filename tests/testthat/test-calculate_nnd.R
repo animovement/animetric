@@ -583,3 +583,29 @@ test_that("a neighbour restriction matching no rows errors", {
     "No rows match"
   )
 })
+
+test_that("calculate_nnd() keeps the input's metadata and declaration", {
+  af <- anicore::example_anipoint(
+    n_obs = 5,
+    n_individuals = 3,
+    n_keypoints = 1
+  ) |>
+    anicore::set_metadata(sampling_rate = 30, source = "test")
+  out <- calculate_nnd(af, across = "individual")
+  expect_equal(anicore::get_metadata(out, "sampling_rate"), 30)
+  expect_equal(anicore::get_metadata(out, "source"), "test")
+  expect_equal(anicore::get_keys(out), anicore::get_keys(af))
+})
+
+test_that("calculate_nnd() works with renamed axis columns", {
+  af <- anicore::example_anipoint(
+    n_obs = 5,
+    n_individuals = 3,
+    n_keypoints = 1
+  ) |>
+    dplyr::rename(u = x, v = y) |>
+    anicore::set_variables(where = c(x = "u", y = "v"))
+  out <- calculate_nnd(af, across = "individual")
+  expect_equal(anicore::get_axes(out), c(x = "u", y = "v"))
+  expect_true("nnd_individual" %in% names(out))
+})
