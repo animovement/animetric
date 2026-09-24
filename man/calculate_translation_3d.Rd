@@ -7,10 +7,10 @@
 calculate_translation_3d(data)
 }
 \arguments{
-\item{data}{An aniframe with x, y, z, and time columns}
+\item{data}{An anipoint with x, y, z, and time columns}
 }
 \value{
-The aniframe with added translational kinematic columns
+The anipoint with added translational kinematic columns
 }
 \description{
 Calculate translational kinematics in 3D

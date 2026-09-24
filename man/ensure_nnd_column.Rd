@@ -7,7 +7,7 @@
 ensure_nnd_column(data, value, arg)
 }
 \arguments{
-\item{data}{An aniframe.}
+\item{data}{An anipoint.}
 
 \item{value}{The supplied column name.}
 

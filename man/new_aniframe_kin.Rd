@@ -7,7 +7,7 @@
 new_aniframe_kin(x)
 }
 \arguments{
-\item{x}{A data frame to add aniframe_kin class to}
+\item{x}{An anipoint to add the aniframe_kin class to}
 }
 \value{
 An aniframe_kin object

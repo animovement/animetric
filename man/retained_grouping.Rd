@@ -7,7 +7,7 @@
 retained_grouping(data, collapsed)
 }
 \arguments{
-\item{data}{An aniframe.}
+\item{data}{An anipoint.}
 
 \item{collapsed}{The identity column being summarised across.}
 }

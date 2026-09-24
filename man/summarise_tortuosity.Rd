@@ -10,7 +10,7 @@ summarise_tortuosity(data)
 summarize_tortuosity(data)
 }
 \arguments{
-\item{data}{A kinematics aniframe (output of \code{calculate_kinematics()})}
+\item{data}{A kinematics anipoint (output of \code{calculate_kinematics()})}
 }
 \value{
 A summarised data frame with one row per group containing:
@@ -32,7 +32,7 @@ Calculate path length, displacement, and tortuosity metrics.
 }
 \examples{
 kin <- calculate_kinematics(
-  anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+  anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 )
 summarise_tortuosity(calculate_tortuosity(kin))
 }

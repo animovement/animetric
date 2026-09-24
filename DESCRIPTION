@@ -19,8 +19,8 @@ LazyData: true
 Depends:
     R (>= 4.1.0)
 Imports: 
-    anicore (>= 0.8.0),
-    anispace,
+    anicore (>= 0.8.0.9003),
+    anispace (>= 0.3.0.9003),
     cli,
     dplyr,
     purrr,

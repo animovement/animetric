@@ -5,7 +5,7 @@
 # constant.
 
 custom_identity <- function() {
-  anicore::as_aniframe(
+  anicore::as_anipoint(
     data.frame(
       time = rep(1:4, each = 4),
       animal = rep(rep(c("a1", "a2"), each = 2), 4),
@@ -21,7 +21,7 @@ custom_identity <- function() {
 # The level it collapses ----
 
 test_that("it collapses the level it is told to", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 2, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 2, n_keypoints = 3)
 
   out <- add_centroid(af, across = "keypoint")
 
@@ -32,7 +32,7 @@ test_that("it collapses the level it is told to", {
 })
 
 test_that("across names the level to collapse", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 2, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 2, n_keypoints = 3)
 
   out <- add_centroid(af, across = "individual", name = "group")
 
@@ -43,7 +43,7 @@ test_that("across names the level to collapse", {
 })
 
 test_that("collapsing every level gives one point per position", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 2, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 2, n_keypoints = 3)
 
   out <- add_centroid(af, across = c("individual", "keypoint"), name = "group")
 
@@ -57,13 +57,13 @@ test_that("a frame with several identity variables has to be told which", {
   # `variables_what` is documented coarse to fine, but nothing enforces it
   # and orthogonal attributes do not nest, so the level is not guessed
   # (animovement/anicore#140, animovement/anicore#141).
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 2, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 2, n_keypoints = 3)
 
   expect_error(add_centroid(af), "has to say which to collapse")
 })
 
 test_that("a frame with one identity variable needs no telling", {
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = rep(1:2, each = 3),
       keypoint = rep(c("a", "b", "c"), 2),
@@ -79,7 +79,7 @@ test_that("a frame with one identity variable needs no telling", {
 test_that("only identity variables can be collapsed", {
   # Collapsing the index or a temporal variable averages over time, which is
   # what `summarise_*()` does. This one adds a point at each position.
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 2, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 2, n_keypoints = 3)
 
   expect_error(add_centroid(af, across = "time"), "not an identity variable")
   expect_error(add_centroid(af, across = "session"), "not an identity variable")
@@ -92,7 +92,7 @@ test_that("only identity variables can be collapsed", {
 test_that("a level that did not vary keeps its value", {
   # Every individual has one strain, so nothing is averaged over strain and
   # calling the result "centroid" there would be a lie.
-  af <- anicore::as_aniframe(
+  af <- anicore::as_anipoint(
     data.frame(
       time = rep(1:2, each = 4),
       strain = rep(c("wild", "mutant"), each = 2, times = 2),
@@ -106,7 +106,7 @@ test_that("a level that did not vary keeps its value", {
 
   out <- add_centroid(af, across = c("strain", "keypoint"))
   summary_rows <- dplyr::filter(
-    dplyr::ungroup(out),
+    dplyr::as_tibble(out),
     .data$keypoint == "centroid"
   )
 
@@ -121,11 +121,11 @@ test_that("a frame with its own identity names keeps them", {
 
   expect_equal(nrow(out), 24)
   expect_true("centroid" %in% levels(out$bodypart))
-  expect_equal(anicore::get_variables_what(out), c("animal", "bodypart"))
+  expect_equal(anicore::get_variables(out, "what"), c("animal", "bodypart"))
 })
 
 test_that("no keypoint column is invented on the way", {
-  # `as_aniframe()` re-detecting the declaration injected a default
+  # `as_anipoint()` re-detecting the declaration injected a default
   # `keypoint` column and stranded it in the result (#47).
   out <- add_centroid(custom_identity(), across = "bodypart")
 
@@ -134,7 +134,10 @@ test_that("no keypoint column is invented on the way", {
 
 test_that("the centroid values are the mean of the members", {
   out <- add_centroid(custom_identity(), across = "bodypart")
-  centroids <- dplyr::filter(dplyr::ungroup(out), .data$bodypart == "centroid")
+  centroids <- dplyr::filter(
+    dplyr::as_tibble(out),
+    .data$bodypart == "centroid"
+  )
 
   # a1 at time 1 has head (1, 16) and tail (2, 15).
   first <- dplyr::filter(centroids, .data$animal == "a1", .data$time == 1)
@@ -147,7 +150,7 @@ test_that("the centroid values are the mean of the members", {
 
 test_that("an integer identity becomes a factor when collapsed", {
   # `individual` is an integer in example frames, and cannot hold a name.
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 2, n_keypoints = 2)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 2, n_keypoints = 2)
   expect_type(af$individual, "integer")
 
   out <- add_centroid(af, across = "individual", name = "group")
@@ -163,12 +166,12 @@ test_that("a frame without confidence does not gain one", {
 })
 
 test_that("a frame with confidence keeps it, NA for the summary", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
   skip_if_not("confidence" %in% names(af))
 
   out <- add_centroid(af, across = "keypoint")
   summary_rows <- dplyr::filter(
-    dplyr::ungroup(out),
+    dplyr::as_tibble(out),
     .data$keypoint == "centroid"
   )
 
@@ -179,7 +182,7 @@ test_that("a frame with confidence keeps it, NA for the summary", {
 # Choosing which members take part ----
 
 test_that("include and exclude select the members averaged", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
   members <- levels(af$keypoint)
 
   from_two <- add_centroid(af, across = "keypoint", include = members[1:2])
@@ -189,7 +192,7 @@ test_that("include and exclude select the members averaged", {
 })
 
 test_that("they need at least two members to average", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
   expect_error(
     add_centroid(af, across = "keypoint", include = levels(af$keypoint)[1]),
@@ -198,7 +201,7 @@ test_that("they need at least two members to average", {
 })
 
 test_that("they are refused when several levels are collapsed", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 2, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 2, n_keypoints = 3)
 
   expect_error(
     add_centroid(af, across = c("individual", "keypoint"), include = "head"),
@@ -207,7 +210,7 @@ test_that("they are refused when several levels are collapsed", {
 })
 
 test_that("the summary name cannot already be taken", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 1, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
   expect_error(
     add_centroid(af, across = "keypoint", name = levels(af$keypoint)[1]),
@@ -218,7 +221,7 @@ test_that("the summary name cannot already be taken", {
 
 test_that("compute_centroid() refuses include across several levels", {
   # `add_centroid()` catches this first, so only a direct call reaches it.
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 2, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 2, n_keypoints = 3)
 
   expect_error(
     compute_centroid(
@@ -231,7 +234,7 @@ test_that("compute_centroid() refuses include across several levels", {
 })
 
 test_that("across has to be column names", {
-  af <- anicore::example_aniframe(n_obs = 3, n_individuals = 2, n_keypoints = 3)
+  af <- anicore::example_anipoint(n_obs = 3, n_individuals = 2, n_keypoints = 3)
 
   expect_error(add_centroid(af, across = 1), "must name at least one column")
   expect_error(

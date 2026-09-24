@@ -46,7 +46,7 @@ make_straight_path_2d <- function(n = 20) {
     x = seq(0, 10, length.out = n),
     y = seq(0, 10, length.out = n)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 make_circular_path_2d <- function(n = 20) {
@@ -56,7 +56,7 @@ make_circular_path_2d <- function(n = 20) {
     x = cos(theta),
     y = sin(theta)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 make_zigzag_path_2d <- function(n = 20) {
@@ -65,7 +65,7 @@ make_zigzag_path_2d <- function(n = 20) {
     x = seq_len(n),
     y = rep(c(0, 1), length.out = n)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 make_straight_path_3d <- function(n = 20) {
@@ -75,7 +75,7 @@ make_straight_path_3d <- function(n = 20) {
     y = seq(0, 10, length.out = n),
     z = seq(0, 10, length.out = n)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 make_helical_path_3d <- function(n = 20) {
@@ -86,7 +86,7 @@ make_helical_path_3d <- function(n = 20) {
     y = sin(theta),
     z = seq(0, 10, length.out = n)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 }
 
 # =============================================================================
@@ -168,7 +168,7 @@ test_that("calculate_tortuosity_2d respects grouping", {
     make_straight_path_2d() |> dplyr::mutate(individual = "A"),
     make_circular_path_2d() |> dplyr::mutate(individual = "B")
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   result <- data |>
     dplyr::group_by(individual) |>
@@ -319,7 +319,7 @@ test_that("calculate_tortuosity_3d respects grouping", {
     make_straight_path_3d() |> dplyr::mutate(individual = "A"),
     make_helical_path_3d() |> dplyr::mutate(individual = "B")
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   result <- data |>
     dplyr::group_by(individual) |>
@@ -349,7 +349,7 @@ test_that("calculate_tortuosity handles stationary points", {
     x = rep(0, 10),
     y = rep(0, 10)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   result <- calculate_tortuosity_2d(stationary, window_width = 5L)
 
@@ -384,7 +384,7 @@ test_that("calculate_tortuosity preserves incoming class", {
     x = cumsum(rnorm(20)),
     y = cumsum(rnorm(20))
   ) |>
-    anicore::as_aniframe() |>
+    anicore::as_anipoint() |>
     calculate_kinematics()
 
   # Add a custom subclass

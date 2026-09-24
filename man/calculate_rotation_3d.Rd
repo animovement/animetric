@@ -7,10 +7,10 @@
 calculate_rotation_3d(data)
 }
 \arguments{
-\item{data}{An aniframe with v_x, v_y, v_z, and time columns}
+\item{data}{An anipoint with v_x, v_y, v_z, and time columns}
 }
 \value{
-The aniframe with added rotational kinematic columns
+The anipoint with added rotational kinematic columns
 }
 \description{
 Computes 3D orientation angles and angular kinematics based on the velocity vector.

@@ -19,7 +19,7 @@
 # - Maintains aniframe_kin class
 
 test_that("returns aniframe with correct new columns (2D)", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1, 2, 2),
     individual = c(1, 2, 1, 2),
     x = c(0, 10, 0, 10),
@@ -35,7 +35,7 @@ test_that("returns aniframe with correct new columns (2D)", {
 })
 
 test_that("returns aniframe with correct new columns (3D)", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1),
     individual = c(1, 2),
     x = c(0, 10),
@@ -51,7 +51,7 @@ test_that("returns aniframe with correct new columns (3D)", {
 })
 
 test_that("calculates correct nearest neighbour distances (2D)", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1, 1),
     individual = c(1, 2, 3),
     x = c(0, 10, 25),
@@ -69,7 +69,7 @@ test_that("calculates correct nearest neighbour distances (2D)", {
 })
 
 test_that("calculates correct nearest neighbour distances (3D)", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1),
     individual = c(1, 2),
     x = c(0, 3),
@@ -83,7 +83,7 @@ test_that("calculates correct nearest neighbour distances (3D)", {
 })
 
 test_that("identifies correct nearest neighbour individual", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1, 1),
     individual = c(1, 2, 3),
     x = c(0, 10, 100),
@@ -107,7 +107,7 @@ test_that("identifies correct nearest neighbour individual", {
 })
 
 test_that("filters neighbours by keypoint_neighbour parameter", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1, 1, 1),
     individual = c(1, 1, 2, 2),
     keypoint = c("nose", "tail", "nose", "tail"),
@@ -140,7 +140,7 @@ test_that("filters neighbours by keypoint_neighbour parameter", {
 })
 
 test_that("returns nnd_keypoint column when keypoint values are non-NA", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1, 1, 1),
     individual = c(1, 1, 2, 2),
     keypoint = c("nose", "tail", "nose", "tail"),
@@ -161,7 +161,7 @@ test_that("returns nnd_keypoint column when keypoint values are non-NA", {
 })
 
 test_that("handles n > 1 for second nearest individual", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1, 1),
     individual = c(1, 2, 3),
     x = c(0, 10, 25),
@@ -194,7 +194,7 @@ test_that("handles n > 1 for second nearest individual", {
 test_that("n = 2 finds second nearest individual, not second nearest point", {
   # Individual 2 has two keypoints, both closer than individual 3
   # n = 2 should return individual 3, not individual 2's second keypoint
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1, 1, 1),
     individual = c(1, 2, 2, 3),
     keypoint = c("nose", "nose", "tail", "nose"),
@@ -211,7 +211,7 @@ test_that("n = 2 finds second nearest individual, not second nearest point", {
 })
 
 test_that("returns NA when no neighbours available (all same individual)", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1),
     individual = c(1, 1),
     x = c(0, 10),
@@ -225,7 +225,7 @@ test_that("returns NA when no neighbours available (all same individual)", {
 })
 
 test_that("returns NA when not enough individuals for n", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1),
     individual = c(1, 2),
     x = c(0, 10),
@@ -238,7 +238,7 @@ test_that("returns NA when not enough individuals for n", {
 })
 
 test_that("errors when the column named by `across` is absent", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1),
     x = c(0, 10),
     y = c(0, 0)
@@ -256,7 +256,7 @@ test_that("errors when the column named by `across` is absent", {
 })
 
 test_that("errors when all individuals are NA", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1),
     individual = c(NA, NA),
     x = c(0, 10),
@@ -267,7 +267,7 @@ test_that("errors when all individuals are NA", {
 })
 
 test_that("errors when keypoint_neighbour is given but the column is absent", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1),
     individual = c(1, 2),
     x = c(0, 10),
@@ -297,7 +297,7 @@ test_that("errors when keypoint_neighbour is given but the column is absent", {
 test_that("a frame without keypoints computes distances without warning", {
   # aniframe stopped adding a phantom `keypoint` beside an existing
   # identity, so probing the column directly warned on every call.
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1, 2, 2),
     individual = c(1, 2, 1, 2),
     x = c(0, 10, 0, 20),
@@ -309,7 +309,7 @@ test_that("a frame without keypoints computes distances without warning", {
 })
 
 test_that("errors when no requested keypoints are present in data", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1),
     individual = c(1, 2),
     keypoint = c("nose", "tail"),
@@ -327,7 +327,7 @@ test_that("errors when no requested keypoints are present in data", {
 })
 
 test_that("warns when some requested keypoints are not present in data", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1),
     individual = c(1, 2),
     keypoint = c("nose", "tail"),
@@ -346,7 +346,7 @@ test_that("warns when some requested keypoints are not present in data", {
 })
 
 test_that("groups correctly by session/trial/time", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     session = c(1, 1, 2, 2),
     trial = c(1, 1, 1, 1),
     time = c(1, 1, 1, 1),
@@ -370,7 +370,7 @@ test_that("groups correctly by session/trial/time", {
 })
 
 test_that("handles vector of keypoint_neighbour values", {
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1, 1, 1, 1, 1),
     individual = c(1, 1, 1, 2, 2, 2),
     keypoint = c(
@@ -405,25 +405,22 @@ test_that("handles vector of keypoint_neighbour values", {
 })
 
 test_that("errors when the frame declares no temporal context", {
-  # The index counts as context here (anicore#109), and `get_index()` falls
-  # back to `time` whatever the field says -- so reaching this branch means
-  # a frame whose index column is gone as well as its temporal variables.
-  data <- anicore::aniframe(
+  # The index counts as context here (anicore#109), so reaching this branch
+  # means a frame whose index column is gone as well as its temporal keys.
+  data <- anicore::anipoint(
     individual = c(1, 2),
     time = c(1, 1),
     x = c(0, 10),
     y = c(0, 0)
-  )
-  md <- anicore::get_metadata(data)
-  md$variables_when <- character(0)
-  attr(data, "metadata") <- md
+  ) |>
+    anicore::set_variables(when = character(0))
   data <- suppressWarnings(dplyr::select(dplyr::ungroup(data), -"time"))
 
   expect_error(calculate_nnd(data, across = "individual"), "context")
 })
 
 test_that("Maintains incoming classes", {
-  data <- anicore::example_aniframe() |>
+  data <- anicore::example_anipoint() |>
     calculate_kinematics() |>
     calculate_nnd(across = "individual")
 
@@ -434,7 +431,7 @@ test_that("Maintains incoming classes", {
 
 pair_af <- function() {
   # A: nose at 0, tail at 10.  B: nose at 30, tail at 12.
-  anicore::aniframe(
+  anicore::anipoint(
     individual = c("A", "A", "B", "B"),
     keypoint = c("nose", "tail", "nose", "tail"),
     time = rep(1, 4),
@@ -447,7 +444,7 @@ test_that("neighbours are not matched across observations", {
   # The reprex from #37: `observation` joined variables_when in aniframe
   # 0.6.0, but the hard-coded context list never picked it up, so clips
   # were pooled and each animal was matched to one in another clip.
-  af <- anicore::aniframe(
+  af <- anicore::anipoint(
     observation = rep(c("clip_a", "clip_b"), each = 2),
     individual = rep(c(1L, 2L), 2),
     time = rep(1, 4),
@@ -501,7 +498,7 @@ test_that("within pairs like with like", {
 })
 
 test_that("a frame identified by track works", {
-  af <- anicore::aniframe(
+  af <- anicore::anipoint(
     track = c(1L, 2L),
     time = c(1, 1),
     x = c(0, 5),
@@ -514,7 +511,7 @@ test_that("a frame identified by track works", {
 })
 
 test_that("non-Cartesian coordinates error with a pointer to the conversion", {
-  af <- anicore::aniframe(
+  af <- anicore::anipoint(
     individual = c(1L, 2L),
     time = c(1, 1),
     rho = c(1, 2),
@@ -553,7 +550,7 @@ test_that("within must name existing columns", {
 })
 
 test_that("one-dimensional data errors rather than measuring in a line", {
-  af <- anicore::aniframe(
+  af <- anicore::anipoint(
     individual = c(1L, 2L),
     time = c(1, 1),
     x = c(0, 5)
@@ -569,7 +566,7 @@ test_that("a neighbour restriction matching no rows errors", {
   # The column is present but carries no usable value, so nothing can
   # satisfy the restriction. Under the old API this was a keypoint-shaped
   # special case; it is now the general "nothing matches" error.
-  data <- anicore::aniframe(
+  data <- anicore::anipoint(
     time = c(1, 1),
     individual = c(1, 2),
     keypoint = c(NA, NA),

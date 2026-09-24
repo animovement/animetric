@@ -13,7 +13,7 @@ compute_centroid(
 )
 }
 \arguments{
-\item{data}{An aniframe with Cartesian coordinates.}
+\item{data}{An anipoint with Cartesian coordinates.}
 
 \item{across}{Identity variables to collapse — the dimensions the summary
 ranges over. Defaults to the finest one the frame declares, which is the
@@ -26,7 +26,7 @@ Only meaningful when one level is collapsed.}
 \item{name}{Name for the summary member. Default is \code{"centroid"}.}
 }
 \value{
-An aniframe containing only the summary member. Coordinate values
+An anipoint containing only the summary member. Coordinate values
 are the mean of the members included, with \code{NA}s removed. Confidence is
 \code{NA}. Missing coordinate dimensions return \code{NA}.
 }
@@ -37,7 +37,7 @@ keypoints of an animal, the animals of a team, or any other level the frame
 declares.
 }
 \examples{
-af <- anicore::example_aniframe(n_obs = 20, n_individuals = 2, n_keypoints = 3)
+af <- anicore::example_anipoint(n_obs = 20, n_individuals = 2, n_keypoints = 3)
 
 # The centroid of each animal's keypoints
 compute_centroid(af, across = "keypoint")

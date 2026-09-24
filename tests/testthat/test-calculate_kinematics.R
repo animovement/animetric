@@ -10,7 +10,7 @@ test_that("calculate_kinematics preserves Cartesian 2D coordinate system", {
     x = c(0, 1, 2, 3, 4, 5),
     y = c(0, 0, 0, 0, 0, 0)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   result <- calculate_kinematics(data)
 
@@ -26,7 +26,7 @@ test_that("calculate_kinematics preserves Cartesian 3D coordinate system", {
     y = c(0, 0, 0, 0, 0, 0),
     z = c(0, 0, 0, 0, 0, 0)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   result <- calculate_kinematics(data)
 
@@ -42,7 +42,7 @@ test_that("calculate_kinematics converts polar to Cartesian and back", {
     x = c(1, 2, 3, 4, 5, 6),
     y = c(0, 0, 0, 0, 0, 0)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   data_polar <- anispace::map_to_polar(data_cartesian)
   result <- calculate_kinematics(data_polar)
@@ -60,7 +60,7 @@ test_that("calculate_kinematics converts polar to Cartesian and back", {
 #     y = c(0, 0, 0, 0, 0, 0),
 #     z = c(0, 1, 2, 3, 4, 5)
 #   ) |>
-#     anicore::as_aniframe()
+#     anicore::as_anipoint()
 
 #   data_cylindrical <- anispace::map_to_cylindrical(data_cartesian)
 #   result <- calculate_kinematics(data_cylindrical)
@@ -78,7 +78,7 @@ test_that("calculate_kinematics converts spherical to Cartesian and back", {
     y = c(0, 0, 0, 0, 0, 0),
     z = c(0, 1, 2, 3, 4, 5)
   ) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   data_spherical <- anispace::map_to_spherical(data_cartesian)
   result <- calculate_kinematics(data_spherical)

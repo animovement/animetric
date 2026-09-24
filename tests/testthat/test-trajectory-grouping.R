@@ -8,7 +8,7 @@
 spread_keypoints <- function() {
   # Two keypoints 100 apart, each drifting 1 per frame. The true speed of
   # each is 1; pooling them reports 2.7.
-  anicore::as_aniframe(
+  anicore::as_anipoint(
     data.frame(
       individual = "a",
       time = rep(1:5, each = 2),

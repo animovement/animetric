@@ -2,18 +2,18 @@
 % Please edit documentation in R/calculate_nnd.R
 \name{nnd_variables}
 \alias{nnd_variables}
-\title{The variable roles an aniframe declares}
+\title{The variable roles an anipoint declares}
 \usage{
 nnd_variables(data)
 }
 \arguments{
-\item{data}{An aniframe.}
+\item{data}{An anipoint.}
 }
 \value{
 Named list of \code{what}, \code{when} and \code{where}, each restricted to
 columns actually present in the data.
 }
 \description{
-The variable roles an aniframe declares
+The variable roles an anipoint declares
 }
 \keyword{internal}

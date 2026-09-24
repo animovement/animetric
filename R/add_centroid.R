@@ -1,4 +1,4 @@
-#' Add a centroid to an aniframe
+#' Add a centroid to an anipoint
 #'
 #' @description
 #' Appends the centroid of one identity level to the frame, as a new member of
@@ -13,7 +13,7 @@
 #' summary's name — an individual's strain is still its strain, since nothing
 #' was averaged over it.
 #'
-#' @param data An aniframe with Cartesian coordinates.
+#' @param data An anipoint with Cartesian coordinates.
 #' @param across Identity variables to collapse — the dimensions the summary
 #'   ranges over. Defaults to the finest one the frame declares. Collapsing
 #'   every level gives a single point per position.
@@ -22,12 +22,12 @@
 #'   Only meaningful when one level is collapsed.
 #' @param name Name for the new member. Default is `"centroid"`.
 #'
-#' @return The aniframe, with the centroid appended as extra rows. The
+#' @return The anipoint, with the centroid appended as extra rows. The
 #'   collapsed identity column comes back as a factor, since it now holds a
 #'   named member that an integer column could not.
 #'
 #' @examples
-#' af <- anicore::example_aniframe(n_obs = 20, n_individuals = 2, n_keypoints = 3)
+#' af <- anicore::example_anipoint(n_obs = 20, n_individuals = 2, n_keypoints = 3)
 #'
 #' # Each animal gains a centroid keypoint
 #' add_centroid(af, across = "keypoint")
@@ -50,7 +50,7 @@ add_centroid <- function(
   exclude = NULL,
   name = "centroid"
 ) {
-  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_anipoint(data)
 
   identity_cols <- resolve_collapsed_identity(data, across)
 
@@ -116,5 +116,5 @@ add_centroid <- function(
   # Re-declared rather than re-detected: on a frame whose identity is not
   # named `keypoint`, detection injects one and strands it there (#47).
   dplyr::bind_rows(as_member(data), as_member(centroid)) |>
-    redeclare_like(data, anicore::get_variables_where(data))
+    redeclare_like(data, anicore::get_variables(data, "where", "position"))
 }

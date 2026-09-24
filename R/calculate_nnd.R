@@ -5,8 +5,8 @@
 #' a *different* entity — typically a different individual at the same
 #' moment.
 #'
-#' Which columns carry time and position is read from the aniframe's
-#' `variables_when` and `variables_where` metadata. The identity columns
+#' Which columns carry time and position is read from the anipoint's
+#' declared variables (see [anicore::get_variables()]). The identity columns
 #' are assigned roles by you, explicitly, because "another animal" and
 #' "another point on this animal" are different questions and the data
 #' cannot tell which one you mean.
@@ -29,7 +29,7 @@
 #' column to permitted values, and they are independent, so asymmetric
 #' questions like nose-to-tail are expressible.
 #'
-#' @param data An aniframe.
+#' @param data An anipoint.
 #' @param across Column whose value must differ between a point and its
 #'   neighbour.
 #' @param n Which neighbour to return (1 = nearest, 2 = second nearest).
@@ -44,14 +44,14 @@
 #' @param keypoint_neighbour Deprecated. Use
 #'   `neighbour = list(keypoint = ...)`.
 #'
-#' @return The input aniframe with added columns:
+#' @return The input anipoint with added columns:
 #'   * `nnd_distance` — distance to the n-th nearest neighbour
 #'   * `nnd_<across>` — which entity that neighbour belongs to
 #'   * `nnd_<variable>` — the neighbour's value for each unconstrained
 #'     identity variable (e.g. `nnd_keypoint`)
 #'
 #' @examples
-#' data <- anicore::example_aniframe(
+#' data <- anicore::example_anipoint(
 #'   n_obs = 5,
 #'   n_individuals = 3,
 #'   n_keypoints = 3
@@ -84,7 +84,7 @@ calculate_nnd <- function(
   neighbour = NULL,
   keypoint_neighbour = NULL
 ) {
-  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_anipoint(data)
 
   if (!is.null(keypoint_neighbour)) {
     cli::cli_warn(c(
@@ -114,7 +114,7 @@ calculate_nnd <- function(
   incoming_classes <- class(data)
 
   # The masks are whole-column vectors, so they are attached to a bare
-  # frame: on the grouped aniframe, `mutate()` would evaluate them once per
+  # frame: on the grouped anipoint, `mutate()` would evaluate them once per
   # group and hit a length mismatch.
   prepared <- dplyr::as_tibble(data)
   prepared[[".nnd_focal"]] <- is_focal
@@ -146,7 +146,7 @@ calculate_nnd <- function(
     dplyr::rename_with(function(nm) {
       sub("^nnd_across$", paste0("nnd_", across), nm)
     }) |>
-    anicore::as_aniframe()
+    anicore::as_anipoint()
 
   outgoing_classes <- class(result)
   class(result) <- c(
@@ -158,35 +158,28 @@ calculate_nnd <- function(
 }
 
 
-#' The variable roles an aniframe declares
+#' The variable roles an anipoint declares
 #'
-#' @param data An aniframe.
+#' @param data An anipoint.
 #'
 #' @return Named list of `what`, `when` and `where`, each restricted to
 #'   columns actually present in the data.
 #' @keywords internal
 nnd_variables <- function(data) {
-  role <- function(field) {
-    declared <- as.character(anicore::get_metadata(data, field))
-    intersect(declared[!is.na(declared)], names(data))
-  }
+  present <- function(cols) intersect(unname(cols), names(data))
 
-  # The index positions a row within its temporal context, and two points
-  # are only neighbours at the same moment -- so it belongs to the context
-  # here, even though `variables_when` stopped naming it (anicore#109).
-  index <- intersect(anicore::get_index(data), names(data))
-
+  # `when` includes the index: neighbours share a moment, not just a session.
   list(
-    what = role("variables_what"),
-    when = unique(c(role("variables_when"), index)),
-    where = role("variables_where")
+    what = present(anicore::get_variables(data, "what")),
+    when = present(anicore::get_variables(data, "when")),
+    where = present(anicore::get_variables(data, "where", "position"))
   )
 }
 
 
 #' Ensure an argument names a single column present in the data
 #'
-#' @param data An aniframe.
+#' @param data An anipoint.
 #' @param value The supplied column name.
 #' @param arg Argument name, for the error message.
 #'
@@ -211,7 +204,7 @@ ensure_nnd_column <- function(data, value, arg) {
 #' timepoints, or across observations that each start at their own time
 #' origin, is never what is wanted.
 #'
-#' @param data An aniframe.
+#' @param data An anipoint.
 #' @param variables Output of [nnd_variables()].
 #' @param within Extra columns supplied by the caller.
 #'
@@ -240,7 +233,7 @@ nnd_context <- function(data, variables, within) {
 
 #' Turn a focal / neighbour restriction into a row mask
 #'
-#' @param data An aniframe.
+#' @param data An anipoint.
 #' @param values Named list of column to permitted values, or `NULL`.
 #' @param arg Argument name, for error messages.
 #'
@@ -295,7 +288,7 @@ nnd_mask <- function(data, values, arg) {
 
 #' Spatial columns to measure distance in
 #'
-#' @param data An aniframe.
+#' @param data An anipoint.
 #' @param where Spatial variables the frame declares.
 #'
 #' @return Character vector of column names.
@@ -314,7 +307,7 @@ nnd_coords <- function(data, where) {
   if (length(where) < 2) {
     cli::cli_abort(c(
       "At least two spatial variables are needed to measure distance.",
-      "x" = "{.field variables_where} declares {.val {where}}."
+      "x" = "The frame declares the spatial variables {.val {where}}."
     ))
   }
 

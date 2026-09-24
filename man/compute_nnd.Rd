@@ -68,5 +68,5 @@ compute_nnd(
 )
 }
 \seealso{
-\code{\link[=calculate_nnd]{calculate_nnd()}} for the aniframe-level function.
+\code{\link[=calculate_nnd]{calculate_nnd()}} for the anipoint-level function.
 }

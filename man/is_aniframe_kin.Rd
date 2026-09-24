@@ -10,17 +10,17 @@ is_aniframe_kin(x)
 \item{x}{An object to test}
 }
 \value{
-Logical: TRUE if x inherits from aniframe
+Logical: TRUE if x inherits from aniframe_kin
 }
 \description{
 Check if object is an aniframe_kin
 }
 \examples{
 kin <- calculate_kinematics(
-  anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+  anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 )
 is_aniframe_kin(kin)
 
-# An aniframe without kinematics is not one
-is_aniframe_kin(anicore::example_aniframe(n_obs = 3))
+# An anipoint without kinematics is not one
+is_aniframe_kin(anicore::example_anipoint(n_obs = 3))
 }

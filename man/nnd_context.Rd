@@ -7,7 +7,7 @@
 nnd_context(data, variables, within)
 }
 \arguments{
-\item{data}{An aniframe.}
+\item{data}{An anipoint.}
 
 \item{variables}{Output of \code{\link[=nnd_variables]{nnd_variables()}}.}
 

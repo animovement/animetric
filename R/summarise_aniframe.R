@@ -3,7 +3,7 @@
 #' Calculate summary statistics for aniframe data by dispatching to specialised
 #' summary functions.
 #'
-#' @param data A kinematics aniframe (output of `calculate_kinematics()`)
+#' @param data A kinematics anipoint (output of `calculate_kinematics()`)
 #' @param type Character vector of summary types. Options are `"kinematics"`
 #'   and `"tortuosity"`. Default is both.
 #' @param measures Measures of central tendency and dispersion for kinematics.
@@ -15,7 +15,7 @@
 #'
 #' @examples
 #' kin <- calculate_kinematics(
-#'   anicore::example_aniframe(n_obs = 20, n_individuals = 1, n_keypoints = 1)
+#'   anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 #' )
 #' summarise_aniframe(kin)
 #'

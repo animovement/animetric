@@ -4,11 +4,11 @@
 #' Handles data in any coordinate system by automatically converting to Cartesian
 #' for calculations, then converting back to the original system.
 #'
-#' @param data An aniframe with position coordinates (x/y or x/y/z for Cartesian;
+#' @param data An anipoint with position coordinates (x/y or x/y/z for Cartesian;
 #'   rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for spherical)
 #'   and a time column
 #'
-#' @return An aniframe in the same coordinate system as the input, with added
+#' @return An anipoint in the same coordinate system as the input, with added
 #'   kinematic measures. For 2D data, includes translational kinematics
 #'   (velocity components, speed, acceleration, path length) and rotational
 #'   kinematics (heading, angular velocity, angular speed, angular acceleration).
@@ -33,7 +33,7 @@
 #' @examples
 #' # 2D Cartesian data
 #' traj_2d <- data.frame(time = 0:10, x = rnorm(11), y = rnorm(11)) |>
-#'   anicore::as_aniframe()
+#'   anicore::as_anipoint()
 #' kinematics_2d <- calculate_kinematics(traj_2d)
 #'
 #' # Polar data (automatically converted and converted back)
@@ -41,10 +41,10 @@
 #' kinematics_polar <- calculate_kinematics(traj_polar)
 calculate_kinematics <- function(data) {
   ensure_trajectory_grouping(data)
-  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_anipoint(data)
 
   # Convert to Cartesian if needed
-  original_system <- anicore::get_metadata(data)$coordinate_system
+  original_system <- anicore::get_metadata(data, "coordinate_system")
   if (!anicore::is_cartesian(data)) {
     data <- anispace::map_to_cartesian(data)
   }
@@ -70,7 +70,7 @@ calculate_kinematics <- function(data) {
 
 #' @keywords internal
 calculate_kinematics_2d <- function(data) {
-  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_anipoint(data)
   data <- calculate_translation_2d(data)
   data <- calculate_rotation_2d(data)
   new_aniframe_kin(data)
@@ -78,15 +78,15 @@ calculate_kinematics_2d <- function(data) {
 
 #' @keywords internal
 calculate_kinematics_3d <- function(data) {
-  anicore::ensure_is_aniframe(data)
+  anicore::ensure_is_anipoint(data)
   data <- calculate_translation_3d(data) # TODO: Add 3D rotation summary
   new_aniframe_kin(data)
 }
 
 #' Calculate translational kinematics in 2D
 #'
-#' @param data An aniframe with x, y, and time columns
-#' @return The aniframe with added translational kinematic columns
+#' @param data An anipoint with x, y, and time columns
+#' @return The anipoint with added translational kinematic columns
 #' @keywords internal
 calculate_translation_2d <- function(data) {
   data |>
@@ -108,8 +108,8 @@ calculate_translation_2d <- function(data) {
 
 #' Calculate translational kinematics in 3D
 #'
-#' @param data An aniframe with x, y, z, and time columns
-#' @return The aniframe with added translational kinematic columns
+#' @param data An anipoint with x, y, z, and time columns
+#' @return The anipoint with added translational kinematic columns
 #' @keywords internal
 calculate_translation_3d <- function(data) {
   data |>
@@ -138,8 +138,8 @@ calculate_translation_3d <- function(data) {
 #' Computes heading angles and angular kinematics based on the velocity vector.
 #' Heading is calculated as atan2(v_y, v_x).
 #'
-#' @param data An aniframe with v_x, v_y, and time columns
-#' @return The aniframe with added rotational kinematic columns
+#' @param data An anipoint with v_x, v_y, and time columns
+#' @return The anipoint with added rotational kinematic columns
 #' @keywords internal
 calculate_rotation_2d <- function(data) {
   data |>
@@ -174,8 +174,8 @@ calculate_rotation_2d <- function(data) {
 #' Computes 3D orientation angles and angular kinematics based on the velocity vector.
 #' Uses spherical coordinates: azimuth (horizontal angle) and elevation (vertical angle).
 #'
-#' @param data An aniframe with v_x, v_y, v_z, and time columns
-#' @return The aniframe with added rotational kinematic columns
+#' @param data An anipoint with v_x, v_y, v_z, and time columns
+#' @return The anipoint with added rotational kinematic columns
 #' @keywords internal
 calculate_rotation_3d <- function(data) {
   # data |>
