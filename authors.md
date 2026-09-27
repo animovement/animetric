@@ -33,6 +33,6 @@ movement-based metrics.”
       author = {Mikkel Roald-Arbøl},
       year = {2026},
       doi = {10.5281/zenodo.17818613},
-      version = {0.5.0.9002},
+      version = {0.5.0.9003},
       url = {https://animovement.dev/animetric/},
     }
