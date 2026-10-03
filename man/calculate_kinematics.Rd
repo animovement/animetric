@@ -7,18 +7,20 @@
 calculate_kinematics(data)
 }
 \arguments{
-\item{data}{An anipoint with position coordinates (x/y or x/y/z for Cartesian;
-rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for spherical)
-and a time column}
+\item{data}{An anipoint with position coordinates (x, x/y or x/y/z for
+Cartesian; rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for
+spherical) and an index. The axes and the index are read from the frame's
+declared variables, so the columns can have any name.}
 }
 \value{
 An anipoint in the same coordinate system as the input, with added
-kinematic measures. For 2D data, includes translational kinematics
-(velocity components, speed, acceleration, path length) and rotational
-kinematics (heading, angular velocity, angular speed, angular acceleration).
+kinematic measures. Translational kinematics (velocity and acceleration
+components, speed, acceleration, path length) are computed for 1D, 2D and
+3D data, with components named by axis role (\code{v_x}, \code{v_y}, ...) whatever
+the input columns are called. For 2D data, rotational kinematics are added
+too (heading, angular velocity, angular speed, angular acceleration).
 Heading is the direction of travel, so it is \code{NA} where speed is zero.
-For 3D data, includes translational kinematics only (rotational measures
-for 3D are not yet implemented).
+Rotational measures for 1D and 3D are not yet implemented.
 }
 \description{
 Computes translational and rotational kinematic measures from movement data.

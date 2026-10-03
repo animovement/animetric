@@ -93,3 +93,76 @@ test_that("calculate_kinematics requires aniframe input", {
   data <- data.frame(time = 0:5, x = 0:5, y = 0:5)
   expect_error(calculate_kinematics(data))
 })
+
+# Frames whose columns are not called x, y, time (#81) ----------------------
+
+test_that("calculate_kinematics() reads renamed axis columns from the frame", {
+  d <- data.frame(time = 0:9, x = cumsum(1:10), y = sin(0:9))
+  standard <- anicore::as_anipoint(d)
+  renamed <- anicore::as_anipoint(
+    dplyr::rename(d, u = "x", v = "y"),
+    variables_where = c(x = "u", y = "v")
+  )
+
+  expected <- calculate_kinematics(standard)
+  result <- calculate_kinematics(renamed)
+
+  # Components are named by axis role, whatever the columns are called
+  kinematic_cols <- c(
+    "speed",
+    "acceleration",
+    "path_length",
+    "v_x",
+    "v_y",
+    "a_x",
+    "a_y",
+    "heading",
+    "angular_velocity",
+    "angular_path_length"
+  )
+  for (col in kinematic_cols) {
+    expect_equal(result[[col]], expected[[col]], label = col)
+  }
+})
+
+test_that("calculate_kinematics() reads a renamed index from the frame", {
+  d <- data.frame(time = c(0, 0.5, 1.5, 2, 3), x = c(0, 1, 3, 4, 7), y = 0)
+  standard <- anicore::as_anipoint(d)
+  renamed <- anicore::as_anipoint(
+    dplyr::rename(d, frame = "time"),
+    index = "frame"
+  )
+
+  expect_equal(
+    calculate_kinematics(renamed)$speed,
+    calculate_kinematics(standard)$speed
+  )
+})
+
+test_that("calculate_kinematics() computes translation for 1D data", {
+  data <- anicore::as_anipoint(data.frame(time = 0:5, x = c(0, 1, 3, 6, 6, 4)))
+  expect_true(anicore::is_cartesian_1d(data))
+
+  result <- calculate_kinematics(data)
+
+  expect_true(is_aniframe_kin(result))
+  expect_equal(result$v_x, differentiate(data$x, data$time))
+  expect_equal(result$speed, abs(result$v_x))
+  expect_equal(result$path_length, c(0, 1, 3, 6, 6, 8))
+  expect_false("heading" %in% names(result))
+})
+
+test_that("summaries work on 1D data", {
+  data <- anicore::as_anipoint(data.frame(time = 0:9, x = c(0:5, 4:1)))
+  kin <- calculate_kinematics(data)
+
+  kin_summary <- summarise_kinematics(kin)
+  expect_true(all(
+    c("median_speed", "mad_acceleration") %in% names(kin_summary)
+  ))
+  expect_false("median_heading" %in% names(kin_summary))
+
+  tort_summary <- summarise_tortuosity(kin)
+  expect_equal(tort_summary$total_path_length, 9)
+  expect_equal(tort_summary$net_displacement, 1)
+})

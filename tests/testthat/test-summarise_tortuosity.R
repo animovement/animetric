@@ -143,17 +143,17 @@ test_that("summarise_tortuosity preserves grouping structure for 3D", {
 
 # summarise_tortuosity: computation correctness --------------------------
 
-test_that("summarise_tortuosity_2d computes total_path_length correctly", {
+test_that("summarise_tortuosity() on 2D data computes total_path_length correctly", {
   data <- mock_kin_2d()
-  result <- summarise_tortuosity_2d(data)
+  result <- summarise_tortuosity(data)
 
   expected <- dplyr::last(data$path_length) - dplyr::first(data$path_length)
   expect_equal(result$total_path_length, expected)
 })
 
-test_that("summarise_tortuosity_2d computes net_displacement correctly", {
+test_that("summarise_tortuosity() on 2D data computes net_displacement correctly", {
   data <- mock_kin_2d()
-  result <- summarise_tortuosity_2d(data)
+  result <- summarise_tortuosity(data)
 
   expected <- sqrt(
     (dplyr::last(data$x) - dplyr::first(data$x))^2 +
@@ -162,17 +162,17 @@ test_that("summarise_tortuosity_2d computes net_displacement correctly", {
   expect_equal(result$net_displacement, expected)
 })
 
-test_that("summarise_tortuosity_3d computes total_path_length correctly", {
+test_that("summarise_tortuosity() on 3D data computes total_path_length correctly", {
   data <- mock_kin_3d()
-  result <- summarise_tortuosity_3d(data)
+  result <- summarise_tortuosity(data)
 
   expected <- dplyr::last(data$path_length) - dplyr::first(data$path_length)
   expect_equal(result$total_path_length, expected)
 })
 
-test_that("summarise_tortuosity_3d computes net_displacement correctly", {
+test_that("summarise_tortuosity() on 3D data computes net_displacement correctly", {
   data <- mock_kin_3d()
-  result <- summarise_tortuosity_3d(data)
+  result <- summarise_tortuosity(data)
 
   expected <- sqrt(
     (dplyr::last(data$x) - dplyr::first(data$x))^2 +
@@ -224,9 +224,9 @@ test_that("sinuosity and emax work for 3D data", {
 
 # summarise_tortuosity: internal columns removed -------------------------
 
-test_that("summarise_tortuosity_2d removes internal columns", {
+test_that("summarise_tortuosity() on 2D data removes internal columns", {
   data <- mock_kin_2d()
-  result <- summarise_tortuosity_2d(data)
+  result <- summarise_tortuosity(data)
 
   internal_cols <- c(
     ".first_x",
@@ -241,9 +241,9 @@ test_that("summarise_tortuosity_2d removes internal columns", {
   expect_false(any(internal_cols %in% names(result)))
 })
 
-test_that("summarise_tortuosity_3d removes internal columns", {
+test_that("summarise_tortuosity() on 3D data removes internal columns", {
   data <- mock_kin_3d()
-  result <- summarise_tortuosity_3d(data)
+  result <- summarise_tortuosity(data)
 
   internal_cols <- c(
     ".first_x",

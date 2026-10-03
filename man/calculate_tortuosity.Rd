@@ -7,8 +7,8 @@
 calculate_tortuosity(data, window_width = 11L)
 }
 \arguments{
-\item{data}{An anipoint with position coordinates and time. Velocity and
-heading columns will be computed if not already present.}
+\item{data}{A Cartesian anipoint. Kinematic columns will be computed if not
+already present.}
 
 \item{window_width}{Size of the sliding window (number of observations).
 Should be an odd number >= 3 for symmetric centering.}
@@ -32,14 +32,14 @@ automatically by calling the appropriate helper functions.
 Straightness is appropriate for directed/goal-oriented movement, while
 sinuosity and E_max are appropriate for random search paths.
 
-For 2D data, heading is derived from the velocity vector, which provides
-smoother estimates than raw position differences.
+Works on 1D, 2D and 3D Cartesian data, reading the axes from the frame's
+declared variables. Turning angles are the angles between consecutive
+velocity vectors (\code{\link[anicore:angle_between]{anicore::angle_between()}}), which gives smoother
+estimates than raw position differences.
 
-For 3D data, turning angles are computed as the angle between consecutive
-velocity vectors using the dot product.
-
-The window is centered on each timepoint. At path edges, metrics are
-computed from available data within the truncated window.
+The window is centered on each timepoint. Near the ends of a trajectory,
+where the window would run past the first or last observation, the metrics
+are \code{NA}.
 }
 \examples{
 data <- anicore::example_anipoint(n_obs = 30, n_individuals = 1, n_keypoints = 1)

@@ -27,7 +27,6 @@
 #' @export
 #' @aliases summarize_tortuosity
 summarise_tortuosity <- function(data) {
-  is_3d <- anicore::is_cartesian_3d(data)
   ensure_trajectory_grouping(data)
 
   if (!is_aniframe_kin(data)) {
@@ -36,36 +35,34 @@ summarise_tortuosity <- function(data) {
       calculate_tortuosity()
   }
 
-  if (is_3d) {
-    summarise_tortuosity_3d(data)
-  } else {
-    summarise_tortuosity_2d(data)
+  axes <- cartesian_axes(data)
+  if (length(axes) == 0L) {
+    cli::cli_abort("Data must be in Cartesian coordinates.")
   }
-}
+  position_cols <- unname(axes)
+  v_cols <- paste0("v_", names(axes))
 
-#' @rdname summarise_tortuosity
-#' @export
-summarize_tortuosity <- summarise_tortuosity
+  total_turning <- if ("angular_path_length" %in% names(data)) {
+    list(
+      total_angular_path_length = rlang::quo(
+        dplyr::last(.data$angular_path_length, na_rm = TRUE) -
+          dplyr::first(.data$angular_path_length, na_rm = TRUE)
+      )
+    )
+  }
 
-#' @keywords internal
-summarise_tortuosity_2d <- function(data) {
   data |>
     dplyr::summarise(
       total_path_length = dplyr::last(.data$path_length, na_rm = TRUE) -
         dplyr::first(.data$path_length, na_rm = TRUE),
-      total_angular_path_length = dplyr::last(
-        .data$angular_path_length,
-        na_rm = TRUE
-      ) -
-        dplyr::first(.data$angular_path_length, na_rm = TRUE),
-
-      .first_x = dplyr::first(.data$x, na_rm = TRUE),
-      .first_y = dplyr::first(.data$y, na_rm = TRUE),
-      .last_x = dplyr::last(.data$x, na_rm = TRUE),
-      .last_y = dplyr::last(.data$y, na_rm = TRUE),
+      !!!total_turning,
+      net_displacement = vector_norm(lapply(
+        dplyr::pick(dplyr::all_of(position_cols)),
+        \(x) dplyr::last(x, na_rm = TRUE) - dplyr::first(x, na_rm = TRUE)
+      )),
 
       .mean_cos_turning = mean(
-        cos(anicore::circ_successive_difference(.data$heading)),
+        cos_turning(dplyr::pick(dplyr::all_of(v_cols))),
         na.rm = TRUE
       ),
       .n_steps = sum(!is.na(.data$path_length)) - 1L,
@@ -73,10 +70,6 @@ summarise_tortuosity_2d <- function(data) {
       .groups = "drop"
     ) |>
     dplyr::mutate(
-      net_displacement = sqrt(
-        (.data$.last_x - .data$.first_x)^2 +
-          (.data$.last_y - .data$.first_y)^2
-      ),
       .mean_step_length = .data$total_path_length / .data$.n_steps,
 
       straightness = compute_straightness(
@@ -90,76 +83,9 @@ summarise_tortuosity_2d <- function(data) {
       ),
       emax = compute_emax(.data$.mean_cos_turning)
     ) |>
-    dplyr::select(
-      -c(
-        ".first_x",
-        ".first_y",
-        ".last_x",
-        ".last_y",
-        ".mean_cos_turning",
-        ".mean_step_length",
-        ".n_steps"
-      )
-    )
+    dplyr::select(-dplyr::starts_with("."))
 }
 
-
-#' @keywords internal
-summarise_tortuosity_3d <- function(data) {
-  data |>
-    dplyr::mutate(
-      .cos_turning = (.data$v_x *
-        dplyr::lag(.data$v_x) +
-        .data$v_y * dplyr::lag(.data$v_y) +
-        .data$v_z * dplyr::lag(.data$v_z)) /
-        (.data$speed * dplyr::lag(.data$speed))
-    ) |>
-    dplyr::summarise(
-      total_path_length = dplyr::last(.data$path_length, na_rm = TRUE) -
-        dplyr::first(.data$path_length, na_rm = TRUE),
-
-      .first_x = dplyr::first(.data$x, na_rm = TRUE),
-      .first_y = dplyr::first(.data$y, na_rm = TRUE),
-      .first_z = dplyr::first(.data$z, na_rm = TRUE),
-      .last_x = dplyr::last(.data$x, na_rm = TRUE),
-      .last_y = dplyr::last(.data$y, na_rm = TRUE),
-      .last_z = dplyr::last(.data$z, na_rm = TRUE),
-
-      .mean_cos_turning = mean(.data$.cos_turning, na.rm = TRUE),
-      .n_steps = sum(!is.na(.data$path_length)) - 1L,
-
-      .groups = "drop"
-    ) |>
-    dplyr::mutate(
-      net_displacement = sqrt(
-        (.data$.last_x - .data$.first_x)^2 +
-          (.data$.last_y - .data$.first_y)^2 +
-          (.data$.last_z - .data$.first_z)^2
-      ),
-      .mean_step_length = .data$total_path_length / .data$.n_steps,
-
-      straightness = compute_straightness(
-        .data$net_displacement,
-        .data$total_path_length
-      ),
-      sinuosity = compute_sinuosity(
-        .data$.mean_step_length,
-        .data$.mean_cos_turning,
-        method = "corrected"
-      ),
-      emax = compute_emax(.data$.mean_cos_turning)
-    ) |>
-    dplyr::select(
-      -c(
-        ".first_x",
-        ".first_y",
-        ".first_z",
-        ".last_x",
-        ".last_y",
-        ".last_z",
-        ".mean_cos_turning",
-        ".mean_step_length",
-        ".n_steps"
-      )
-    )
-}
+#' @rdname summarise_tortuosity
+#' @export
+summarize_tortuosity <- summarise_tortuosity

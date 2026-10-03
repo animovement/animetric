@@ -7,7 +7,7 @@
 calculate_rotation_2d(data)
 }
 \arguments{
-\item{data}{An anipoint with v_x, v_y, speed, and time columns}
+\item{data}{An anipoint with v_x, v_y and speed columns, and an index}
 }
 \value{
 The anipoint with added rotational kinematic columns

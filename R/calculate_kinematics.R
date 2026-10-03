@@ -4,17 +4,19 @@
 #' Handles data in any coordinate system by automatically converting to Cartesian
 #' for calculations, then converting back to the original system.
 #'
-#' @param data An anipoint with position coordinates (x/y or x/y/z for Cartesian;
-#'   rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for spherical)
-#'   and a time column
+#' @param data An anipoint with position coordinates (x, x/y or x/y/z for
+#'   Cartesian; rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for
+#'   spherical) and an index. The axes and the index are read from the frame's
+#'   declared variables, so the columns can have any name.
 #'
 #' @return An anipoint in the same coordinate system as the input, with added
-#'   kinematic measures. For 2D data, includes translational kinematics
-#'   (velocity components, speed, acceleration, path length) and rotational
-#'   kinematics (heading, angular velocity, angular speed, angular acceleration).
+#'   kinematic measures. Translational kinematics (velocity and acceleration
+#'   components, speed, acceleration, path length) are computed for 1D, 2D and
+#'   3D data, with components named by axis role (`v_x`, `v_y`, ...) whatever
+#'   the input columns are called. For 2D data, rotational kinematics are added
+#'   too (heading, angular velocity, angular speed, angular acceleration).
 #'   Heading is the direction of travel, so it is `NA` where speed is zero.
-#'   For 3D data, includes translational kinematics only (rotational measures
-#'   for 3D are not yet implemented).
+#'   Rotational measures for 1D and 3D are not yet implemented.
 #'
 #' @details
 #' The function preserves the original coordinate system by:
@@ -50,12 +52,7 @@ calculate_kinematics <- function(data) {
     data <- anispace::map_to_cartesian(data)
   }
 
-  # Calculate kinematics
-  if (anicore::is_cartesian_2d(data)) {
-    data <- calculate_kinematics_2d(data)
-  } else if (anicore::is_cartesian_3d(data)) {
-    data <- calculate_kinematics_3d(data)
-  }
+  data <- new_aniframe_kin(add_kinematics(data))
 
   # Convert back if needed
   if (as.character(original_system) == "polar") {
@@ -69,69 +66,58 @@ calculate_kinematics <- function(data) {
   data
 }
 
-#' @keywords internal
-calculate_kinematics_2d <- function(data) {
-  anicore::ensure_is_anipoint(data)
-  data <- calculate_translation_2d(data)
-  data <- calculate_rotation_2d(data)
-  new_aniframe_kin(data)
-}
-
-#' @keywords internal
-calculate_kinematics_3d <- function(data) {
-  anicore::ensure_is_anipoint(data)
-  data <- calculate_translation_3d(data) # TODO: Add 3D rotation summary
-  new_aniframe_kin(data)
-}
-
-#' Calculate translational kinematics in 2D
+#' Add translational, and where defined rotational, kinematics
 #'
-#' @param data An anipoint with x, y, and time columns
+#' @param data A Cartesian anipoint.
+#' @return The anipoint with added kinematic columns.
+#' @keywords internal
+add_kinematics <- function(data) {
+  data <- calculate_translation(data)
+  if (anicore::is_cartesian_2d(data)) {
+    data <- calculate_rotation_2d(data)
+  }
+  data
+}
+
+#' Calculate translational kinematics
+#'
+#' Works on any number of Cartesian axes. Velocity and acceleration components
+#' are named by axis role (`v_x`, `a_x`, ...), speed and step length are
+#' Euclidean norms over the axes.
+#'
+#' @param data A Cartesian anipoint.
 #' @return The anipoint with added translational kinematic columns
 #' @keywords internal
-calculate_translation_2d <- function(data) {
-  data |>
-    dplyr::mutate(
-      v_x = differentiate(.data$x, .data$time, order = 1),
-      v_y = differentiate(.data$y, .data$time, order = 1),
-      a_x = differentiate(.data$x, .data$time, order = 2),
-      a_y = differentiate(.data$y, .data$time, order = 2),
-      speed = sqrt(.data$v_x^2 + .data$v_y^2),
-      acceleration = differentiate(.data$speed, .data$time, order = 1),
-      path_length = cumsum_na(sqrt(
-        (.data$x - dplyr::lag(.data$x))^2 + (.data$y - dplyr::lag(.data$y))^2
-      ))
-    ) |>
-    dplyr::relocate("speed", .before = "v_x") |>
-    dplyr::relocate("acceleration", .before = "v_x") |>
-    dplyr::relocate("path_length", .before = "v_x")
-}
+calculate_translation <- function(data) {
+  axes <- cartesian_axes(data)
+  index <- anicore::get_index(data)
+  v_cols <- paste0("v_", names(axes))
+  a_cols <- paste0("a_", names(axes))
 
-#' Calculate translational kinematics in 3D
-#'
-#' @param data An anipoint with x, y, z, and time columns
-#' @return The anipoint with added translational kinematic columns
-#' @keywords internal
-calculate_translation_3d <- function(data) {
+  derivative <- function(col, order) {
+    rlang::quo(differentiate(.data[[!!col]], .data[[!!index]], order = !!order))
+  }
+  derivatives <- c(
+    rlang::set_names(purrr::map(axes, derivative, order = 1L), v_cols),
+    rlang::set_names(purrr::map(axes, derivative, order = 2L), a_cols)
+  )
+
   data |>
+    dplyr::mutate(!!!derivatives) |>
     dplyr::mutate(
-      v_x = differentiate(.data$x, .data$time, order = 1),
-      v_y = differentiate(.data$y, .data$time, order = 1),
-      v_z = differentiate(.data$z, .data$time, order = 1),
-      a_x = differentiate(.data$x, .data$time, order = 2),
-      a_y = differentiate(.data$y, .data$time, order = 2),
-      a_z = differentiate(.data$z, .data$time, order = 2),
-      speed = sqrt(.data$v_x^2 + .data$v_y^2 + .data$v_z^2),
-      acceleration = differentiate(.data$speed, .data$time, order = 1),
-      path_length = cumsum_na(sqrt(
-        (.data$x - dplyr::lag(.data$x))^2 +
-          (.data$y - dplyr::lag(.data$y))^2 +
-          (.data$z - dplyr::lag(.data$z))^2
-      ))
+      speed = vector_norm(dplyr::pick(dplyr::all_of(v_cols))),
+      acceleration = differentiate(
+        .data$speed,
+        .data[[index]],
+        order = 1
+      ),
+      path_length = cumsum_na(
+        step_length(dplyr::pick(dplyr::all_of(unname(axes))))
+      )
     ) |>
-    dplyr::relocate("speed", .before = "v_x") |>
-    dplyr::relocate("acceleration", .before = "v_x") |>
-    dplyr::relocate("path_length", .before = "v_x")
+    dplyr::relocate("speed", .before = dplyr::all_of(v_cols[1])) |>
+    dplyr::relocate("acceleration", .before = dplyr::all_of(v_cols[1])) |>
+    dplyr::relocate("path_length", .before = dplyr::all_of(v_cols[1]))
 }
 
 #' Calculate rotational kinematics in 2D
@@ -139,10 +125,11 @@ calculate_translation_3d <- function(data) {
 #' Computes heading angles and angular kinematics based on the velocity vector.
 #' Heading is calculated as atan2(v_y, v_x), and is `NA` where speed is zero.
 #'
-#' @param data An anipoint with v_x, v_y, speed, and time columns
+#' @param data An anipoint with v_x, v_y and speed columns, and an index
 #' @return The anipoint with added rotational kinematic columns
 #' @keywords internal
 calculate_rotation_2d <- function(data) {
+  index <- anicore::get_index(data)
   data |>
     dplyr::mutate(
       # Direction of travel is undefined when the animal is not moving
@@ -155,13 +142,13 @@ calculate_rotation_2d <- function(data) {
       angular_path_length = cumsum_turning(.data$heading),
       angular_velocity = differentiate(
         .data$heading_unwrapped,
-        .data$time,
+        .data[[index]],
         order = 1
       ),
       angular_speed = abs(.data$angular_velocity),
       angular_acceleration = differentiate(
         .data$heading_unwrapped,
-        .data$time,
+        .data[[index]],
         order = 2
       )
     ) |>
