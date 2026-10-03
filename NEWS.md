@@ -41,6 +41,14 @@
 
   Each deprecated call returns exactly what it did before. They will be removed after the next release.
 
+* `add_point()` and `compute_point()` replace `add_centroid()` and `compute_centroid()` (#94). They derive a new member of an identity level at each moment, as before, and `method` now chooses how:
+  - `"centroid"`, the mean (the default, and what the old functions did);
+  - `"median"`, robust to a stray keypoint;
+  - `"weighted"`, weighted by `confidence`;
+  - a function of your own, e.g. `\(x) mean(x, trim = 0.1)`.
+
+  A declared orientation is derived for the new member too: the circular mean of `yaw`, or the mean quaternion in 3D. It used to be left `NA`. `add_centroid()` and `compute_centroid()` are deprecated, and return exactly what they did.
+
 * **The `aniframe_kin` class is retired** (#58). `calculate_kinematics()` returns a plain anipoint. The class only labelled a frame as having been through `calculate_kinematics()`, recorded nothing about its columns, and survived `select(-speed)`. `is_aniframe_kin()` is deprecated; check for the columns you need instead. Declaring derived columns in anicore's metadata is the planned replacement (animovement/anicore#174).
 
 * `calculate_kinematics()` gives turning measures for 3D data too (#63). Every 3D frame gets `turning_speed` (how fast the direction of travel turns, in any direction) and `cumulative_turning`, and `calculate_kinematics(data, vertical = "z")` adds `course` and `course_unwrapped` in the horizontal plane, `course_elevation` (the angle of travel above it), and the signed horizontal `turning_rate` and `turning_acceleration`. The new `vertical` argument names the axis that points up in the world, with a minus sign when it points down (`"-y"`); the frame's `axis_directions` cannot supply it, since they are relative to the camera (animovement/anicore#172 proposes declaring it). Course counts about the vertical by the right-hand rule. The 3D turning speed is the angle between the velocities either side of each row over the time between them, so it has no wrap at +/-pi and no singularity when travel is vertical; 2D results are unchanged. `summarise_kinematics()` and `summarise_tortuosity()` summarise the new columns, and `total_turning` is now reported for 3D.

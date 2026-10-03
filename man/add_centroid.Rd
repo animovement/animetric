@@ -15,51 +15,28 @@ add_centroid(
 \arguments{
 \item{data}{An anipoint with Cartesian coordinates.}
 
-\item{across}{Identity variables to collapse — the dimensions the summary
-ranges over. Required when the frame declares more than one identity
-variable, since their order is not a hierarchy and there is no finest
-one to assume; with a single identity variable, that one is the default.
-Collapsing every level gives a single point per position.}
+\item{across}{Identity variables to collapse — the dimensions the new
+point is derived over. Required when the frame declares more than one
+identity variable, since their order is not a hierarchy and there is no
+finest one to assume; with a single identity variable, that one is the
+default. Collapsing every level gives a single point per position.}
 
 \item{include, exclude}{Values of the collapsed level to keep or leave out.
-Only meaningful when one level is collapsed.}
+Only meaningful when one level is collapsed. A midpoint is the centroid
+of two members: \code{include = c("ear_l", "ear_r")}.}
 
 \item{name}{Name for the new member. Default is \code{"centroid"}.}
 }
 \value{
-The anipoint, with the centroid appended as extra rows. The
-collapsed identity column comes back as a factor, since it now holds a
-named member that an integer column could not.
+The anipoint, with the centroid appended as extra rows.
 }
 \description{
-Appends the centroid of one identity level to the frame, as a new member of
-that level. The rest of the data is returned untouched.
+\strong{Deprecated.} Use \code{\link[=add_point]{add_point()}}, whose default \code{method = "centroid"}
+does the same, and which can also derive a median, a confidence-weighted
+centroid or a point by a rule of your own, and derives a declared
+orientation for the new member.
 
-Which levels are collapsed is the caller's choice. On pose data for a
-team, the default gives each player their own centre;
-\code{across = "individual"} gives one centre per keypoint across the players;
-and collapsing both gives the single point the whole team occupies.
-
-A level that did not actually vary keeps its value rather than taking the
-summary's name — an individual's strain is still its strain, since nothing
-was averaged over it.
+This returns exactly what it did: the centroid as a new member, with any
+declared orientation left \code{NA} for it.
 }
-\examples{
-af <- anicore::example_anipoint(n_obs = 20, n_individuals = 2, n_keypoints = 3)
-
-# Each animal gains a centroid keypoint
-add_centroid(af, across = "keypoint")
-
-# From a subset of the keypoints
-add_centroid(af, across = "keypoint", include = c("head", "neck"))
-
-# One centre per keypoint, across the animals
-add_centroid(af, across = "individual", name = "group")
-
-# The single point the whole group occupies
-add_centroid(af, across = c("individual", "keypoint"), name = "group")
-
-}
-\seealso{
-\code{\link[=compute_centroid]{compute_centroid()}}, which returns the centroid on its own.
-}
+\keyword{internal}
