@@ -31,7 +31,9 @@ of two members: \code{include = c("ear_l", "ear_r")}.}
 The anipoint, with the centroid appended as extra rows.
 }
 \description{
-\strong{Deprecated.} Use \code{\link[=add_point]{add_point()}}, whose default \code{method = "centroid"}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+Use \code{\link[=add_point]{add_point()}}, whose default \code{method = "centroid"}
 does the same, and which can also derive a median, a confidence-weighted
 centroid or a point by a rule of your own, and derives a declared
 orientation for the new member.

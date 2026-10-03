@@ -1,7 +1,9 @@
 #' Calculate tortuosity summary statistics
 #'
 #' @description
-#' **Deprecated.** Renamed to [summarise_path()], which returns the same measures. The name
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Renamed to [summarise_path()], which returns the same measures. The name
 #' suggested a summary of [calculate_tortuosity()]'s windowed output, which it
 #' never was: it measures the whole path. To summarise the windowed
 #' measures, use [summarise_aniframe()].

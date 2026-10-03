@@ -1,7 +1,9 @@
 #' Add a centroid to an anipoint
 #'
 #' @description
-#' **Deprecated.** Use [add_point()], whose default `method = "centroid"`
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Use [add_point()], whose default `method = "centroid"`
 #' does the same, and which can also derive a median, a confidence-weighted
 #' centroid or a point by a rule of your own, and derives a declared
 #' orientation for the new member.

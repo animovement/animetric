@@ -1,7 +1,9 @@
 #' Test whether a frame holds kinematics
 #'
 #' @description
-#' **Deprecated.** The `aniframe_kin` class is retired: it only labelled a frame as having
+#' `r lifecycle::badge("deprecated")`
+#'
+#' The `aniframe_kin` class is retired: it only labelled a frame as having
 #' been through [calculate_kinematics()], said nothing about which columns
 #' it held, and outlived them (`select(-speed)` kept it). Check for the
 #' columns you need instead, e.g. `"speed" %in% names(x)`.

@@ -28,6 +28,7 @@ export(summarize_aniframe)
 export(summarize_kinematics)
 export(summarize_path)
 export(summarize_tortuosity)
+importFrom(lifecycle,deprecated)
 importFrom(rlang,
   ":=",
   .data
