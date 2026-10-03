@@ -77,15 +77,18 @@ declared variables, so the columns can have any name.</p></dd>
 
 
 <dt id="arg-vertical">vertical<a class="anchor" aria-label="anchor" href="#arg-vertical"></a></dt>
-<dd><p>For 3D data, the axis that points up in the world, against
-gravity: one of <code>"x"</code>, <code>"y"</code> or <code>"z"</code>, or with a minus sign (<code>"-y"</code>) when
-that axis points down. It defines the horizontal plane that course is
-measured in. The frame's <code>axis_directions</code> cannot supply it, since they
-are relative to the camera: in a recording filmed from above, the axis
-pointing at the camera is the vertical one. A metadata field for it is
-proposed in animovement/anicore#172. <code>NULL</code> (the default) gives
-only the measures that need no vertical. Ignored for 1D and 2D data,
-where course is measured in the plane of the data.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> For 3D data, the
+axis that points up in the world, against gravity: one of <code>"x"</code>, <code>"y"</code>
+or <code>"z"</code>, or with a minus sign (<code>"-y"</code>) when that axis points down. It
+defines the horizontal plane that course is measured in. The frame's
+<code>axis_directions</code> cannot supply it, since they are relative to the
+camera: in a recording filmed from above, the axis pointing at the
+camera is the vertical one. A metadata field for it is proposed in
+animovement/anicore#172. <code>NULL</code> (the default) gives only the measures
+that need no vertical. Ignored for 1D and 2D data, where course is
+measured in the plane of the data. Experimental until that proposal is
+settled: the argument may come to default to the declared vertical, and
+to mean something for 2D side views.</p></dd>
 
 </dl></div>
     <div class="section level2">

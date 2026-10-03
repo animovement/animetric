@@ -21,14 +21,15 @@ or the geometry of each whole trajectory with
 
 - [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
   [`summarize_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
-  : Summarise the time series of an aniframe
+  **\[experimental\]** : Summarise the time series of an aniframe
 - [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
   [`summarize_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
   : Summarise each trajectory as a whole
 - [`add_point()`](https://animovement.dev/animetric/reference/add_point.md)
   : Add a derived point to an anipoint
 - [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
-  : Declare orientation from the positions of points
+  **\[experimental\]** : Declare orientation from the positions of
+  points
 
 ## Compute
 

@@ -121,6 +121,27 @@
 
 ### Changed
 
+- [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md),
+  [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
+  and the `vertical` argument of
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  are marked experimental (animovement/.github#46). They are new designs
+  that have not been used in anger yet, so they may still change without
+  a deprecation cycle; anything without a badge is stable, and changes
+  only through one.
+  [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+  has open design questions
+  ([\#91](https://github.com/animovement/animetric/issues/91),
+  [\#92](https://github.com/animovement/animetric/issues/92),
+  [\#22](https://github.com/animovement/animetric/issues/22)), the first
+  uses of
+  [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
+  are still being designed
+  ([\#25](https://github.com/animovement/animetric/issues/25),
+  [\#85](https://github.com/animovement/animetric/issues/85)), and
+  `vertical` may come to default to a vertical declared in the frame’s
+  metadata (animovement/anicore#172).
+
 - **The summaries are reorganised into two functions, by what they
   summarise**
   ([\#58](https://github.com/animovement/animetric/issues/58)). Sliding

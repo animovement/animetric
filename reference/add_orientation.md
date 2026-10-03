@@ -1,5 +1,7 @@
 # Declare orientation from the positions of points
 
+**\[experimental\]**
+
 Works out which way a body faces from where its points are, and declares
 it as the frame's orientation: `heading` in 2D, a unit quaternion (`qw`,
 `qx`, `qy`, `qz`) in 3D. Once declared, it is a proper `where` variable
