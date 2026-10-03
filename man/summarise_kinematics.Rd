@@ -28,7 +28,9 @@ summarize_kinematics(
 A data frame with one row per group.
 }
 \description{
-\strong{Deprecated.} Use \code{\link[=summarise_aniframe]{summarise_aniframe()}}, which summarises any per-row measure of a
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+Use \code{\link[=summarise_aniframe]{summarise_aniframe()}}, which summarises any per-row measure of a
 frame, not only kinematics. This keeps the old output: the median and MAD
 (or mean and SD) of \code{speed}, \code{acceleration}, the turning measures,
 \code{course_elevation} and, with circular statistics, \code{course}.

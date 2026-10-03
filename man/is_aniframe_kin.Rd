@@ -13,7 +13,9 @@ is_aniframe_kin(x)
 \code{TRUE} for an anipoint with a \code{speed} column.
 }
 \description{
-\strong{Deprecated.} The \code{aniframe_kin} class is retired: it only labelled a frame as having
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+The \code{aniframe_kin} class is retired: it only labelled a frame as having
 been through \code{\link[=calculate_kinematics]{calculate_kinematics()}}, said nothing about which columns
 it held, and outlived them (\code{select(-speed)} kept it). Check for the
 columns you need instead, e.g. \code{"speed" \%in\% names(x)}.

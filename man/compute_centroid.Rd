@@ -31,7 +31,9 @@ of two members: \code{include = c("ear_l", "ear_r")}.}
 An anipoint containing only the centroid.
 }
 \description{
-\strong{Deprecated.} Use \code{\link[=compute_point]{compute_point()}}, whose default \code{method = "centroid"}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+Use \code{\link[=compute_point]{compute_point()}}, whose default \code{method = "centroid"}
 does the same.
 
 This returns exactly what it did: the centroid, with any declared

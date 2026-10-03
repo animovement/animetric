@@ -16,7 +16,9 @@ summarize_tortuosity(data)
 As \code{\link[=summarise_path]{summarise_path()}}.
 }
 \description{
-\strong{Deprecated.} Renamed to \code{\link[=summarise_path]{summarise_path()}}, which returns the same measures. The name
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+Renamed to \code{\link[=summarise_path]{summarise_path()}}, which returns the same measures. The name
 suggested a summary of \code{\link[=calculate_tortuosity]{calculate_tortuosity()}}'s windowed output, which it
 never was: it measures the whole path. To summarise the windowed
 measures, use \code{\link[=summarise_aniframe]{summarise_aniframe()}}.

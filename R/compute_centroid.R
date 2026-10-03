@@ -1,7 +1,9 @@
 #' Compute the centroid of an identity level
 #'
 #' @description
-#' **Deprecated.** Use [compute_point()], whose default `method = "centroid"`
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Use [compute_point()], whose default `method = "centroid"`
 #' does the same.
 #'
 #' This returns exactly what it did: the centroid, with any declared

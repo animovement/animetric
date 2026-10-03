@@ -1,7 +1,9 @@
 #' Calculate kinematic summary statistics
 #'
 #' @description
-#' **Deprecated.** Use [summarise_aniframe()], which summarises any per-row measure of a
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Use [summarise_aniframe()], which summarises any per-row measure of a
 #' frame, not only kinematics. This keeps the old output: the median and MAD
 #' (or mean and SD) of `speed`, `acceleration`, the turning measures,
 #' `course_elevation` and, with circular statistics, `course`.
