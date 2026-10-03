@@ -60,8 +60,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="fixed-development-version">Fixed<a class="anchor" aria-label="anchor" href="#fixed-development-version"></a></h3>
-<ul><li>
-<code><a href="../reference/calculate_nnd.html">calculate_nnd()</a></code> keeps the input’s metadata, such as <code>sampling_rate</code>, and works on frames whose axis columns have custom names. It used to rebuild its result by re-detecting the columns, which dropped both.</li>
+<ul><li><p><code>heading</code> from <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> is <code>pi</code> for movement along <code>-x</code>, where it used to be rewritten to <code>0</code> — the opposite direction (<a href="https://github.com/animovement/animetric/issues/69" class="external-link">#69</a>). The rewrite fired whenever <code>v_y</code> was exactly zero, which integer-pixel tracking produces routinely, so a trajectory along <code>-x</code> picked up 180-degree jumps that showed as spikes in <code>angular_velocity</code> and <code>angular_acceleration</code> and as turning in <code>angular_path_length</code> that never happened. <code>heading</code> is now <code>NA</code> where speed is zero, since a stationary animal has no direction of travel; before, it read as <code>0</code>, or as <code>pi</code> when the velocity was a negative zero.</p></li>
+<li><p><code><a href="../reference/calculate_nnd.html">calculate_nnd()</a></code> keeps the input’s metadata, such as <code>sampling_rate</code>, and works on frames whose axis columns have custom names. It used to rebuild its result by re-detecting the columns, which dropped both.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="changed-development-version">Changed<a class="anchor" aria-label="anchor" href="#changed-development-version"></a></h3>

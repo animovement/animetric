@@ -26,6 +26,19 @@
 
 ### Fixed
 
+- `heading` from
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  is `pi` for movement along `-x`, where it used to be rewritten to `0`
+  — the opposite direction
+  ([\#69](https://github.com/animovement/animetric/issues/69)). The
+  rewrite fired whenever `v_y` was exactly zero, which integer-pixel
+  tracking produces routinely, so a trajectory along `-x` picked up
+  180-degree jumps that showed as spikes in `angular_velocity` and
+  `angular_acceleration` and as turning in `angular_path_length` that
+  never happened. `heading` is now `NA` where speed is zero, since a
+  stationary animal has no direction of travel; before, it read as `0`,
+  or as `pi` when the velocity was a negative zero.
+
 - [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
   keeps the input’s metadata, such as `sampling_rate`, and works on
   frames whose axis columns have custom names. It used to rebuild its
