@@ -152,11 +152,7 @@ calculate_rotation_2d <- function(data) {
         atan2(.data$v_y, .data$v_x)
       ),
       heading_unwrapped = anicore::unwrap_angle(.data$heading),
-      angular_path_length = cumsum_na(abs(diff(c(
-        0,
-        .data$heading_unwrapped
-      )))) -
-        dplyr::first(.data$heading_unwrapped),
+      angular_path_length = cumsum_turning(.data$heading),
       angular_velocity = differentiate(
         .data$heading_unwrapped,
         .data$time,
