@@ -1,6 +1,8 @@
 #' Summarise the time series of an aniframe
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Summarises the per-row measures of a frame over each group: a measure of
 #' central tendency and of dispersion for each, one row per group. It
 #' describes the measures the frame already carries — the output of
