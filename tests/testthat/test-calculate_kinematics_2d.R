@@ -371,8 +371,8 @@ test_that("course summaries are in the frame's unit_angle", {
   )
 
   for (measures in c("median_mad", "mean_sd")) {
-    s_rad <- summarise_kinematics(rad, measures = measures)
-    s_deg <- summarise_kinematics(deg, measures = measures)
+    s_rad <- summarise_aniframe(rad, measures = measures)
+    s_deg <- summarise_aniframe(deg, measures = measures)
     angular <- grep("course|turning", names(s_rad), value = TRUE)
     expect_length(angular, 8)
     for (col in angular) {
@@ -381,8 +381,8 @@ test_that("course summaries are in the frame's unit_angle", {
   }
 
   expect_equal(
-    summarise_tortuosity(deg)$total_turning,
-    summarise_tortuosity(rad)$total_turning * 180 / pi
+    summarise_path(deg)$total_turning,
+    summarise_path(rad)$total_turning * 180 / pi
   )
 })
 

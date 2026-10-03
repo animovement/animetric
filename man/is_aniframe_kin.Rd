@@ -2,25 +2,20 @@
 % Please edit documentation in R/aniframe_kin_is.R
 \name{is_aniframe_kin}
 \alias{is_aniframe_kin}
-\title{Check if object is an aniframe_kin}
+\title{Test whether a frame holds kinematics}
 \usage{
 is_aniframe_kin(x)
 }
 \arguments{
-\item{x}{An object to test}
+\item{x}{An object.}
 }
 \value{
-Logical: TRUE if x inherits from aniframe_kin
+\code{TRUE} for an anipoint with a \code{speed} column.
 }
 \description{
-Check if object is an aniframe_kin
+\strong{Deprecated.} The \code{aniframe_kin} class is retired: it only labelled a frame as having
+been through \code{\link[=calculate_kinematics]{calculate_kinematics()}}, said nothing about which columns
+it held, and outlived them (\code{select(-speed)} kept it). Check for the
+columns you need instead, e.g. \code{"speed" \%in\% names(x)}.
 }
-\examples{
-kin <- calculate_kinematics(
-  anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
-)
-is_aniframe_kin(kin)
-
-# An anipoint without kinematics is not one
-is_aniframe_kin(anicore::example_anipoint(n_obs = 3))
-}
+\keyword{internal}

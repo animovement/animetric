@@ -22,6 +22,27 @@
 
 ## Changed
 
+* **The summaries are reorganised into two functions, by what they summarise** (#58). Sliding windows stay in the `calculate_*()` functions; both summaries cover each group's whole time range.
+
+  - `summarise_aniframe()` summarises the *distribution* of per-row measures, with one row per group and any grouping allowed. It is now an S3 generic:
+    - **anipoints:** speed, acceleration, the turning measures, course and elevation, the windowed `straightness`, `sinuosity` and `emax`, `confidence`, and a declared `yaw` as `*_heading`.
+    - **anisegments:** `length`.
+    - **anijoints:** `angle`.
+
+    Angles (`course`, `yaw`, joint angles) get circular statistics, reported in the frame's `unit_angle`. `cols =` picks the measures. It no longer needs `calculate_kinematics()` to have been run: it summarises whichever measures the frame has.
+  - `summarise_path()` measures each trajectory as a whole: `total_path_length`, `total_turning`, `net_displacement`, `straightness`, `sinuosity` and `emax`. It works on any anipoint in any coordinate system, computing what it needs from the positions, and needs one trajectory per group.
+
+  `median_straightness` from `summarise_aniframe()` is the typical straightness over windows; `straightness` from `summarise_path()` is how direct the whole route was.
+
+* **Deprecated:**
+  - `summarise_kinematics()` → `summarise_aniframe()`.
+  - `summarise_tortuosity()` → `summarise_path()`, which returns the same columns.
+  - `summarise_aniframe(type = )` keeps its old combined output, with a warning.
+
+  Each deprecated call returns exactly what it did before. They will be removed after the next release.
+
+* **The `aniframe_kin` class is retired** (#58). `calculate_kinematics()` returns a plain anipoint. The class only labelled a frame as having been through `calculate_kinematics()`, recorded nothing about its columns, and survived `select(-speed)`. `is_aniframe_kin()` is deprecated; check for the columns you need instead. Declaring derived columns in anicore's metadata is the planned replacement (animovement/anicore#174).
+
 * `calculate_kinematics()` gives turning measures for 3D data too (#63). Every 3D frame gets `turning_speed` (how fast the direction of travel turns, in any direction) and `cumulative_turning`, and `calculate_kinematics(data, vertical = "z")` adds `course` and `course_unwrapped` in the horizontal plane, `course_elevation` (the angle of travel above it), and the signed horizontal `turning_rate` and `turning_acceleration`. The new `vertical` argument names the axis that points up in the world, with a minus sign when it points down (`"-y"`); the frame's `axis_directions` cannot supply it, since they are relative to the camera (animovement/anicore#172 proposes declaring it). Course counts about the vertical by the right-hand rule. The 3D turning speed is the angle between the velocities either side of each row over the time between them, so it has no wrap at +/-pi and no singularity when travel is vertical; 2D results are unchanged. `summarise_kinematics()` and `summarise_tortuosity()` summarise the new columns, and `total_turning` is now reported for 3D.
 
 * **Breaking:** the velocity-derived angular columns are renamed to say they describe the path, not the body (#70). Course is the direction of travel and turning rate is how fast it changes, while heading and angular velocity are where the animal faces and how fast that turns. They differ for any animal that does not move nose-first, and the orientation names are kept free for body orientation once anicore records it (animovement/anicore#46).

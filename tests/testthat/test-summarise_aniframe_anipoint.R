@@ -1,16 +1,16 @@
 # Tests for summarise_kinematics
 #
-# - summarise_kinematics returns correct columns for 2D data
-# - summarise_kinematics returns correct columns for 3D data
-# - summarise_kinematics respects measures argument (median_mad vs mean_sd)
-# - summarise_kinematics preserves grouping structure
-# - summarise_kinematics validates input with .check = TRUE
-# - summarise_kinematics_2d computes median/mad correctly
-# - summarise_kinematics_2d computes mean/sd correctly
-# - summarise_kinematics_2d includes circular statistics for course
-# - summarise_kinematics_3d computes median/mad correctly
-# - summarise_kinematics_3d computes mean/sd correctly
-# - summarise_kinematics_3d excludes angular columns
+# - summarise_aniframe returns correct columns for 2D data
+# - summarise_aniframe returns correct columns for 3D data
+# - summarise_aniframe respects measures argument (median_mad vs mean_sd)
+# - summarise_aniframe preserves grouping structure
+# - summarise_aniframe validates input
+# - summarise_aniframe_2d computes median/mad correctly
+# - summarise_aniframe_2d computes mean/sd correctly
+# - summarise_aniframe_2d includes circular statistics for course
+# - summarise_aniframe_3d computes median/mad correctly
+# - summarise_aniframe_3d computes mean/sd correctly
+# - summarise_aniframe_3d excludes angular columns
 
 # Helper to create mock 2D kinematics aniframe
 mock_kin_2d <- function(n = 10, grouped = FALSE) {
@@ -52,11 +52,11 @@ mock_kin_3d <- function(n = 10, grouped = FALSE) {
 }
 
 
-# summarise_kinematics: 2D output columns --------------------------------
+# summarise_aniframe: 2D output columns --------------------------------
 
-test_that("summarise_kinematics returns correct columns for 2D median_mad", {
+test_that("summarise_aniframe returns correct columns for 2D median_mad", {
   data <- mock_kin_2d()
-  result <- summarise_kinematics(data, measures = "median_mad")
+  result <- summarise_aniframe(data, measures = "median_mad")
 
   expected_cols <- c(
     "median_speed",
@@ -77,9 +77,9 @@ test_that("summarise_kinematics returns correct columns for 2D median_mad", {
   expect_equal(nrow(result), 1L)
 })
 
-test_that("summarise_kinematics returns correct columns for 2D mean_sd", {
+test_that("summarise_aniframe returns correct columns for 2D mean_sd", {
   data <- mock_kin_2d()
-  result <- summarise_kinematics(data, measures = "mean_sd")
+  result <- summarise_aniframe(data, measures = "mean_sd")
 
   expected_cols <- c(
     "mean_speed",
@@ -101,11 +101,11 @@ test_that("summarise_kinematics returns correct columns for 2D mean_sd", {
 })
 
 
-# summarise_kinematics: 3D output columns --------------------------------
+# summarise_aniframe: 3D output columns --------------------------------
 
-test_that("summarise_kinematics returns correct columns for 3D median_mad", {
+test_that("summarise_aniframe returns correct columns for 3D median_mad", {
   data <- mock_kin_3d()
-  result <- summarise_kinematics(data, measures = "median_mad")
+  result <- summarise_aniframe(data, measures = "median_mad")
 
   expected_cols <- c(
     "median_speed",
@@ -123,9 +123,9 @@ test_that("summarise_kinematics returns correct columns for 3D median_mad", {
   expect_equal(nrow(result), 1L)
 })
 
-test_that("summarise_kinematics returns correct columns for 3D mean_sd", {
+test_that("summarise_aniframe returns correct columns for 3D mean_sd", {
   data <- mock_kin_3d()
-  result <- summarise_kinematics(data, measures = "mean_sd")
+  result <- summarise_aniframe(data, measures = "mean_sd")
 
   expected_cols <- c(
     "mean_speed",
@@ -143,30 +143,30 @@ test_that("summarise_kinematics returns correct columns for 3D mean_sd", {
 })
 
 
-# summarise_kinematics: grouping -----------------------------------------
+# summarise_aniframe: grouping -----------------------------------------
 
-test_that("summarise_kinematics preserves grouping structure", {
+test_that("summarise_aniframe preserves grouping structure", {
   data <- mock_kin_2d(grouped = TRUE)
-  result <- summarise_kinematics(data)
+  result <- summarise_aniframe(data)
 
   expect_equal(nrow(result), 2L)
   expect_true("individual" %in% names(result))
 })
 
-test_that("summarise_kinematics works with 3D grouped data", {
+test_that("summarise_aniframe works with 3D grouped data", {
   data <- mock_kin_3d(grouped = TRUE)
-  result <- summarise_kinematics(data)
+  result <- summarise_aniframe(data)
 
   expect_equal(nrow(result), 2L)
   expect_true("individual" %in% names(result))
 })
 
 
-# summarise_kinematics: computation correctness --------------------------
+# summarise_aniframe: computation correctness --------------------------
 
-test_that("summarise_kinematics() on 2D data computes median/mad correctly", {
+test_that("summarise_aniframe() on 2D data computes median/mad correctly", {
   data <- mock_kin_2d()
-  result <- summarise_kinematics(data, measures = "median_mad")
+  result <- summarise_aniframe(data, measures = "median_mad")
 
   expect_equal(result$median_speed, median(data$speed, na.rm = TRUE))
   expect_equal(result$mad_speed, mad(data$speed, na.rm = TRUE))
@@ -176,41 +176,41 @@ test_that("summarise_kinematics() on 2D data computes median/mad correctly", {
   )
 })
 
-test_that("summarise_kinematics() on 2D data computes mean/sd correctly", {
+test_that("summarise_aniframe() on 2D data computes mean/sd correctly", {
   data <- mock_kin_2d()
-  result <- summarise_kinematics(data, measures = "mean_sd")
+  result <- summarise_aniframe(data, measures = "mean_sd")
 
   expect_equal(result$mean_speed, mean(data$speed, na.rm = TRUE))
   expect_equal(result$sd_speed, sd(data$speed, na.rm = TRUE))
   expect_equal(result$mean_acceleration, mean(data$acceleration, na.rm = TRUE))
 })
 
-test_that("summarise_kinematics() on 3D data computes median/mad correctly", {
+test_that("summarise_aniframe() on 3D data computes median/mad correctly", {
   data <- mock_kin_3d()
-  result <- summarise_kinematics(data, measures = "median_mad")
+  result <- summarise_aniframe(data, measures = "median_mad")
 
   expect_equal(result$median_speed, median(data$speed, na.rm = TRUE))
   expect_equal(result$mad_speed, mad(data$speed, na.rm = TRUE))
 })
 
-test_that("summarise_kinematics() on 3D data computes mean/sd correctly", {
+test_that("summarise_aniframe() on 3D data computes mean/sd correctly", {
   data <- mock_kin_3d()
-  result <- summarise_kinematics(data, measures = "mean_sd")
+  result <- summarise_aniframe(data, measures = "mean_sd")
 
   expect_equal(result$mean_speed, mean(data$speed, na.rm = TRUE))
   expect_equal(result$sd_speed, sd(data$speed, na.rm = TRUE))
 })
 
 
-# summarise_kinematics: circular statistics ------------------------------
-test_that("summarise_kinematics() on 2D data uses circular statistics for course", {
+# summarise_aniframe: circular statistics ------------------------------
+test_that("summarise_aniframe() on 2D data uses circular statistics for course", {
   # Create data with known course values
   data <- mock_kin_2d()
   data$course <- rep(c(-pi + 0.1, pi - 0.1), length.out = nrow(data))
   data <- anicore::as_anipoint(data)
 
-  result_median <- summarise_kinematics(data, measures = "median_mad")
-  result_mean <- summarise_kinematics(data, measures = "mean_sd")
+  result_median <- summarise_aniframe(data, measures = "median_mad")
+  result_mean <- summarise_aniframe(data, measures = "mean_sd")
 
   # Circular median/mean of values near +/- pi should be near pi, not near 0
 

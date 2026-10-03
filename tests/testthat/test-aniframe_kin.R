@@ -1,66 +1,29 @@
-# tests/testthat/test-new-aniframe-kin.R
+# The aniframe_kin class is retired (#58): calculate_kinematics() no longer
+# adds it, and is_aniframe_kin() is deprecated.
 
-# ------------------------------------------------------------------
-# What we are testing
-# ------------------------------------------------------------------
-# 1  `new_aniframe_kin()`   creates an object of class "aniframe_kin"
-# 2  It preserves the original data‑frame columns
-# 3  The resulting object inherits from `"data.frame"` (or `"tbl_df"` etc.)
-# 4  The class vector contains the class exactly once
-# 5  Objects created from a minimal aniframe (time, x, y) pass `anicore::as_anipoint()`
-# ------------------------------------------------------------------
-
-# Helper: a minimal, valid aniframe‑like data frame
-make_minimal_aniframe <- function() {
-  data.frame(
-    time = seq.POSIXt(from = Sys.time(), by = "sec", length.out = 5),
-    x = runif(5),
-    y = runif(5)
-  )
-}
-
-test_that("new_aniframe_kin creates a proper aniframe_kin object", {
-  df <- make_minimal_aniframe()
-  kin <- new_aniframe_kin(df)
-
-  # class checks
-  expect_true(inherits(kin, "aniframe_kin"))
-  expect_true(inherits(kin, "data.frame"))
-  expect_equal(length(which(kin %>% class() == "aniframe_kin")), 1)
-
-  # column preservation
-  expect_named(kin, names(df))
-
-  # conversion back to aniframe works
-  expect_s3_class(anicore::as_anipoint(kin), "aniframe")
-})
-
-test_that("the class appears only once in the class vector", {
-  df <- make_minimal_aniframe()
-
-  # The `unique()` inside the constructor should guarantee no duplicates,
-  # including when it is applied to an object that already carries it.
-  kin <- new_aniframe_kin(new_aniframe_kin(df))
-
-  expect_identical(class(kin), unique(class(kin)))
-  expect_equal(sum(class(kin) == "aniframe_kin"), 1L)
-})
-
-test_that("error when not an aniframe_kin", {
-  df <- anicore::example_anipoint()
-
-  # Should give an error when it is not an aniframe_kin class
-  expect_error(ensure_is_aniframe_kin(df))
-})
-
-test_that("kinematics sit on the anipoint class stack and survive verbs", {
+test_that("calculate_kinematics() returns a plain anipoint", {
   kin <- calculate_kinematics(
-    anicore::example_anipoint(n_obs = 10, n_individuals = 1, n_keypoints = 1)
+    anicore::example_anipoint(n_obs = 5, n_individuals = 1, n_keypoints = 1)
   )
-  expect_identical(class(kin)[1:3], c("aniframe_kin", "anipoint", "aniframe"))
-  expect_true(anicore::is_anipoint(kin))
 
-  expect_identical(class(dplyr::mutate(kin, w = 1)), class(kin))
-  expect_identical(class(dplyr::filter(kin, time > 2)), class(kin))
-  expect_identical(class(dplyr::select(kin, -"speed")), class(kin))
+  expect_s3_class(kin, "anipoint")
+  expect_false(inherits(kin, "aniframe_kin"))
+})
+
+test_that("is_aniframe_kin() is deprecated and checks for kinematic columns", {
+  af <- anicore::example_anipoint(n_obs = 5, n_individuals = 1, n_keypoints = 1)
+  kin <- calculate_kinematics(af)
+
+  expect_warning(
+    expect_true(is_aniframe_kin(kin)),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_warning(
+    expect_false(is_aniframe_kin(af)),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_warning(
+    expect_false(is_aniframe_kin(data.frame(speed = 1))),
+    class = "lifecycle_warning_deprecated"
+  )
 })

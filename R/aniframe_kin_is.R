@@ -1,27 +1,21 @@
-#' Check if object is an aniframe_kin
+#' Test whether a frame holds kinematics
 #'
-#' @param x An object to test
-#' @return Logical: TRUE if x inherits from aniframe_kin
-#' @examples
-#' kin <- calculate_kinematics(
-#'   anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
-#' )
-#' is_aniframe_kin(kin)
+#' @description
+#' **Deprecated.** The `aniframe_kin` class is retired: it only labelled a frame as having
+#' been through [calculate_kinematics()], said nothing about which columns
+#' it held, and outlived them (`select(-speed)` kept it). Check for the
+#' columns you need instead, e.g. `"speed" %in% names(x)`.
 #'
-#' # An anipoint without kinematics is not one
-#' is_aniframe_kin(anicore::example_anipoint(n_obs = 3))
+#' @param x An object.
+#'
+#' @return `TRUE` for an anipoint with a `speed` column.
+#' @keywords internal
 #' @export
 is_aniframe_kin <- function(x) {
-  inherits(x, "aniframe_kin")
-}
-
-#' Ensure object is an aniframe_kin
-#'
-#' @param x An object to test
-#' @return Error if not an aniframe_kin
-#' @keywords internal
-ensure_is_aniframe_kin <- function(x) {
-  if (!is_aniframe_kin(x)) {
-    cli::cli_abort("Data is not an aniframe_kin class.")
-  }
+  lifecycle::deprecate_warn(
+    "0.6.0",
+    "is_aniframe_kin()",
+    details = "Check for the columns you need instead, e.g. `\"speed\" %in% names(x)`."
+  )
+  anicore::is_anipoint(x) && "speed" %in% names(x)
 }

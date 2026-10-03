@@ -56,134 +56,274 @@ mock_kin_3d <- function(n = 10, grouped = FALSE) {
 }
 
 
-# summarise_aniframe: type argument --------------------------------------
+# summarise_aniframe() on an anipoint -----------------------------------
 
-test_that("summarise_aniframe returns combined output with default type", {
-  data <- mock_kin_2d()
-  result <- summarise_aniframe(data)
+test_that("an anipoint's default measures are the kinematics it carries", {
+  result <- summarise_aniframe(mock_kin_2d())
 
-  # Should have columns from both kinematics and tortuosity
-  expect_true("median_speed" %in% names(result))
-  expect_true("total_path_length" %in% names(result))
-  expect_true("straightness" %in% names(result))
-})
-
-test_that("summarise_aniframe returns only kinematics when type = 'kinematics'", {
-  data <- mock_kin_2d()
-  result <- summarise_aniframe(data, type = "kinematics")
-
-  expect_true("median_speed" %in% names(result))
-  expect_false("total_path_length" %in% names(result))
-  expect_false("straightness" %in% names(result))
-})
-
-test_that("summarise_aniframe returns only tortuosity when type = 'tortuosity'", {
-  data <- mock_kin_2d()
-  result <- summarise_aniframe(data, type = "tortuosity")
-
-  expect_false("median_speed" %in% names(result))
-  expect_true("total_path_length" %in% names(result))
-  expect_true("straightness" %in% names(result))
-})
-
-test_that("summarise_aniframe accepts multiple type values", {
-  data <- mock_kin_2d()
-  result <- summarise_aniframe(data, type = c("tortuosity", "kinematics"))
-
-  expect_true("median_speed" %in% names(result))
-  expect_true("total_path_length" %in% names(result))
-})
-
-
-# summarise_aniframe: measures argument ----------------------------------
-
-test_that("summarise_aniframe passes measures argument correctly", {
-  data <- mock_kin_2d()
-
-  result_median <- summarise_aniframe(
-    data,
-    type = "kinematics",
-    measures = "median_mad"
+  expect_named(
+    result,
+    c(
+      "keypoint",
+      "median_speed",
+      "mad_speed",
+      "median_acceleration",
+      "mad_acceleration",
+      "median_turning_speed",
+      "mad_turning_speed",
+      "median_turning_rate",
+      "mad_turning_rate",
+      "median_turning_acceleration",
+      "mad_turning_acceleration",
+      "median_course",
+      "mad_course"
+    )
   )
-  result_mean <- summarise_aniframe(
-    data,
-    type = "kinematics",
-    measures = "mean_sd"
-  )
-
-  expect_true("median_speed" %in% names(result_median))
-  expect_false("mean_speed" %in% names(result_median))
-
-  expect_true("mean_speed" %in% names(result_mean))
-  expect_false("median_speed" %in% names(result_mean))
-})
-
-
-# summarise_aniframe: grouping -------------------------------------------
-
-test_that("summarise_aniframe preserves grouping structure", {
-  data <- mock_kin_2d(grouped = TRUE)
-  result <- summarise_aniframe(data)
-
-  expect_equal(nrow(result), 2L)
-  expect_true("individual" %in% names(result))
-})
-
-test_that("summarise_aniframe grouped output has correct columns", {
-  data <- mock_kin_2d(grouped = TRUE)
-  result <- summarise_aniframe(data)
-
-  # Should have id column plus columns from both summary types
-
-  expect_true("individual" %in% names(result))
-  expect_true("median_speed" %in% names(result))
-  expect_true("total_path_length" %in% names(result))
-})
-
-
-# summarise_aniframe: 2D vs 3D -------------------------------------------
-
-test_that("summarise_aniframe works with 2D data", {
-  data <- mock_kin_2d()
-  result <- summarise_aniframe(data)
-
-  # 2D should have angular columns
-  expect_true("median_turning_speed" %in% names(result))
-  expect_true("total_turning" %in% names(result))
-})
-
-test_that("summarise_aniframe works with 3D data", {
-  data <- mock_kin_3d()
-  result <- summarise_aniframe(data)
-
-  # 3D gets turning, but no course without a vertical
-  expect_true("median_turning_speed" %in% names(result))
-  expect_true("total_turning" %in% names(result))
-  expect_false("median_course" %in% names(result))
-
-  # But should have the basic columns
-
-  expect_true("median_speed" %in% names(result))
-  expect_true("total_path_length" %in% names(result))
-})
-
-
-# summarise_aniframe: output structure -----------------------------------
-
-test_that("summarise_aniframe returns one row for ungrouped data", {
-  data <- mock_kin_2d()
-  result <- summarise_aniframe(data)
-
   expect_equal(nrow(result), 1L)
 })
 
-test_that("summarise_aniframe returns data.frame", {
-  data <- mock_kin_2d()
+test_that("windowed tortuosity and confidence are summarised when present", {
+  data <- mock_kin_2d(n = 20) |>
+    dplyr::mutate(confidence = seq(0.5, 1, length.out = 20)) |>
+    calculate_tortuosity(window_width = 5L)
+
   result <- summarise_aniframe(data)
 
-  expect_s3_class(result, "data.frame")
+  expect_true(all(
+    c(
+      "median_straightness",
+      "median_sinuosity",
+      "median_emax",
+      "median_confidence"
+    ) %in%
+      names(result)
+  ))
+  expect_equal(
+    result$median_straightness,
+    stats::median(data$straightness, na.rm = TRUE)
+  )
 })
 
+test_that("components, unwrapped course and running totals are left out", {
+  result <- summarise_aniframe(mock_kin_2d())
+
+  left_out <- c(
+    "v_x",
+    "a_x",
+    "course_unwrapped",
+    "path_length",
+    "cumulative_turning"
+  )
+  for (col in left_out) {
+    expect_false(any(grepl(col, names(result), fixed = TRUE)), label = col)
+  }
+})
+
+test_that("3D kinematics are summarised, with course only given a vertical", {
+  without <- summarise_aniframe(mock_kin_3d())
+  expect_true("median_turning_speed" %in% names(without))
+  expect_false("median_course" %in% names(without))
+
+  data <- data.frame(time = 1:20, x = cos(1:20), y = sin(1:20), z = 1:20) |>
+    anicore::as_anipoint() |>
+    calculate_kinematics(vertical = "z")
+  with <- summarise_aniframe(data)
+  expect_true(all(
+    c("median_course", "median_course_elevation", "median_turning_rate") %in%
+      names(with)
+  ))
+})
+
+test_that("a declared yaw is summarised as circular heading", {
+  # Facing just either side of pi: the circular median is pi, not 0
+  data <- data.frame(
+    time = 1:6,
+    x = 1:6,
+    y = 0,
+    hd = c(pi - 0.1, -pi + 0.1, pi - 0.1, -pi + 0.1, pi, pi)
+  ) |>
+    anicore::as_anipoint() |>
+    anicore::set_variables(
+      where = list(position = c(x = "x", y = "y"), orientation = c(yaw = "hd"))
+    )
+
+  result <- summarise_aniframe(data, measures = "mean_sd")
+
+  expect_equal(abs(anicore::wrap_angle(result$mean_heading, "pi")), pi)
+  expect_false("mean_hd" %in% names(result))
+})
+
+test_that("measures = 'mean_sd' gives means and standard deviations", {
+  data <- mock_kin_2d()
+  result <- summarise_aniframe(data, measures = "mean_sd")
+
+  expect_equal(result$mean_speed, mean(data$speed, na.rm = TRUE))
+  expect_equal(result$sd_speed, stats::sd(data$speed, na.rm = TRUE))
+  expect_equal(
+    result$mean_course,
+    anicore::circ_mean(data$course)
+  )
+})
+
+test_that("cols replaces the default measures, keeping known angles circular", {
+  data <- mock_kin_2d()
+  result <- summarise_aniframe(data, cols = c("speed", "course", "x"))
+
+  expect_named(
+    result,
+    c(
+      "keypoint",
+      "median_speed",
+      "mad_speed",
+      "median_x",
+      "mad_x",
+      "median_course",
+      "mad_course"
+    )
+  )
+  expect_equal(result$median_course, anicore::circ_median(data$course))
+})
+
+test_that("cols is checked", {
+  data <- mock_kin_2d()
+
+  expect_error(summarise_aniframe(data, cols = "nope"), "not found")
+  expect_error(summarise_aniframe(data, cols = 1), "character vector")
+  expect_error(summarise_aniframe(data, cols = "keypoint"), "grouping")
+  expect_error(
+    summarise_aniframe(dplyr::mutate(data, label = "a"), cols = "label"),
+    "not numeric"
+  )
+  expect_error(summarise_aniframe(data, foo = 1), "must be empty")
+})
+
+test_that("an anipoint without measures says what to do", {
+  plain <- anicore::as_anipoint(data.frame(time = 1:5, x = 1:5, y = 1:5))
+  expect_error(summarise_aniframe(plain), "calculate_kinematics")
+})
+
+test_that("summaries follow any grouping, one row per group", {
+  data <- mock_kin_2d(grouped = TRUE)
+
+  per_individual <- summarise_aniframe(data)
+  expect_equal(nrow(per_individual), 2L)
+  expect_true("individual" %in% names(per_individual))
+
+  # anicore warns that an ungrouped anipoint is unusual; that is the point
+  pooled <- summarise_aniframe(suppressWarnings(dplyr::ungroup(data)))
+  expect_equal(nrow(pooled), 1L)
+  expect_equal(pooled$median_speed, stats::median(data$speed, na.rm = TRUE))
+})
+
+test_that("circular summaries are in the frame's unit_angle", {
+  rad <- mock_kin_2d(n = 30)
+  deg <- anicore::convert_unit_angle(
+    rad,
+    "deg",
+    cols = c("course", "turning_rate", "turning_speed", "turning_acceleration")
+  )
+
+  expect_equal(
+    summarise_aniframe(deg)$median_course,
+    summarise_aniframe(rad)$median_course * 180 / pi
+  )
+})
+
+# summarise_aniframe() on segments, joints and events --------------------
+
+structured <- function() {
+  anicore::example_anipoint(n_obs = 10, n_individuals = 1) |>
+    anicore::set_structure(anicore::example_structure())
+}
+
+test_that("an anisegment's lengths are summarised per segment", {
+  segments <- anicore::as_anisegment(structured())
+  result <- summarise_aniframe(segments)
+
+  expect_true(all(
+    c("segment", "median_length", "mad_length") %in% names(result)
+  ))
+  expect_equal(nrow(result), dplyr::n_groups(segments))
+  expect_false(any(c("median_ux", "median_uy") %in% names(result)))
+})
+
+test_that("an anijoint's angles are summarised circularly, per joint", {
+  joints <- anicore::as_anijoint(structured())
+  result <- summarise_aniframe(joints, measures = "mean_sd")
+
+  expect_true(all(c("joint", "mean_angle", "sd_angle") %in% names(result)))
+  first <- dplyr::filter(joints, .data$joint == result$joint[1])
+  expect_equal(result$mean_angle[1], anicore::circ_mean(first$angle))
+})
+
+test_that("anievents and other objects are refused with a reason", {
+  events <- anicore::anievent(
+    individual = 1L,
+    channel = "behaviour",
+    label = "REM",
+    start = 3,
+    stop = 9
+  )
+  expect_error(summarise_aniframe(events), "#91")
+  expect_error(
+    summarise_aniframe(data.frame(x = 1)),
+    "anipoint, anisegment or anijoint"
+  )
+})
+
+# Deprecated: type, summarise_kinematics(), summarise_tortuosity() -------
+
+test_that("type still gives the old summaries, with a deprecation warning", {
+  data <- mock_kin_2d()
+
+  expect_warning(
+    kin <- summarise_aniframe(data, type = "kinematics"),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_equal(kin, summarise_kinematics_legacy(data, "median_mad"))
+
+  expect_warning(
+    path <- summarise_aniframe(data, type = "tortuosity"),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_equal(path, summarise_path(data))
+
+  expect_warning(
+    both <- summarise_aniframe(
+      data,
+      type = c("kinematics", "tortuosity"),
+      measures = "mean_sd"
+    ),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_equal(
+    both,
+    dplyr::bind_cols(summarise_kinematics_legacy(data, "mean_sd"), path[-1])
+  )
+
+  # The old signature took type as the second argument
+  expect_warning(
+    positional <- summarise_aniframe(data, "tortuosity"),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_equal(positional, path)
+})
+
+test_that("summarise_kinematics() and summarise_tortuosity() are deprecated", {
+  data <- mock_kin_2d()
+
+  expect_warning(
+    kin <- summarise_kinematics(data, measures = "mean_sd"),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_equal(kin, summarise_kinematics_legacy(data, "mean_sd"))
+
+  expect_warning(
+    path <- summarise_tortuosity(data),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_equal(path, summarise_path(data))
+})
 
 # join_summaries ---------------------------------------------------------
 

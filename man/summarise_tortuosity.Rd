@@ -10,33 +10,15 @@ summarise_tortuosity(data)
 summarize_tortuosity(data)
 }
 \arguments{
-\item{data}{A kinematics anipoint (output of \code{calculate_kinematics()})}
+\item{data}{An anipoint.}
 }
 \value{
-A summarised data frame with one row per group containing:
-\itemize{
-\item \code{total_path_length}: Total distance traveled
-\item \code{total_turning}: Total turning of the direction of travel (2D and 3D)
-}
-
-\strong{Tortuosity metrics:}
-\itemize{
-\item \code{net_displacement}: Straight-line distance from start to end
-\item \code{straightness}: Ratio of net displacement to path length (0-1)
-\item \code{sinuosity}: Corrected sinuosity index (Benhamou 2004)
-\item \code{emax}: Maximum expected displacement (dimensionless)
-}
+As \code{\link[=summarise_path]{summarise_path()}}.
 }
 \description{
-Calculate path length, displacement, and tortuosity metrics.
+\strong{Deprecated.} Renamed to \code{\link[=summarise_path]{summarise_path()}}, which returns the same measures. The name
+suggested a summary of \code{\link[=calculate_tortuosity]{calculate_tortuosity()}}'s windowed output, which it
+never was: it measures the whole path. To summarise the windowed
+measures, use \code{\link[=summarise_aniframe]{summarise_aniframe()}}.
 }
-\examples{
-kin <- calculate_kinematics(
-  anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
-)
-summarise_tortuosity(calculate_tortuosity(kin))
-}
-\references{
-Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal's
-path. Journal of Theoretical Biology, 229(2), 209-220.
-}
+\keyword{internal}

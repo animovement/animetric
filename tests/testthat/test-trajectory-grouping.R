@@ -47,12 +47,12 @@ test_that("calculate_tortuosity() refuses it too", {
   )
 })
 
-test_that("summarise_tortuosity() refuses it, since it subtracts along a path", {
+test_that("summarise_path() refuses it, since it subtracts along a path", {
   k <- spread_keypoints() |>
     calculate_kinematics() |>
     calculate_tortuosity()
 
-  expect_error(summarise_tortuosity(pooled(k)), "one trajectory per group")
+  expect_error(summarise_path(pooled(k)), "one trajectory per group")
 })
 
 test_that("the error says how to summarise more coarsely", {
@@ -72,7 +72,7 @@ test_that("summarise at the declared grouping, then combine those results", {
   # per-animal figure is built from those -- not from a pooled sweep.
   k <- calculate_kinematics(spread_keypoints())
 
-  per_keypoint <- summarise_kinematics(k, measures = "mean_sd")
+  per_keypoint <- summarise_aniframe(k, measures = "mean_sd")
   per_animal <- dplyr::summarise(
     per_keypoint,
     mean_speed = mean(.data$mean_speed),
@@ -84,11 +84,11 @@ test_that("summarise at the declared grouping, then combine those results", {
   expect_equal(per_animal$mean_speed, 1)
 })
 
-test_that("summarise_kinematics() pools freely, having correct values to pool", {
+test_that("summarise_aniframe() pools freely, having correct values to pool", {
   # No guard here: speed was derived per trajectory, so pooling those values
   # is a choice of statistic rather than a change of computation.
   k <- calculate_kinematics(spread_keypoints())
 
-  expect_no_error(summarise_kinematics(pooled(k)))
-  expect_equal(nrow(summarise_kinematics(pooled(k))), 1)
+  expect_no_error(summarise_aniframe(pooled(k)))
+  expect_equal(nrow(summarise_aniframe(pooled(k))), 1)
 })

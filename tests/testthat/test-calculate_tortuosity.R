@@ -391,7 +391,7 @@ test_that("calculate_tortuosity preserves incoming class", {
   result <- calculate_tortuosity(data, window_width = 5L)
 
   expect_s3_class(result, "custom_aniframe")
-  expect_s3_class(result, "aniframe_kin")
+  expect_s3_class(result, "anipoint")
   expect_s3_class(result, "aniframe")
 })
 
