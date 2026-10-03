@@ -67,8 +67,8 @@ sliding windows, returning a value at each timepoint.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>An anipoint with position coordinates and time. Velocity and
-heading columns will be computed if not already present.</p></dd>
+<dd><p>A Cartesian anipoint. Kinematic columns will be computed if not
+already present.</p></dd>
 
 
 <dt id="arg-window-width">window_width<a class="anchor" aria-label="anchor" href="#arg-window-width"></a></dt>
@@ -95,12 +95,13 @@ Should be an odd number &gt;= 3 for symmetric centering.</p></dd>
 automatically by calling the appropriate helper functions.</p>
 <p>Straightness is appropriate for directed/goal-oriented movement, while
 sinuosity and E_max are appropriate for random search paths.</p>
-<p>For 2D data, heading is derived from the velocity vector, which provides
-smoother estimates than raw position differences.</p>
-<p>For 3D data, turning angles are computed as the angle between consecutive
-velocity vectors using the dot product.</p>
-<p>The window is centered on each timepoint. At path edges, metrics are
-computed from available data within the truncated window.</p>
+<p>Works on 1D, 2D and 3D Cartesian data, reading the axes from the frame's
+declared variables. Turning angles are the angles between consecutive
+velocity vectors (<code><a href="https://animovement.dev/anicore/reference/angle_between.html" class="external-link">anicore::angle_between()</a></code>), which gives smoother
+estimates than raw position differences.</p>
+<p>The window is centered on each timepoint. Near the ends of a trajectory,
+where the window would run past the first or last observation, the metrics
+are <code>NA</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -115,7 +116,7 @@ Cybernetics, 97(1), 47-61.</p>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
-<ul><li><p><code><a href="calculate_kinematics.html">calculate_kinematics()</a></code> for computing velocity and heading</p></li>
+<ul><li><p><code><a href="calculate_kinematics.html">calculate_kinematics()</a></code> for computing velocity and course</p></li>
 </ul></div>
     </div>
 
@@ -144,9 +145,9 @@ Cybernetics, 97(1), 47-61.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>          1 centroid       1     1    10 -<span style="color: #BB0000;">0.684</span>   0.477      0.649 0.137</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: acceleration &lt;dbl&gt;, path_length &lt;dbl&gt;, v_x &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   v_y &lt;dbl&gt;, a_x &lt;dbl&gt;, a_y &lt;dbl&gt;, heading &lt;dbl&gt;, heading_unwrapped &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   angular_speed &lt;dbl&gt;, angular_velocity &lt;dbl&gt;, angular_acceleration &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   angular_path_length &lt;dbl&gt;, straightness &lt;dbl&gt;, sinuosity &lt;dbl&gt;, emax &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   v_y &lt;dbl&gt;, a_x &lt;dbl&gt;, a_y &lt;dbl&gt;, course &lt;dbl&gt;, course_unwrapped &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   turning_speed &lt;dbl&gt;, turning_rate &lt;dbl&gt;, turning_acceleration &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   cumulative_turning &lt;dbl&gt;, straightness &lt;dbl&gt;, sinuosity &lt;dbl&gt;, emax &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Or with kinematics already computed</span></span></span>
 <span class="r-in"><span><span class="va">data</span> <span class="op">|&gt;</span></span></span>
@@ -170,9 +171,9 @@ Cybernetics, 97(1), 47-61.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>          1 centroid       1     1    10 -<span style="color: #BB0000;">0.684</span>   0.477      0.649 0.137</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: acceleration &lt;dbl&gt;, path_length &lt;dbl&gt;, v_x &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   v_y &lt;dbl&gt;, a_x &lt;dbl&gt;, a_y &lt;dbl&gt;, heading &lt;dbl&gt;, heading_unwrapped &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   angular_speed &lt;dbl&gt;, angular_velocity &lt;dbl&gt;, angular_acceleration &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   angular_path_length &lt;dbl&gt;, straightness &lt;dbl&gt;, sinuosity &lt;dbl&gt;, emax &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   v_y &lt;dbl&gt;, a_x &lt;dbl&gt;, a_y &lt;dbl&gt;, course &lt;dbl&gt;, course_unwrapped &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   turning_speed &lt;dbl&gt;, turning_rate &lt;dbl&gt;, turning_acceleration &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   cumulative_turning &lt;dbl&gt;, straightness &lt;dbl&gt;, sinuosity &lt;dbl&gt;, emax &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

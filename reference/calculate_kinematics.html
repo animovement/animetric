@@ -70,20 +70,52 @@ for calculations, then converting back to the original system.</p>
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>An anipoint with position coordinates (x/y or x/y/z for Cartesian;
-rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for spherical)
-and a time column</p></dd>
+<dd><p>An anipoint with position coordinates (x, x/y or x/y/z for
+Cartesian; rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for
+spherical) and an index. The axes and the index are read from the frame's
+declared variables, so the columns can have any name.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An anipoint in the same coordinate system as the input, with added
-kinematic measures. For 2D data, includes translational kinematics
-(velocity components, speed, acceleration, path length) and rotational
-kinematics (heading, angular velocity, angular speed, angular acceleration).
-Heading is the direction of travel, so it is <code>NA</code> where speed is zero.
-For 3D data, includes translational kinematics only (rotational measures
-for 3D are not yet implemented).</p>
+kinematic measures. Translational kinematics (velocity and acceleration
+components, speed, acceleration, path length) are computed for 1D, 2D and
+3D data, with components named by axis role (<code>v_x</code>, <code>v_y</code>, ...) whatever
+the input columns are called. For 2D data, measures of the path's
+direction are added too:</p><dl><dt><code>course</code></dt>
+<dd><p>Direction of travel, <code>atan2(v_y, v_x)</code>. It is <code>NA</code>
+where speed is zero, since a stationary animal has no direction of
+travel. <code>course_unwrapped</code> is the same, without jumps at +/-pi.</p></dd>
+
+<dt><code>turning_rate</code></dt>
+<dd><p>Rate of change of the course: signed curvature
+times speed.</p></dd>
+
+<dt><code>turning_speed</code></dt>
+<dd><p>Absolute turning rate.</p></dd>
+
+<dt><code>turning_acceleration</code></dt>
+<dd><p>Rate of change of the turning rate.</p></dd>
+
+<dt><code>cumulative_turning</code></dt>
+<dd><p>Absolute turning accumulated since the
+first row.</p></dd>
+
+
+</dl><p>These describe the path, not the body: course is where the animal is
+going, not where it is facing, and the two differ for any animal that
+does not move nose-first. The names heading and angular velocity are
+kept for body orientation. Measures of the path's direction for 1D and 3D
+are not yet implemented.</p>
+<p>Angular measures are in the frame's declared <code>unit_angle</code>, radians or
+degrees; turning rate and acceleration are per unit of the index.
+Signed angles (course, turning rate) follow the frame's own
+convention: course counts from the <code>x</code> axis toward the <code>y</code> axis, which
+is counter-clockwise when <code><a href="https://animovement.dev/anicore/reference/get_angle_direction.html" class="external-link">anicore::get_angle_direction()</a></code> says so (<code>y</code>
+pointing up, as aniread leaves image data) and clockwise in a frame whose
+<code>y</code> points down. To change convention, change the coordinates, for
+example with <code><a href="https://animovement.dev/anicore/reference/reflect_axis.html" class="external-link">anicore::reflect_axis()</a></code>, and the angles follow.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

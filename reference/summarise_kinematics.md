@@ -45,9 +45,11 @@ mean\_/sd\_)
 
 - Speed, acceleration
 
-- Angular speed, velocity, acceleration (2D only)
+- Turning speed, rate, acceleration (2D only)
 
-- Heading (2D only, using circular statistics)
+- Course (2D only, using circular statistics)
+
+Angular summaries are in the frame's declared `unit_angle`.
 
 ## Examples
 
@@ -60,10 +62,10 @@ summarise_kinematics(kin)
 #>   individual keypoint session trial median_speed mad_speed median_acceleration
 #>        <int> <fct>      <int> <int>        <dbl>     <dbl>               <dbl>
 #> 1          1 centroid       1     1        0.837     0.581             -0.0164
-#> # ℹ 9 more variables: mad_acceleration <dbl>, median_angular_speed <dbl>,
-#> #   mad_angular_speed <dbl>, median_angular_velocity <dbl>,
-#> #   mad_angular_velocity <dbl>, median_angular_acceleration <dbl>,
-#> #   mad_angular_acceleration <dbl>, median_heading <dbl>, mad_heading <dbl>
+#> # ℹ 9 more variables: mad_acceleration <dbl>, median_turning_speed <dbl>,
+#> #   mad_turning_speed <dbl>, median_turning_rate <dbl>, mad_turning_rate <dbl>,
+#> #   median_turning_acceleration <dbl>, mad_turning_acceleration <dbl>,
+#> #   median_course <dbl>, mad_course <dbl>
 
 # Mean and standard deviation instead of median and MAD
 summarise_kinematics(kin, measures = "mean_sd")
@@ -71,8 +73,8 @@ summarise_kinematics(kin, measures = "mean_sd")
 #>   individual keypoint session trial mean_speed sd_speed mean_acceleration
 #>        <int> <fct>      <int> <int>      <dbl>    <dbl>             <dbl>
 #> 1          1 centroid       1     1      0.938    0.469            0.0128
-#> # ℹ 9 more variables: sd_acceleration <dbl>, mean_angular_speed <dbl>,
-#> #   sd_angular_speed <dbl>, mean_angular_velocity <dbl>,
-#> #   sd_angular_velocity <dbl>, mean_angular_acceleration <dbl>,
-#> #   sd_angular_acceleration <dbl>, mean_heading <dbl>, sd_heading <dbl>
+#> # ℹ 9 more variables: sd_acceleration <dbl>, mean_turning_speed <dbl>,
+#> #   sd_turning_speed <dbl>, mean_turning_rate <dbl>, sd_turning_rate <dbl>,
+#> #   mean_turning_acceleration <dbl>, sd_turning_acceleration <dbl>,
+#> #   mean_course <dbl>, sd_course <dbl>
 ```

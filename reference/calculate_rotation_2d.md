@@ -1,8 +1,9 @@
 # Calculate rotational kinematics in 2D
 
-Computes heading angles and angular kinematics based on the velocity
-vector. Heading is calculated as atan2(v_y, v_x), and is `NA` where
-speed is zero.
+Computes the course (direction of travel) and turning measures from the
+velocity vector. Course is calculated as atan2(v_y, v_x), and is `NA`
+where speed is zero. The angles are computed in radians and returned in
+the frame's `unit_angle`.
 
 ## Usage
 
@@ -14,7 +15,7 @@ calculate_rotation_2d(data)
 
 - data:
 
-  An anipoint with v_x, v_y, speed, and time columns
+  An anipoint with v_x, v_y and speed columns, and an index
 
 ## Value
 

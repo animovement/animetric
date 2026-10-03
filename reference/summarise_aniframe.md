@@ -56,19 +56,19 @@ summarise_aniframe(kin)
 #>   individual keypoint session trial median_speed mad_speed median_acceleration
 #>        <int> <fct>      <int> <int>        <dbl>     <dbl>               <dbl>
 #> 1          1 centroid       1     1        0.889     0.423              0.0499
-#> # ℹ 15 more variables: mad_acceleration <dbl>, median_angular_speed <dbl>,
-#> #   mad_angular_speed <dbl>, median_angular_velocity <dbl>,
-#> #   mad_angular_velocity <dbl>, median_angular_acceleration <dbl>,
-#> #   mad_angular_acceleration <dbl>, median_heading <dbl>, mad_heading <dbl>,
-#> #   total_path_length <dbl>, total_angular_path_length <dbl>,
-#> #   net_displacement <dbl>, straightness <dbl>, sinuosity <dbl>, emax <dbl>
+#> # ℹ 15 more variables: mad_acceleration <dbl>, median_turning_speed <dbl>,
+#> #   mad_turning_speed <dbl>, median_turning_rate <dbl>, mad_turning_rate <dbl>,
+#> #   median_turning_acceleration <dbl>, mad_turning_acceleration <dbl>,
+#> #   median_course <dbl>, mad_course <dbl>, total_path_length <dbl>,
+#> #   total_turning <dbl>, net_displacement <dbl>, straightness <dbl>,
+#> #   sinuosity <dbl>, emax <dbl>
 
 # Tortuosity measures instead of kinematics
 summarise_aniframe(calculate_tortuosity(kin), type = "tortuosity")
 #> # A tibble: 1 × 10
-#>   individual keypoint session trial total_path_length total_angular_path_length
-#>        <int> <fct>      <int> <int>             <dbl>                     <dbl>
-#> 1          1 centroid       1     1              33.1                      30.6
+#>   individual keypoint session trial total_path_length total_turning
+#>        <int> <fct>      <int> <int>             <dbl>         <dbl>
+#> 1          1 centroid       1     1              33.1          30.6
 #> # ℹ 4 more variables: net_displacement <dbl>, straightness <dbl>,
 #> #   sinuosity <dbl>, emax <dbl>
 ```

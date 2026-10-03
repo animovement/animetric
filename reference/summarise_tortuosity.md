@@ -23,7 +23,7 @@ A summarised data frame with one row per group containing:
 
 - `total_path_length`: Total distance traveled
 
-- `total_angular_path_length`: Total angular distance (2D only)
+- `total_turning`: Total absolute turning of the course (2D only)
 
 **Tortuosity metrics:**
 
@@ -48,9 +48,9 @@ kin <- calculate_kinematics(
 )
 summarise_tortuosity(calculate_tortuosity(kin))
 #> # A tibble: 1 × 10
-#>   individual keypoint session trial total_path_length total_angular_path_length
-#>        <int> <fct>      <int> <int>             <dbl>                     <dbl>
-#> 1          1 centroid       1     1              31.4                      27.0
+#>   individual keypoint session trial total_path_length total_turning
+#>        <int> <fct>      <int> <int>             <dbl>         <dbl>
+#> 1          1 centroid       1     1              31.4          27.0
 #> # ℹ 4 more variables: net_displacement <dbl>, straightness <dbl>,
 #> #   sinuosity <dbl>, emax <dbl>
 ```

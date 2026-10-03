@@ -13,8 +13,8 @@ calculate_tortuosity(data, window_width = 11L)
 
 - data:
 
-  An anipoint with position coordinates and time. Velocity and heading
-  columns will be computed if not already present.
+  A Cartesian anipoint. Kinematic columns will be computed if not
+  already present.
 
 - window_width:
 
@@ -45,14 +45,15 @@ them automatically by calling the appropriate helper functions.
 Straightness is appropriate for directed/goal-oriented movement, while
 sinuosity and E_max are appropriate for random search paths.
 
-For 2D data, heading is derived from the velocity vector, which provides
-smoother estimates than raw position differences.
+Works on 1D, 2D and 3D Cartesian data, reading the axes from the frame's
+declared variables. Turning angles are the angles between consecutive
+velocity vectors
+([`anicore::angle_between()`](https://animovement.dev/anicore/reference/angle_between.html)),
+which gives smoother estimates than raw position differences.
 
-For 3D data, turning angles are computed as the angle between
-consecutive velocity vectors using the dot product.
-
-The window is centered on each timepoint. At path edges, metrics are
-computed from available data within the truncated window.
+The window is centered on each timepoint. Near the ends of a trajectory,
+where the window would run past the first or last observation, the
+metrics are `NA`.
 
 ## References
 
@@ -69,7 +70,7 @@ Cybernetics, 97(1), 47-61.
 ## See also
 
 - [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  for computing velocity and heading
+  for computing velocity and course
 
 ## Examples
 
@@ -97,9 +98,9 @@ data |>
 #> 10          1 centroid       1     1    10 -0.684   0.477      0.649 0.137
 #> # ℹ 20 more rows
 #> # ℹ 15 more variables: acceleration <dbl>, path_length <dbl>, v_x <dbl>,
-#> #   v_y <dbl>, a_x <dbl>, a_y <dbl>, heading <dbl>, heading_unwrapped <dbl>,
-#> #   angular_speed <dbl>, angular_velocity <dbl>, angular_acceleration <dbl>,
-#> #   angular_path_length <dbl>, straightness <dbl>, sinuosity <dbl>, emax <dbl>
+#> #   v_y <dbl>, a_x <dbl>, a_y <dbl>, course <dbl>, course_unwrapped <dbl>,
+#> #   turning_speed <dbl>, turning_rate <dbl>, turning_acceleration <dbl>,
+#> #   cumulative_turning <dbl>, straightness <dbl>, sinuosity <dbl>, emax <dbl>
 
 # Or with kinematics already computed
 data |>
@@ -123,7 +124,7 @@ data |>
 #> 10          1 centroid       1     1    10 -0.684   0.477      0.649 0.137
 #> # ℹ 20 more rows
 #> # ℹ 15 more variables: acceleration <dbl>, path_length <dbl>, v_x <dbl>,
-#> #   v_y <dbl>, a_x <dbl>, a_y <dbl>, heading <dbl>, heading_unwrapped <dbl>,
-#> #   angular_speed <dbl>, angular_velocity <dbl>, angular_acceleration <dbl>,
-#> #   angular_path_length <dbl>, straightness <dbl>, sinuosity <dbl>, emax <dbl>
+#> #   v_y <dbl>, a_x <dbl>, a_y <dbl>, course <dbl>, course_unwrapped <dbl>,
+#> #   turning_speed <dbl>, turning_rate <dbl>, turning_acceleration <dbl>,
+#> #   cumulative_turning <dbl>, straightness <dbl>, sinuosity <dbl>, emax <dbl>
 ```

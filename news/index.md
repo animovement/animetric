@@ -39,12 +39,87 @@
   stationary animal has no direction of travel; before, it read as `0`,
   or as `pi` when the velocity was a negative zero.
 
+- `angular_path_length` from
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  starts at `0`
+  ([\#68](https://github.com/animovement/animetric/issues/68)). When the
+  first heading was negative it started at `2 * abs(heading)` and
+  carried that offset along the whole trajectory, so a straight line at
+  a heading of `-1` reported two radians of turning.
+  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  takes the difference between the last and first values, so its
+  `total_angular_path_length` was not affected. Turning made while the
+  animal is stopped (where `heading` is `NA`) is counted when it moves
+  off again.
+
+- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
+  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md),
+  [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
+  and
+  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  read the axes and the index from the frame’s declared variables, so
+  they work on frames whose columns are not called `x`, `y`, `z` and
+  `time` ([\#81](https://github.com/animovement/animetric/issues/81)).
+  They used to stop with “Column `x` not found”. Velocity and
+  acceleration components are named by axis role (`v_x`, `a_y`, …)
+  whatever the input columns are called. 1D frames get translational
+  kinematics and tortuosity too;
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  used to return them unchanged. The 2D and 3D code paths are now one
+  implementation, with turning angles from
+  [`anicore::angle_between()`](https://animovement.dev/anicore/reference/angle_between.html).
+  The only change in output is that 3D windowed tortuosity is `NA` at
+  the first row where the window is incomplete, as it already was in 2D;
+  the old 3D code filled the missing start of the window with the first
+  position.
+
+- Angular measures are returned in the frame’s declared `unit_angle`
+  ([\#80](https://github.com/animovement/animetric/issues/80)). A frame
+  declared in degrees used to get `heading`, `angular_velocity`,
+  `angular_acceleration`, `angular_path_length` and the heading
+  summaries in radians, still labelled as degrees, so anything that
+  trusted the metadata was off by a factor of 180/pi.
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
+  [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
+  and
+  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  now report them in degrees for such frames, with no extra step. Radian
+  frames are unchanged. The documentation now also says which way signed
+  angles run: they follow the frame’s own axes, counter-clockwise when
+  `y` points up, as aniread leaves image data.
+
 - [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
   keeps the input’s metadata, such as `sampling_rate`, and works on
   frames whose axis columns have custom names. It used to rebuild its
   result by re-detecting the columns, which dropped both.
 
 ### Changed
+
+- **Breaking:** the velocity-derived angular columns are renamed to say
+  they describe the path, not the body
+  ([\#70](https://github.com/animovement/animetric/issues/70)). Course
+  is the direction of travel and turning rate is how fast it changes,
+  while heading and angular velocity are where the animal faces and how
+  fast that turns. They differ for any animal that does not move
+  nose-first, and the orientation names are kept free for body
+  orientation once anicore records it (animovement/anicore#46).
+
+  | Old                    | New                    |
+  |------------------------|------------------------|
+  | `heading`              | `course`               |
+  | `heading_unwrapped`    | `course_unwrapped`     |
+  | `angular_velocity`     | `turning_rate`         |
+  | `angular_speed`        | `turning_speed`        |
+  | `angular_acceleration` | `turning_acceleration` |
+  | `angular_path_length`  | `cumulative_turning`   |
+
+  The summaries follow: `median_heading`, `mad_heading`, `mean_heading`
+  and `sd_heading` become `*_course`, `*_angular_speed`,
+  `*_angular_velocity` and `*_angular_acceleration` become
+  `*_turning_speed`, `*_turning_rate` and `*_turning_acceleration`, and
+  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)’s
+  `total_angular_path_length` becomes `total_turning`. Values are
+  unchanged.
 
 - data.table is now a hard dependency
   ([\#27](https://github.com/animovement/animetric/issues/27)).
