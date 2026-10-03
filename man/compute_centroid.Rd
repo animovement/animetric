@@ -15,44 +15,26 @@ compute_centroid(
 \arguments{
 \item{data}{An anipoint with Cartesian coordinates.}
 
-\item{across}{Identity variables to collapse — the dimensions the summary
-ranges over. Required when the frame declares more than one identity
-variable, since their order is not a hierarchy and there is no finest
-one to assume; with a single identity variable, that one is the default.
-Collapsing every level gives a single point per position.}
+\item{across}{Identity variables to collapse — the dimensions the new
+point is derived over. Required when the frame declares more than one
+identity variable, since their order is not a hierarchy and there is no
+finest one to assume; with a single identity variable, that one is the
+default. Collapsing every level gives a single point per position.}
 
 \item{include, exclude}{Values of the collapsed level to keep or leave out.
-Only meaningful when one level is collapsed.}
+Only meaningful when one level is collapsed. A midpoint is the centroid
+of two members: \code{include = c("ear_l", "ear_r")}.}
 
 \item{name}{Name for the summary member. Default is \code{"centroid"}.}
 }
 \value{
-An anipoint containing only the summary member. Coordinate values
-are the mean of the members included, with \code{NA}s removed. Confidence is
-\code{NA}. Missing coordinate dimensions return \code{NA}.
+An anipoint containing only the centroid.
 }
 \description{
-The mean position of the members of one identity variable, at each position
-of every other. Which variable is collapsed is the caller's choice: the
-keypoints of an animal, the animals of a team, or any other level the frame
-declares.
+\strong{Deprecated.} Use \code{\link[=compute_point]{compute_point()}}, whose default \code{method = "centroid"}
+does the same.
+
+This returns exactly what it did: the centroid, with any declared
+orientation left \code{NA}.
 }
-\examples{
-af <- anicore::example_anipoint(n_obs = 20, n_individuals = 2, n_keypoints = 3)
-
-# The centroid of each animal's keypoints
-compute_centroid(af, across = "keypoint")
-
-# From a subset of them
-compute_centroid(af, across = "keypoint", include = c("head", "neck"))
-
-# The centroid of the animals themselves, one per keypoint
-compute_centroid(af, across = "individual")
-
-# One point for the whole group, per position
-compute_centroid(af, across = c("individual", "keypoint"))
-
-}
-\seealso{
-\code{\link[=add_centroid]{add_centroid()}}, which appends the result to the frame.
-}
+\keyword{internal}

@@ -13,24 +13,24 @@ custom_af <- function() {
   )
 }
 
-test_that("compute_centroid() works on a frame with its own identity names", {
-  out <- compute_centroid(custom_af(), across = "bodypart")
+test_that("compute_point() works on a frame with its own identity names", {
+  out <- compute_point(custom_af(), across = "bodypart")
 
   expect_equal(as.character(unique(out$bodypart)), "centroid")
   expect_equal(out$x, c(5, 5, 5))
   expect_equal(out$y, c(0, 2, 4))
 })
 
-test_that("compute_centroid() keeps the declaration rather than re-detecting", {
+test_that("compute_point() keeps the declaration rather than re-detecting", {
   # Detection only recognises the standard identity names, so re-detecting
   # would inject a `keypoint` column and replace the declaration.
-  out <- compute_centroid(custom_af(), across = "bodypart")
+  out <- compute_point(custom_af(), across = "bodypart")
 
   expect_equal(anicore::get_variables(out, "what"), c("animal", "bodypart"))
   expect_false("keypoint" %in% names(out))
 })
 
-test_that("compute_centroid() collapses only the level it is given", {
+test_that("compute_point() collapses only the level it is given", {
   af <- anicore::as_anipoint(
     data.frame(
       time = rep(1:2, each = 4),
@@ -42,7 +42,7 @@ test_that("compute_centroid() collapses only the level it is given", {
     variables_what = c("animal", "bodypart")
   )
 
-  out <- compute_centroid(af, across = "bodypart")
+  out <- compute_point(af, across = "bodypart")
 
   # One centroid per animal per timepoint, not one overall.
   expect_equal(nrow(out), 4)
@@ -50,8 +50,8 @@ test_that("compute_centroid() collapses only the level it is given", {
   expect_setequal(out$x, c(5, 105))
 })
 
-test_that("add_centroid() selects on the declared identity", {
-  out <- add_centroid(custom_af(), across = "bodypart", name = "mid")
+test_that("add_point() selects on the declared identity", {
+  out <- add_point(custom_af(), across = "bodypart", name = "mid")
 
   expect_true("mid" %in% as.character(out$bodypart))
   expect_equal(nrow(out), 9)
@@ -63,13 +63,13 @@ test_that("a frame with no identity variables is refused by name", {
     variables_what = character(0)
   ))
 
-  expect_error(compute_centroid(af), "declares no identity variables")
+  expect_error(compute_point(af), "declares no identity variables")
 })
 
 test_that("the standard keypoint frame is unaffected", {
   af <- anicore::example_anipoint(n_obs = 3, n_individuals = 1, n_keypoints = 3)
 
-  out <- compute_centroid(af, across = "keypoint")
+  out <- compute_point(af, across = "keypoint")
 
   expect_equal(as.character(unique(out$keypoint)), "centroid")
   expect_equal(nrow(out), 3)

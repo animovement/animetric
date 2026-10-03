@@ -1,4 +1,4 @@
-# Tests for compute_centroid()
+# Tests for compute_point()
 # - Basic centroid calculation
 # - Include specific keypoints
 # - Exclude specific keypoints
@@ -11,7 +11,7 @@
 # - Non-aniframe input errors
 # - Non-Cartesian data errors
 
-test_that("compute_centroid calculates basic centroid correctly", {
+test_that("compute_point calculates basic centroid correctly", {
   data <- data.frame(
     time = rep(1:3, each = 2),
     keypoint = rep(c("point1", "point2"), 3),
@@ -21,7 +21,7 @@ test_that("compute_centroid calculates basic centroid correctly", {
   ) |>
     anicore::as_anipoint()
 
-  result <- compute_centroid(data, across = "keypoint")
+  result <- compute_point(data, across = "keypoint")
 
   expect_s3_class(result, "aniframe")
   expect_equal(nrow(result), 3)
@@ -31,7 +31,7 @@ test_that("compute_centroid calculates basic centroid correctly", {
   expect_true(all(is.na(result$confidence)))
 })
 
-test_that("compute_centroid works with include", {
+test_that("compute_point works with include", {
   data <- data.frame(
     time = rep(1, 3),
     keypoint = c("point1", "point2", "point3"),
@@ -41,13 +41,13 @@ test_that("compute_centroid works with include", {
   ) |>
     anicore::as_anipoint()
 
-  result <- compute_centroid(data, include = c("point1", "point2"))
+  result <- compute_point(data, include = c("point1", "point2"))
 
   expect_equal(result$x, 1.5)
   expect_equal(result$y, 1.5)
 })
 
-test_that("compute_centroid works with exclude", {
+test_that("compute_point works with exclude", {
   data <- data.frame(
     time = rep(1, 3),
     keypoint = c("point1", "point2", "point3"),
@@ -57,13 +57,13 @@ test_that("compute_centroid works with exclude", {
   ) |>
     anicore::as_anipoint()
 
-  result <- compute_centroid(data, exclude = "point3")
+  result <- compute_point(data, exclude = "point3")
 
   expect_equal(result$x, 1.5)
   expect_equal(result$y, 1.5)
 })
 
-test_that("compute_centroid errors when both include and exclude specified", {
+test_that("compute_point errors when both include and exclude specified", {
   data <- data.frame(
     time = 1,
     keypoint = "point1",
@@ -74,7 +74,7 @@ test_that("compute_centroid errors when both include and exclude specified", {
     anicore::as_anipoint()
 
   expect_error(
-    compute_centroid(
+    compute_point(
       data,
       include = "point1",
       exclude = "point2"
@@ -83,7 +83,7 @@ test_that("compute_centroid errors when both include and exclude specified", {
   )
 })
 
-test_that("compute_centroid uses custom centroid name", {
+test_that("compute_point uses custom centroid name", {
   data <- data.frame(
     time = 1,
     keypoint = c("point1", "point2"),
@@ -93,12 +93,12 @@ test_that("compute_centroid uses custom centroid name", {
   ) |>
     anicore::as_anipoint()
 
-  result <- compute_centroid(data, name = "center")
+  result <- compute_point(data, name = "center")
 
   expect_equal(as.character(unique(result$keypoint)), "center")
 })
 
-test_that("compute_centroid handles NA values correctly", {
+test_that("compute_point handles NA values correctly", {
   data <- data.frame(
     time = 1,
     keypoint = c("point1", "point2", "point3"),
@@ -108,13 +108,13 @@ test_that("compute_centroid handles NA values correctly", {
   ) |>
     anicore::as_anipoint()
 
-  result <- compute_centroid(data, across = "keypoint")
+  result <- compute_point(data, across = "keypoint")
 
   expect_equal(result$x, 2)
   expect_equal(result$y, 2)
 })
 
-test_that("compute_centroid handles all NA values", {
+test_that("compute_point handles all NA values", {
   data <- data.frame(
     time = 1,
     keypoint = c("point1", "point2"),
@@ -124,13 +124,13 @@ test_that("compute_centroid handles all NA values", {
   ) |>
     anicore::as_anipoint()
 
-  result <- compute_centroid(data, across = "keypoint")
+  result <- compute_point(data, across = "keypoint")
 
   expect_true(is.na(result$x))
   expect_equal(result$y, 1)
 })
 
-test_that("compute_centroid works without z coordinate", {
+test_that("compute_point works without z coordinate", {
   data <- data.frame(
     time = 1,
     keypoint = c("point1", "point2"),
@@ -140,12 +140,12 @@ test_that("compute_centroid works without z coordinate", {
   ) |>
     anicore::as_anipoint()
 
-  result <- compute_centroid(data, across = "keypoint")
+  result <- compute_point(data, across = "keypoint")
 
   expect_false("z" %in% names(result))
 })
 
-test_that("compute_centroid works with 3D data", {
+test_that("compute_point works with 3D data", {
   data <- data.frame(
     time = 1,
     keypoint = c("point1", "point2"),
@@ -156,13 +156,13 @@ test_that("compute_centroid works with 3D data", {
   ) |>
     anicore::as_anipoint()
 
-  result <- compute_centroid(data, across = "keypoint")
+  result <- compute_point(data, across = "keypoint")
 
   expect_true("z" %in% names(result))
   expect_equal(result$z, 1)
 })
 
-test_that("compute_centroid converts NaN to NA", {
+test_that("compute_point converts NaN to NA", {
   data <- data.frame(
     time = 1,
     keypoint = c("point1", "point2"),
@@ -172,12 +172,12 @@ test_that("compute_centroid converts NaN to NA", {
   ) |>
     anicore::as_anipoint()
 
-  result <- compute_centroid(data, across = "keypoint")
+  result <- compute_point(data, across = "keypoint")
 
   expect_true(is.na(result$x))
 })
 
-test_that("compute_centroid errors on non-aniframe input", {
+test_that("compute_point errors on non-aniframe input", {
   data <- data.frame(
     time = 1,
     keypoint = "point1",
@@ -185,10 +185,10 @@ test_that("compute_centroid errors on non-aniframe input", {
     y = 1
   )
 
-  expect_error(compute_centroid(data, across = "keypoint"))
+  expect_error(compute_point(data, across = "keypoint"))
 })
 
-test_that("compute_centroid errors on non-Cartesian data", {
+test_that("compute_point errors on non-Cartesian data", {
   data <- data.frame(
     time = 1,
     keypoint = c("point1", "point2"),
@@ -200,12 +200,12 @@ test_that("compute_centroid errors on non-Cartesian data", {
     anispace::map_to_polar()
 
   expect_error(
-    compute_centroid(data, across = "keypoint"),
+    compute_point(data, across = "keypoint"),
     "Cartesian coordinate system"
   )
 })
 
-test_that("compute_centroid preserves grouping variables", {
+test_that("compute_point preserves grouping variables", {
   data <- data.frame(
     time = rep(1:2, each = 4),
     individual = rep(c("ind1", "ind2"), each = 2, times = 2),
@@ -216,7 +216,7 @@ test_that("compute_centroid preserves grouping variables", {
   ) |>
     anicore::as_anipoint()
 
-  result <- compute_centroid(data, across = "keypoint")
+  result <- compute_point(data, across = "keypoint")
 
   expect_equal(nrow(result), 4)
   expect_true("individual" %in% names(result))
