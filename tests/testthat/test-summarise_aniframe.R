@@ -148,8 +148,8 @@ test_that("summarise_aniframe works with 2D data", {
   result <- summarise_aniframe(data)
 
   # 2D should have angular columns
-  expect_true("median_angular_speed" %in% names(result))
-  expect_true("total_angular_path_length" %in% names(result))
+  expect_true("median_turning_speed" %in% names(result))
+  expect_true("total_turning" %in% names(result))
 })
 
 test_that("summarise_aniframe works with 3D data", {
@@ -157,8 +157,8 @@ test_that("summarise_aniframe works with 3D data", {
   result <- summarise_aniframe(data)
 
   # 3D should not have angular columns
-  expect_false("median_angular_speed" %in% names(result))
-  expect_false("total_angular_path_length" %in% names(result))
+  expect_false("median_turning_speed" %in% names(result))
+  expect_false("total_turning" %in% names(result))
 
   # But should have the basic columns
 

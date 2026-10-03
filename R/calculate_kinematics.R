@@ -13,15 +13,29 @@
 #'   kinematic measures. Translational kinematics (velocity and acceleration
 #'   components, speed, acceleration, path length) are computed for 1D, 2D and
 #'   3D data, with components named by axis role (`v_x`, `v_y`, ...) whatever
-#'   the input columns are called. For 2D data, rotational kinematics are added
-#'   too (heading, angular velocity, angular speed, angular acceleration).
-#'   Heading is the direction of travel, so it is `NA` where speed is zero.
-#'   Rotational measures for 1D and 3D are not yet implemented.
+#'   the input columns are called. For 2D data, measures of the path's
+#'   direction are added too:
+#'   \describe{
+#'     \item{`course`}{Direction of travel, `atan2(v_y, v_x)`. It is `NA`
+#'       where speed is zero, since a stationary animal has no direction of
+#'       travel. `course_unwrapped` is the same, without jumps at +/-pi.}
+#'     \item{`turning_rate`}{Rate of change of the course: signed curvature
+#'       times speed.}
+#'     \item{`turning_speed`}{Absolute turning rate.}
+#'     \item{`turning_acceleration`}{Rate of change of the turning rate.}
+#'     \item{`cumulative_turning`}{Absolute turning accumulated since the
+#'       first row.}
+#'   }
+#'   These describe the path, not the body: course is where the animal is
+#'   going, not where it is facing, and the two differ for any animal that
+#'   does not move nose-first. The names heading and angular velocity are
+#'   kept for body orientation. Measures of the path's direction for 1D and 3D
+#'   are not yet implemented.
 #'
 #'   Angular measures are in the frame's declared `unit_angle`, radians or
-#'   degrees; angular velocity and acceleration are per unit of the index.
-#'   Signed angles (heading, angular velocity) follow the frame's own
-#'   convention: heading counts from the `x` axis toward the `y` axis, which
+#'   degrees; turning rate and acceleration are per unit of the index.
+#'   Signed angles (course, turning rate) follow the frame's own
+#'   convention: course counts from the `x` axis toward the `y` axis, which
 #'   is counter-clockwise when [anicore::get_angle_direction()] says so (`y`
 #'   pointing up, as aniread leaves image data) and clockwise in a frame whose
 #'   `y` points down. To change convention, change the coordinates, for
@@ -131,8 +145,9 @@ calculate_translation <- function(data) {
 
 #' Calculate rotational kinematics in 2D
 #'
-#' Computes heading angles and angular kinematics based on the velocity vector.
-#' Heading is calculated as atan2(v_y, v_x), and is `NA` where speed is zero.
+#' Computes the course (direction of travel) and turning measures from the
+#' velocity vector. Course is calculated as atan2(v_y, v_x), and is `NA` where
+#' speed is zero.
 #' The angles are computed in radians and returned in the frame's
 #' `unit_angle`.
 #'
@@ -143,32 +158,32 @@ calculate_rotation_2d <- function(data) {
   index <- anicore::get_index(data)
   unit <- angle_unit(data)
   angular_cols <- c(
-    "heading",
-    "heading_unwrapped",
-    "angular_path_length",
-    "angular_velocity",
-    "angular_speed",
-    "angular_acceleration"
+    "course",
+    "course_unwrapped",
+    "cumulative_turning",
+    "turning_rate",
+    "turning_speed",
+    "turning_acceleration"
   )
 
   data |>
     dplyr::mutate(
       # Direction of travel is undefined when the animal is not moving
-      heading = dplyr::if_else(
+      course = dplyr::if_else(
         .data$speed == 0,
         NA_real_,
         atan2(.data$v_y, .data$v_x)
       ),
-      heading_unwrapped = anicore::unwrap_angle(.data$heading),
-      angular_path_length = cumsum_turning(.data$heading),
-      angular_velocity = differentiate(
-        .data$heading_unwrapped,
+      course_unwrapped = anicore::unwrap_angle(.data$course),
+      cumulative_turning = cumsum_turning(.data$course),
+      turning_rate = differentiate(
+        .data$course_unwrapped,
         .data[[index]],
         order = 1
       ),
-      angular_speed = abs(.data$angular_velocity),
-      angular_acceleration = differentiate(
-        .data$heading_unwrapped,
+      turning_speed = abs(.data$turning_rate),
+      turning_acceleration = differentiate(
+        .data$course_unwrapped,
         .data[[index]],
         order = 2
       )
@@ -177,9 +192,9 @@ calculate_rotation_2d <- function(data) {
       dplyr::all_of(angular_cols),
       \(x) rad_to_unit(x, unit)
     )) |>
-    dplyr::relocate("angular_speed", .before = "angular_path_length") |>
-    dplyr::relocate("angular_velocity", .before = "angular_path_length") |>
-    dplyr::relocate("angular_acceleration", .before = "angular_path_length")
+    dplyr::relocate("turning_speed", .before = "cumulative_turning") |>
+    dplyr::relocate("turning_rate", .before = "cumulative_turning") |>
+    dplyr::relocate("turning_acceleration", .before = "cumulative_turning")
 }
 
 #' Calculate rotational kinematics in 3D
@@ -193,7 +208,7 @@ calculate_rotation_2d <- function(data) {
 calculate_rotation_3d <- function(data) {
   # data |>
   #   dplyr::mutate(
-  #     # Azimuth: angle in xy-plane (like heading in 2D)
+  #     # Azimuth: angle in xy-plane (like course in 2D)
   #     azimuth = atan2(.data$v_y, .data$v_x),
   #     azimuth = dplyr::if_else(.data$azimuth == pi, 0, .data$azimuth),
   #     azimuth_unwrapped = anicore::unwrap_angle(.data$azimuth),
@@ -212,7 +227,7 @@ calculate_rotation_3d <- function(data) {
   #       order = 1
   #     ),
   #     # Total angular speed (magnitude)
-  #     angular_speed = sqrt(
+  #     turning_speed = sqrt(
   #       .data$angular_velocity_azimuth^2 + .data$angular_velocity_elevation^2
   #     ),
   #     # Angular path lengths
@@ -238,5 +253,5 @@ calculate_rotation_3d <- function(data) {
   #       order = 2
   #     )
   #   ) |>
-  #   dplyr::relocate("angular_speed", .before = "angular_velocity_azimuth")
+  #   dplyr::relocate("turning_speed", .before = "angular_velocity_azimuth")
 }

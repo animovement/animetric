@@ -11,8 +11,8 @@
 #'   tendency and dispersion measures (prefixed with median_/mad_ or mean_/sd_)
 #'
 #'   - Speed, acceleration
-#'   - Angular speed, velocity, acceleration (2D only)
-#'   - Heading (2D only, using circular statistics)
+#'   - Turning speed, rate, acceleration (2D only)
+#'   - Course (2D only, using circular statistics)
 #'
 #'   Angular summaries are in the frame's declared `unit_angle`.
 #'
@@ -39,15 +39,15 @@ summarise_kinematics <- function(
   # Rotational measures are only present where they are defined (2D)
   linear_cols <- c("speed", "acceleration")
   angular_cols <- intersect(
-    c("angular_speed", "angular_velocity", "angular_acceleration"),
+    c("turning_speed", "turning_rate", "turning_acceleration"),
     names(data)
   )
-  has_heading <- "heading" %in% names(data)
+  has_course <- "course" %in% names(data)
 
   # Circular statistics work in radians; report them in the frame's unit
   unit <- angle_unit(data)
   circular <- function(stat) {
-    rlang::quo(rad_to_unit(stat(unit_to_rad(.data$heading, unit)), unit))
+    rlang::quo(rad_to_unit(stat(unit_to_rad(.data$course, unit)), unit))
   }
 
   if (measures == "median_mad") {
@@ -55,10 +55,10 @@ summarise_kinematics <- function(
       median = ~ stats::median(.x, na.rm = TRUE),
       mad = ~ stats::mad(.x, na.rm = TRUE)
     )
-    heading <- if (has_heading) {
+    course <- if (has_course) {
       list(
-        median_heading = circular(anicore::circ_median),
-        mad_heading = circular(anicore::circ_mad)
+        median_course = circular(anicore::circ_median),
+        mad_course = circular(anicore::circ_mad)
       )
     }
   } else {
@@ -66,10 +66,10 @@ summarise_kinematics <- function(
       mean = ~ mean(.x, na.rm = TRUE),
       sd = ~ stats::sd(.x, na.rm = TRUE)
     )
-    heading <- if (has_heading) {
+    course <- if (has_course) {
       list(
-        mean_heading = circular(anicore::circ_mean),
-        sd_heading = circular(anicore::circ_sd)
+        mean_course = circular(anicore::circ_mean),
+        sd_course = circular(anicore::circ_sd)
       )
     }
   }
@@ -81,7 +81,7 @@ summarise_kinematics <- function(
         stats,
         .names = "{.fn}_{.col}"
       ),
-      !!!heading,
+      !!!course,
       .groups = "drop"
     )
 }

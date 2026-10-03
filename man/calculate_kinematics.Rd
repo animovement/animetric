@@ -17,15 +17,29 @@ An anipoint in the same coordinate system as the input, with added
 kinematic measures. Translational kinematics (velocity and acceleration
 components, speed, acceleration, path length) are computed for 1D, 2D and
 3D data, with components named by axis role (\code{v_x}, \code{v_y}, ...) whatever
-the input columns are called. For 2D data, rotational kinematics are added
-too (heading, angular velocity, angular speed, angular acceleration).
-Heading is the direction of travel, so it is \code{NA} where speed is zero.
-Rotational measures for 1D and 3D are not yet implemented.
+the input columns are called. For 2D data, measures of the path's
+direction are added too:
+\describe{
+\item{\code{course}}{Direction of travel, \code{atan2(v_y, v_x)}. It is \code{NA}
+where speed is zero, since a stationary animal has no direction of
+travel. \code{course_unwrapped} is the same, without jumps at +/-pi.}
+\item{\code{turning_rate}}{Rate of change of the course: signed curvature
+times speed.}
+\item{\code{turning_speed}}{Absolute turning rate.}
+\item{\code{turning_acceleration}}{Rate of change of the turning rate.}
+\item{\code{cumulative_turning}}{Absolute turning accumulated since the
+first row.}
+}
+These describe the path, not the body: course is where the animal is
+going, not where it is facing, and the two differ for any animal that
+does not move nose-first. The names heading and angular velocity are
+kept for body orientation. Measures of the path's direction for 1D and 3D
+are not yet implemented.
 
 Angular measures are in the frame's declared \code{unit_angle}, radians or
-degrees; angular velocity and acceleration are per unit of the index.
-Signed angles (heading, angular velocity) follow the frame's own
-convention: heading counts from the \code{x} axis toward the \code{y} axis, which
+degrees; turning rate and acceleration are per unit of the index.
+Signed angles (course, turning rate) follow the frame's own
+convention: course counts from the \code{x} axis toward the \code{y} axis, which
 is counter-clockwise when \code{\link[anicore:get_angle_direction]{anicore::get_angle_direction()}} says so (\code{y}
 pointing up, as aniread leaves image data) and clockwise in a frame whose
 \code{y} points down. To change convention, change the coordinates, for

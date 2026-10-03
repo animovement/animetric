@@ -47,7 +47,7 @@
 #' Cybernetics, 97(1), 47-61.
 #'
 #' @seealso
-#' * [calculate_kinematics()] for computing velocity and heading
+#' * [calculate_kinematics()] for computing velocity and course
 #'
 #' @export
 #'

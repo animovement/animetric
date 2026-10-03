@@ -1,6 +1,6 @@
 # Testing:
 # - Translational kinematics (velocity, acceleration, speed, path_length)
-# - Rotational kinematics (heading, angular velocity, angular speed)
+# - Path direction (course, turning rate, turning speed)
 # - Edge cases (stationary, constant velocity, circular motion)
 # - Column presence and structure
 # - Consistency with differentiate() function
@@ -23,12 +23,12 @@ test_that("calculate_kinematics() on 2D data adds all expected columns", {
     "speed",
     "acceleration",
     "path_length",
-    "heading",
-    "heading_unwrapped",
-    "angular_velocity",
-    "angular_speed",
-    "angular_acceleration",
-    "angular_path_length"
+    "course",
+    "course_unwrapped",
+    "turning_rate",
+    "turning_speed",
+    "turning_acceleration",
+    "cumulative_turning"
   )
 
   expect_true(all(expected_cols %in% names(result)))
@@ -121,7 +121,7 @@ test_that("path_length accumulates distance correctly", {
   expect_equal(result$path_length, expected_path)
 })
 
-test_that("heading is calculated correctly from velocity", {
+test_that("course is calculated correctly from velocity", {
   data <- data.frame(
     time = 0:5,
     x = c(0, 1, 2, 3, 4, 5),
@@ -131,13 +131,13 @@ test_that("heading is calculated correctly from velocity", {
 
   result <- calculate_kinematics(data)
 
-  # For 45-degree motion, heading should be pi/4
-  expected_heading <- atan2(result$v_y, result$v_x)
+  # For 45-degree motion, course should be pi/4
+  expected_course <- atan2(result$v_y, result$v_x)
 
-  expect_equal(result$heading, expected_heading)
+  expect_equal(result$course, expected_course)
 })
 
-test_that("heading along -x is pi, not 0", {
+test_that("course along -x is pi, not 0", {
   data <- data.frame(
     time = 0:5,
     x = 5:0,
@@ -147,12 +147,12 @@ test_that("heading along -x is pi, not 0", {
 
   result <- calculate_kinematics(data)
 
-  expect_equal(result$heading, rep(pi, 6))
-  expect_equal(result$angular_velocity, rep(0, 6))
-  expect_equal(result$angular_path_length, rep(0, 6))
+  expect_equal(result$course, rep(pi, 6))
+  expect_equal(result$turning_rate, rep(0, 6))
+  expect_equal(result$cumulative_turning, rep(0, 6))
 })
 
-test_that("heading is NA where the animal is stationary", {
+test_that("course is NA where the animal is stationary", {
   # Moves along -x, pauses at x = 2, then moves on along -x
   data <- data.frame(
     time = 0:8,
@@ -165,14 +165,14 @@ test_that("heading is NA where the animal is stationary", {
 
   stationary <- result$speed == 0
   expect_true(any(stationary))
-  expect_true(all(is.na(result$heading[stationary])))
-  expect_equal(result$heading[!stationary], rep(pi, sum(!stationary)))
+  expect_true(all(is.na(result$course[stationary])))
+  expect_equal(result$course[!stationary], rep(pi, sum(!stationary)))
 
   # The pause must not register as turning
-  expect_equal(max(result$angular_path_length), 0)
+  expect_equal(max(result$cumulative_turning), 0)
 })
 
-test_that("angular_velocity matches differentiate of unwrapped heading", {
+test_that("turning_rate matches differentiate of unwrapped course", {
   # Create circular motion
   t <- seq(0, 2 * pi, length.out = 50)
   data <- data.frame(
@@ -184,17 +184,17 @@ test_that("angular_velocity matches differentiate of unwrapped heading", {
 
   result <- calculate_kinematics(data)
 
-  # Angular velocity should match differentiate(heading_unwrapped)
+  # Angular velocity should match differentiate(course_unwrapped)
   expected_ang_vel <- differentiate(
-    result$heading_unwrapped,
+    result$course_unwrapped,
     data$time,
     order = 1
   )
 
-  expect_equal(result$angular_velocity, expected_ang_vel)
+  expect_equal(result$turning_rate, expected_ang_vel)
 })
 
-test_that("angular_speed is absolute value of angular_velocity", {
+test_that("turning_speed is absolute value of turning_rate", {
   t <- seq(0, 4 * pi, length.out = 100)
   data <- data.frame(
     time = t,
@@ -205,10 +205,10 @@ test_that("angular_speed is absolute value of angular_velocity", {
 
   result <- calculate_kinematics(data)
 
-  expect_equal(result$angular_speed, abs(result$angular_velocity))
+  expect_equal(result$turning_speed, abs(result$turning_rate))
 })
 
-test_that("angular_acceleration matches differentiate of unwrapped heading", {
+test_that("turning_acceleration matches differentiate of unwrapped course", {
   t <- seq(0, 2 * pi, length.out = 50)
   data <- data.frame(
     time = t,
@@ -219,14 +219,14 @@ test_that("angular_acceleration matches differentiate of unwrapped heading", {
 
   result <- calculate_kinematics(data)
 
-  # Angular acceleration should match second derivative of heading
+  # Angular acceleration should match second derivative of course
   expected_ang_acc <- differentiate(
-    result$heading_unwrapped,
+    result$course_unwrapped,
     data$time,
     order = 2
   )
 
-  expect_equal(result$angular_acceleration, expected_ang_acc)
+  expect_equal(result$turning_acceleration, expected_ang_acc)
 })
 
 test_that("stationary object has zero kinematics", {
@@ -259,8 +259,8 @@ test_that("constant velocity has zero acceleration", {
   expect_true(all(abs(result$acceleration[3:9]) < 1e-10))
 })
 
-test_that("angular_path_length starts at 0 when the first heading is negative", {
-  # Straight line at a heading of -1 rad: it never turns
+test_that("cumulative_turning starts at 0 when the first course is negative", {
+  # Straight line at a course of -1 rad: it never turns
   t <- 0:5
   data <- data.frame(
     time = t,
@@ -271,11 +271,11 @@ test_that("angular_path_length starts at 0 when the first heading is negative", 
 
   result <- calculate_kinematics(data)
 
-  expect_equal(result$heading, rep(-1, 6))
-  expect_equal(result$angular_path_length, rep(0, 6))
+  expect_equal(result$course, rep(-1, 6))
+  expect_equal(result$cumulative_turning, rep(0, 6))
 })
 
-test_that("angular_path_length accumulates absolute turning", {
+test_that("cumulative_turning accumulates absolute turning", {
   t <- seq(0, 2 * pi, length.out = 50)
   data <- data.frame(
     time = t,
@@ -286,14 +286,14 @@ test_that("angular_path_length accumulates absolute turning", {
 
   result <- calculate_kinematics(data)
 
-  expect_equal(result$angular_path_length[1], 0)
+  expect_equal(result$cumulative_turning[1], 0)
   expect_equal(
-    result$angular_path_length,
-    cumsum(c(0, abs(diff(result$heading_unwrapped))))
+    result$cumulative_turning,
+    cumsum(c(0, abs(diff(result$course_unwrapped))))
   )
 })
 
-test_that("angular_path_length counts turning across a pause", {
+test_that("cumulative_turning counts turning across a pause", {
   # Moves along +x, stops, then moves back along -x
   data <- data.frame(
     time = 0:8,
@@ -304,13 +304,13 @@ test_that("angular_path_length counts turning across a pause", {
 
   result <- calculate_kinematics(data)
 
-  expect_true(any(is.na(result$heading)))
-  expect_false(anyNA(result$angular_path_length))
-  expect_equal(result$angular_path_length[1], 0)
-  expect_equal(dplyr::last(result$angular_path_length), pi)
+  expect_true(any(is.na(result$course)))
+  expect_false(anyNA(result$cumulative_turning))
+  expect_equal(result$cumulative_turning[1], 0)
+  expect_equal(dplyr::last(result$cumulative_turning), pi)
 })
 
-test_that("angular_path_length is 0 for a stationary track", {
+test_that("cumulative_turning is 0 for a stationary track", {
   data <- data.frame(
     time = 0:5,
     x = rep(5, 6),
@@ -320,7 +320,7 @@ test_that("angular_path_length is 0 for a stationary track", {
 
   result <- calculate_kinematics(data)
 
-  expect_equal(result$angular_path_length, rep(0, 6))
+  expect_equal(result$cumulative_turning, rep(0, 6))
 })
 
 # Angular units and sign convention (#80) ------------------------------------
@@ -335,12 +335,12 @@ test_that("angular measures are returned in the frame's unit_angle", {
   in_deg <- calculate_kinematics(deg)
 
   angular_cols <- c(
-    "heading",
-    "heading_unwrapped",
-    "angular_velocity",
-    "angular_speed",
-    "angular_acceleration",
-    "angular_path_length"
+    "course",
+    "course_unwrapped",
+    "turning_rate",
+    "turning_speed",
+    "turning_acceleration",
+    "cumulative_turning"
   )
   for (col in angular_cols) {
     expect_equal(in_deg[[col]], in_rad[[col]] * 180 / pi, label = col)
@@ -350,7 +350,7 @@ test_that("angular measures are returned in the frame's unit_angle", {
   expect_equal(as.character(anicore::get_metadata(in_deg, "unit_angle")), "deg")
 })
 
-test_that("heading summaries are in the frame's unit_angle", {
+test_that("course summaries are in the frame's unit_angle", {
   t <- seq(0, 2 * pi, length.out = 40)
   d <- data.frame(time = t, x = cos(t) + t / 4, y = sin(t))
   rad <- calculate_kinematics(anicore::as_anipoint(d))
@@ -361,7 +361,7 @@ test_that("heading summaries are in the frame's unit_angle", {
   for (measures in c("median_mad", "mean_sd")) {
     s_rad <- summarise_kinematics(rad, measures = measures)
     s_deg <- summarise_kinematics(deg, measures = measures)
-    angular <- grep("heading|angular", names(s_rad), value = TRUE)
+    angular <- grep("course|turning", names(s_rad), value = TRUE)
     expect_length(angular, 8)
     for (col in angular) {
       expect_equal(s_deg[[col]], s_rad[[col]] * 180 / pi, label = col)
@@ -369,8 +369,8 @@ test_that("heading summaries are in the frame's unit_angle", {
   }
 
   expect_equal(
-    summarise_tortuosity(deg)$total_angular_path_length,
-    summarise_tortuosity(rad)$total_angular_path_length * 180 / pi
+    summarise_tortuosity(deg)$total_turning,
+    summarise_tortuosity(rad)$total_turning * 180 / pi
   )
 })
 
@@ -395,8 +395,8 @@ test_that("signed angles follow the frame's own axes", {
   expect_equal(anicore::get_angle_direction(up), "counter_clockwise")
   expect_equal(anicore::get_angle_direction(down), "clockwise")
   expect_equal(
-    calculate_kinematics(down)$heading,
-    calculate_kinematics(up)$heading
+    calculate_kinematics(down)$course,
+    calculate_kinematics(up)$course
   )
-  expect_equal(dplyr::last(calculate_kinematics(up)$heading), pi / 2)
+  expect_equal(dplyr::last(calculate_kinematics(up)$course), pi / 2)
 })

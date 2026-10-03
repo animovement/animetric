@@ -16,7 +16,7 @@ test_that("calculate_kinematics preserves Cartesian 2D coordinate system", {
 
   expect_true(anicore::is_cartesian_2d(result))
   expect_true("speed" %in% names(result))
-  expect_true("heading" %in% names(result))
+  expect_true("course" %in% names(result))
 })
 
 test_that("calculate_kinematics preserves Cartesian 3D coordinate system", {
@@ -116,9 +116,9 @@ test_that("calculate_kinematics() reads renamed axis columns from the frame", {
     "v_y",
     "a_x",
     "a_y",
-    "heading",
-    "angular_velocity",
-    "angular_path_length"
+    "course",
+    "turning_rate",
+    "cumulative_turning"
   )
   for (col in kinematic_cols) {
     expect_equal(result[[col]], expected[[col]], label = col)
@@ -149,7 +149,7 @@ test_that("calculate_kinematics() computes translation for 1D data", {
   expect_equal(result$v_x, differentiate(data$x, data$time))
   expect_equal(result$speed, abs(result$v_x))
   expect_equal(result$path_length, c(0, 1, 3, 6, 6, 8))
-  expect_false("heading" %in% names(result))
+  expect_false("course" %in% names(result))
 })
 
 test_that("summaries work on 1D data", {
@@ -160,7 +160,7 @@ test_that("summaries work on 1D data", {
   expect_true(all(
     c("median_speed", "mad_acceleration") %in% names(kin_summary)
   ))
-  expect_false("median_heading" %in% names(kin_summary))
+  expect_false("median_course" %in% names(kin_summary))
 
   tort_summary <- summarise_tortuosity(kin)
   expect_equal(tort_summary$total_path_length, 9)

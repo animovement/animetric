@@ -13,8 +13,9 @@ calculate_rotation_2d(data)
 The anipoint with added rotational kinematic columns
 }
 \description{
-Computes heading angles and angular kinematics based on the velocity vector.
-Heading is calculated as atan2(v_y, v_x), and is \code{NA} where speed is zero.
+Computes the course (direction of travel) and turning measures from the
+velocity vector. Course is calculated as atan2(v_y, v_x), and is \code{NA} where
+speed is zero.
 The angles are computed in radians and returned in the frame's
 \code{unit_angle}.
 }

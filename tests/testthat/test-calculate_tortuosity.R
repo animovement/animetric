@@ -135,7 +135,7 @@ test_that("calculate_tortuosity() on 2D data computes kinematics automatically i
 
   result <- calculate_tortuosity(data, window_width = 5L)
 
-  expect_true("heading" %in% names(result))
+  expect_true("course" %in% names(result))
   expect_true("v_x" %in% names(result))
   expect_true("v_y" %in% names(result))
 })

@@ -7,7 +7,7 @@
 # - summarise_kinematics validates input with .check = TRUE
 # - summarise_kinematics_2d computes median/mad correctly
 # - summarise_kinematics_2d computes mean/sd correctly
-# - summarise_kinematics_2d includes circular statistics for heading
+# - summarise_kinematics_2d includes circular statistics for course
 # - summarise_kinematics_3d computes median/mad correctly
 # - summarise_kinematics_3d computes mean/sd correctly
 # - summarise_kinematics_3d excludes angular columns
@@ -63,14 +63,14 @@ test_that("summarise_kinematics returns correct columns for 2D median_mad", {
     "mad_speed",
     "median_acceleration",
     "mad_acceleration",
-    "median_angular_speed",
-    "mad_angular_speed",
-    "median_angular_velocity",
-    "mad_angular_velocity",
-    "median_angular_acceleration",
-    "mad_angular_acceleration",
-    "median_heading",
-    "mad_heading"
+    "median_turning_speed",
+    "mad_turning_speed",
+    "median_turning_rate",
+    "mad_turning_rate",
+    "median_turning_acceleration",
+    "mad_turning_acceleration",
+    "median_course",
+    "mad_course"
   )
 
   expect_true(all(expected_cols %in% names(result)))
@@ -86,14 +86,14 @@ test_that("summarise_kinematics returns correct columns for 2D mean_sd", {
     "sd_speed",
     "mean_acceleration",
     "sd_acceleration",
-    "mean_angular_speed",
-    "sd_angular_speed",
-    "mean_angular_velocity",
-    "sd_angular_velocity",
-    "mean_angular_acceleration",
-    "sd_angular_acceleration",
-    "mean_heading",
-    "sd_heading"
+    "mean_turning_speed",
+    "sd_turning_speed",
+    "mean_turning_rate",
+    "sd_turning_rate",
+    "mean_turning_acceleration",
+    "sd_turning_acceleration",
+    "mean_course",
+    "sd_course"
   )
 
   expect_true(all(expected_cols %in% names(result)))
@@ -113,7 +113,7 @@ test_that("summarise_kinematics returns correct columns for 3D median_mad", {
     "median_acceleration",
     "mad_acceleration"
   )
-  excluded_cols <- c("median_heading", "median_angular_speed")
+  excluded_cols <- c("median_course", "median_turning_speed")
 
   expect_true(all(expected_cols %in% names(result)))
   expect_false(any(excluded_cols %in% names(result)))
@@ -130,7 +130,7 @@ test_that("summarise_kinematics returns correct columns for 3D mean_sd", {
     "mean_acceleration",
     "sd_acceleration"
   )
-  excluded_cols <- c("mean_heading", "mean_angular_speed")
+  excluded_cols <- c("mean_course", "mean_turning_speed")
 
   expect_true(all(expected_cols %in% names(result)))
   expect_false(any(excluded_cols %in% names(result)))
@@ -198,10 +198,10 @@ test_that("summarise_kinematics() on 3D data computes mean/sd correctly", {
 
 
 # summarise_kinematics: circular statistics ------------------------------
-test_that("summarise_kinematics() on 2D data uses circular statistics for heading", {
-  # Create data with known heading values
+test_that("summarise_kinematics() on 2D data uses circular statistics for course", {
+  # Create data with known course values
   data <- mock_kin_2d()
-  data$heading <- rep(c(-pi + 0.1, pi - 0.1), length.out = nrow(data))
+  data$course <- rep(c(-pi + 0.1, pi - 0.1), length.out = nrow(data))
   data <- anicore::as_anipoint(data)
 
   result_median <- summarise_kinematics(data, measures = "median_mad")
@@ -209,6 +209,6 @@ test_that("summarise_kinematics() on 2D data uses circular statistics for headin
 
   # Circular median/mean of values near +/- pi should be near pi, not near 0
 
-  expect_true(abs(result_median$median_heading) > 2)
-  expect_true(abs(result_mean$mean_heading) > 2)
+  expect_true(abs(result_median$median_course) > 2)
+  expect_true(abs(result_mean$mean_course) > 2)
 })

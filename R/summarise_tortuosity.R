@@ -7,7 +7,7 @@
 #' @return A summarised data frame with one row per group containing:
 #'
 #'   - `total_path_length`: Total distance traveled
-#'   - `total_angular_path_length`: Total angular distance (2D only)
+#'   - `total_turning`: Total absolute turning of the course (2D only)
 #'
 #'   **Tortuosity metrics:**
 #'   - `net_displacement`: Straight-line distance from start to end
@@ -42,11 +42,11 @@ summarise_tortuosity <- function(data) {
   position_cols <- unname(axes)
   v_cols <- paste0("v_", names(axes))
 
-  total_turning <- if ("angular_path_length" %in% names(data)) {
+  total_turning <- if ("cumulative_turning" %in% names(data)) {
     list(
-      total_angular_path_length = rlang::quo(
-        dplyr::last(.data$angular_path_length, na_rm = TRUE) -
-          dplyr::first(.data$angular_path_length, na_rm = TRUE)
+      total_turning = rlang::quo(
+        dplyr::last(.data$cumulative_turning, na_rm = TRUE) -
+          dplyr::first(.data$cumulative_turning, na_rm = TRUE)
       )
     )
   }
