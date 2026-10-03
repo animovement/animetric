@@ -1,6 +1,8 @@
 # Calculate kinematic summary statistics
 
-**Deprecated.** Use
+**\[deprecated\]**
+
+Use
 [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md),
 which summarises any per-row measure of a frame, not only kinematics.
 This keeps the old output: the median and MAD (or mean and SD) of

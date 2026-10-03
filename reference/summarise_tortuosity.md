@@ -1,6 +1,8 @@
 # Calculate tortuosity summary statistics
 
-**Deprecated.** Renamed to
+**\[deprecated\]**
+
+Renamed to
 [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md),
 which returns the same measures. The name suggested a summary of
 [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)'s

@@ -110,14 +110,14 @@ Kept for one release; see each page for its replacement.
 
 - [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
   [`summarize_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  : Calculate kinematic summary statistics
+  **\[deprecated\]** : Calculate kinematic summary statistics
 - [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
   [`summarize_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  : Calculate tortuosity summary statistics
+  **\[deprecated\]** : Calculate tortuosity summary statistics
 - [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
-  : Add a centroid to an anipoint
+  **\[deprecated\]** : Add a centroid to an anipoint
 - [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
-  : Compute the centroid of an identity level
+  **\[deprecated\]** : Compute the centroid of an identity level
 - [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
-  : Test whether a frame holds kinematics
+  **\[deprecated\]** : Test whether a frame holds kinematics
 

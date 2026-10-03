@@ -1,6 +1,8 @@
 # Compute the centroid of an identity level
 
-**Deprecated.** Use
+**\[deprecated\]**
+
+Use
 [`compute_point()`](https://animovement.dev/animetric/reference/compute_point.md),
 whose default `method = "centroid"` does the same.
 

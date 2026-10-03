@@ -1,6 +1,8 @@
 # Add a centroid to an anipoint
 
-**Deprecated.** Use
+**\[deprecated\]**
+
+Use
 [`add_point()`](https://animovement.dev/animetric/reference/add_point.md),
 whose default `method = "centroid"` does the same, and which can also
 derive a median, a confidence-weighted centroid or a point by a rule of
