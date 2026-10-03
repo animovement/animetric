@@ -14,6 +14,8 @@
 
 * `calculate_kinematics()`, `calculate_tortuosity()`, `summarise_kinematics()` and `summarise_tortuosity()` read the axes and the index from the frame's declared variables, so they work on frames whose columns are not called `x`, `y`, `z` and `time` (#81). They used to stop with "Column `x` not found". Velocity and acceleration components are named by axis role (`v_x`, `a_y`, ...) whatever the input columns are called. 1D frames get translational kinematics and tortuosity too; `calculate_kinematics()` used to return them unchanged. The 2D and 3D code paths are now one implementation, with turning angles from `anicore::angle_between()`. The only change in output is that 3D windowed tortuosity is `NA` at the first row where the window is incomplete, as it already was in 2D; the old 3D code filled the missing start of the window with the first position.
 
+* Angular measures are returned in the frame's declared `unit_angle` (#80). A frame declared in degrees used to get `heading`, `angular_velocity`, `angular_acceleration`, `angular_path_length` and the heading summaries in radians, still labelled as degrees, so anything that trusted the metadata was off by a factor of 180/pi. `calculate_kinematics()`, `summarise_kinematics()` and `summarise_tortuosity()` now report them in degrees for such frames, with no extra step. Radian frames are unchanged. The documentation now also says which way signed angles run: they follow the frame's own axes, counter-clockwise when `y` points up, as aniread leaves image data.
+
 * `calculate_nnd()` keeps the input's metadata, such as `sampling_rate`, and works on frames whose axis columns have custom names. It used to rebuild its result by re-detecting the columns, which dropped both.
 
 ## Changed

@@ -21,6 +21,15 @@ the input columns are called. For 2D data, rotational kinematics are added
 too (heading, angular velocity, angular speed, angular acceleration).
 Heading is the direction of travel, so it is \code{NA} where speed is zero.
 Rotational measures for 1D and 3D are not yet implemented.
+
+Angular measures are in the frame's declared \code{unit_angle}, radians or
+degrees; angular velocity and acceleration are per unit of the index.
+Signed angles (heading, angular velocity) follow the frame's own
+convention: heading counts from the \code{x} axis toward the \code{y} axis, which
+is counter-clockwise when \code{\link[anicore:get_angle_direction]{anicore::get_angle_direction()}} says so (\code{y}
+pointing up, as aniread leaves image data) and clockwise in a frame whose
+\code{y} points down. To change convention, change the coordinates, for
+example with \code{\link[anicore:reflect_axis]{anicore::reflect_axis()}}, and the angles follow.
 }
 \description{
 Computes translational and rotational kinematic measures from movement data.
