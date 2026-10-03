@@ -1,6 +1,12 @@
 # Calculate tortuosity summary statistics
 
-Calculate path length, displacement, and tortuosity metrics.
+**Deprecated.** Renamed to
+[`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md),
+which returns the same measures. The name suggested a summary of
+[`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)'s
+windowed output, which it never was: it measures the whole path. To
+summarise the windowed measures, use
+[`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md).
 
 ## Usage
 
@@ -14,43 +20,9 @@ summarize_tortuosity(data)
 
 - data:
 
-  A kinematics anipoint (output of
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md))
+  An anipoint.
 
 ## Value
 
-A summarised data frame with one row per group containing:
-
-- `total_path_length`: Total distance traveled
-
-- `total_turning`: Total turning of the direction of travel (2D and 3D)
-
-**Tortuosity metrics:**
-
-- `net_displacement`: Straight-line distance from start to end
-
-- `straightness`: Ratio of net displacement to path length (0-1)
-
-- `sinuosity`: Corrected sinuosity index (Benhamou 2004)
-
-- `emax`: Maximum expected displacement (dimensionless)
-
-## References
-
-Benhamou, S. (2004). How to reliably estimate the tortuosity of an
-animal's path. Journal of Theoretical Biology, 229(2), 209-220.
-
-## Examples
-
-``` r
-kin <- calculate_kinematics(
-  anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
-)
-summarise_tortuosity(calculate_tortuosity(kin))
-#> # A tibble: 1 × 10
-#>   individual keypoint session trial total_path_length total_turning
-#>        <int> <fct>      <int> <int>             <dbl>         <dbl>
-#> 1          1 centroid       1     1              31.4          27.0
-#> # ℹ 4 more variables: net_displacement <dbl>, straightness <dbl>,
-#> #   sinuosity <dbl>, emax <dbl>
-```
+As
+[`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md).

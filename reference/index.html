@@ -81,7 +81,7 @@
       </dl></div><div class="section level2">
       <h2 id="summarise">Summarise<a class="anchor" aria-label="anchor" href="#summarise"></a></h2>
 
-      <div class="section-desc"><p>These functions return a single value per group, or a full summary.</p></div>
+      <div class="section-desc"><p>One row per group: the distribution of per-row measures with <code><a href="../reference/summarise_aniframe.html">summarise_aniframe()</a></code>, or the geometry of each whole trajectory with <code><a href="../reference/summarise_path.html">summarise_path()</a></code>.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -93,21 +93,14 @@
           <code><a href="summarise_aniframe.html">summarise_aniframe()</a></code> <code><a href="summarise_aniframe.html">summarize_aniframe()</a></code>
 
         </dt>
-        <dd>Summarise an aniframe</dd>
+        <dd>Summarise the time series of an aniframe</dd>
 
         <dt>
 
-          <code><a href="summarise_kinematics.html">summarise_kinematics()</a></code> <code><a href="summarise_kinematics.html">summarize_kinematics()</a></code>
+          <code><a href="summarise_path.html">summarise_path()</a></code> <code><a href="summarise_path.html">summarize_path()</a></code>
 
         </dt>
-        <dd>Calculate kinematic summary statistics</dd>
-
-        <dt>
-
-          <code><a href="summarise_tortuosity.html">summarise_tortuosity()</a></code> <code><a href="summarise_tortuosity.html">summarize_tortuosity()</a></code>
-
-        </dt>
-        <dd>Calculate tortuosity summary statistics</dd>
+        <dd>Summarise each trajectory as a whole</dd>
 
         <dt>
 
@@ -174,9 +167,9 @@
         </dt>
         <dd>Compute nearest neighbour distances within one group</dd>
       </dl></div><div class="section level2">
-      <h2 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
+      <h2 id="deprecated">Deprecated<a class="anchor" aria-label="anchor" href="#deprecated"></a></h2>
 
-
+      <div class="section-desc"><p>Kept for one release; see each page for its replacement.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -185,10 +178,24 @@
 
       <dl><dt>
 
+          <code><a href="summarise_kinematics.html">summarise_kinematics()</a></code> <code><a href="summarise_kinematics.html">summarize_kinematics()</a></code>
+
+        </dt>
+        <dd>Calculate kinematic summary statistics</dd>
+
+        <dt>
+
+          <code><a href="summarise_tortuosity.html">summarise_tortuosity()</a></code> <code><a href="summarise_tortuosity.html">summarize_tortuosity()</a></code>
+
+        </dt>
+        <dd>Calculate tortuosity summary statistics</dd>
+
+        <dt>
+
           <code><a href="is_aniframe_kin.html">is_aniframe_kin()</a></code>
 
         </dt>
-        <dd>Check if object is an aniframe_kin</dd>
+        <dd>Test whether a frame holds kinematics</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

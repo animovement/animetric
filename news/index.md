@@ -102,6 +102,66 @@
 
 ### Changed
 
+- **The summaries are reorganised into two functions, by what they
+  summarise**
+  ([\#58](https://github.com/animovement/animetric/issues/58)). Sliding
+  windows stay in the `calculate_*()` functions; both summaries cover
+  each group’s whole time range.
+
+  - [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+    summarises the *distribution* of per-row measures, with one row per
+    group and any grouping allowed. It is now an S3 generic:
+    - **anipoints:** speed, acceleration, the turning measures, course
+      and elevation, the windowed `straightness`, `sinuosity` and
+      `emax`, `confidence`, and a declared `yaw` as `*_heading`.
+    - **anisegments:** `length`.
+    - **anijoints:** `angle`.
+
+    Angles (`course`, `yaw`, joint angles) get circular statistics,
+    reported in the frame’s `unit_angle`. `cols =` picks the measures.
+    It no longer needs
+    [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+    to have been run: it summarises whichever measures the frame has.
+  - [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
+    measures each trajectory as a whole: `total_path_length`,
+    `total_turning`, `net_displacement`, `straightness`, `sinuosity` and
+    `emax`. It works on any anipoint in any coordinate system, computing
+    what it needs from the positions, and needs one trajectory per
+    group.
+
+  `median_straightness` from
+  [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+  is the typical straightness over windows; `straightness` from
+  [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
+  is how direct the whole route was.
+
+- **Deprecated:**
+
+  - [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
+    →
+    [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md).
+  - [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+    →
+    [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md),
+    which returns the same columns.
+  - `summarise_aniframe(type = )` keeps its old combined output, with a
+    warning.
+
+  Each deprecated call returns exactly what it did before. They will be
+  removed after the next release.
+
+- **The `aniframe_kin` class is retired**
+  ([\#58](https://github.com/animovement/animetric/issues/58)).
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  returns a plain anipoint. The class only labelled a frame as having
+  been through
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
+  recorded nothing about its columns, and survived `select(-speed)`.
+  [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
+  is deprecated; check for the columns you need instead. Declaring
+  derived columns in anicore’s metadata is the planned replacement
+  (animovement/anicore#174).
+
 - [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
   gives turning measures for 3D data too
   ([\#63](https://github.com/animovement/animetric/issues/63)). Every 3D

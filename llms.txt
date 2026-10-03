@@ -67,17 +67,17 @@ return.
 
 ## Summarise
 
-These functions return a single value per group, or a full summary.
+One row per group: the distribution of per-row measures with
+[`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md),
+or the geometry of each whole trajectory with
+[`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md).
 
 - [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
   [`summarize_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
-  : Summarise an aniframe
-- [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  [`summarize_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  : Calculate kinematic summary statistics
-- [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  [`summarize_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  : Calculate tortuosity summary statistics
+  : Summarise the time series of an aniframe
+- [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
+  [`summarize_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
+  : Summarise each trajectory as a whole
 - [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
   : Add a centroid to an anipoint
 
@@ -102,8 +102,16 @@ functions.
 - [`compute_nnd()`](https://animovement.dev/animetric/reference/compute_nnd.md)
   : Compute nearest neighbour distances within one group
 
-## Helpers
+## Deprecated
 
+Kept for one release; see each page for its replacement.
+
+- [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
+  [`summarize_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
+  : Calculate kinematic summary statistics
+- [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  [`summarize_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  : Calculate tortuosity summary statistics
 - [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
-  : Check if object is an aniframe_kin
+  : Test whether a frame holds kinematics
 

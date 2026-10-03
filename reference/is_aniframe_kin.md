@@ -1,6 +1,11 @@
-# Check if object is an aniframe_kin
+# Test whether a frame holds kinematics
 
-Check if object is an aniframe_kin
+**Deprecated.** The `aniframe_kin` class is retired: it only labelled a
+frame as having been through
+[`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
+said nothing about which columns it held, and outlived them
+(`select(-speed)` kept it). Check for the columns you need instead, e.g.
+`"speed" %in% names(x)`.
 
 ## Usage
 
@@ -12,22 +17,8 @@ is_aniframe_kin(x)
 
 - x:
 
-  An object to test
+  An object.
 
 ## Value
 
-Logical: TRUE if x inherits from aniframe_kin
-
-## Examples
-
-``` r
-kin <- calculate_kinematics(
-  anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
-)
-is_aniframe_kin(kin)
-#> [1] TRUE
-
-# An anipoint without kinematics is not one
-is_aniframe_kin(anicore::example_anipoint(n_obs = 3))
-#> [1] FALSE
-```
+`TRUE` for an anipoint with a `speed` column.
