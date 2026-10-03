@@ -20,7 +20,7 @@ Depends:
     R (>= 4.1.0)
 Imports: 
     anicore (>= 0.8.0.9004),
-    anispace (>= 0.3.0.9005),
+    anispace (>= 0.3.0.9006),
     cli,
     data.table,
     dplyr (>= 1.1.0),

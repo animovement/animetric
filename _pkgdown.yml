@@ -27,6 +27,7 @@ reference:
   - summarise_aniframe
   - summarise_path
   - add_point
+  - add_orientation
 
 - title: "Compute"
   desc: These functions are cogs used in `calculate_` and `summarise_` functions.
