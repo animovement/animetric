@@ -7,13 +7,13 @@
 calculate_rotation_2d(data)
 }
 \arguments{
-\item{data}{An anipoint with v_x, v_y, and time columns}
+\item{data}{An anipoint with v_x, v_y, speed, and time columns}
 }
 \value{
 The anipoint with added rotational kinematic columns
 }
 \description{
 Computes heading angles and angular kinematics based on the velocity vector.
-Heading is calculated as atan2(v_y, v_x).
+Heading is calculated as atan2(v_y, v_x), and is \code{NA} where speed is zero.
 }
 \keyword{internal}

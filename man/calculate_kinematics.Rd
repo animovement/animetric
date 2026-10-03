@@ -16,6 +16,7 @@ An anipoint in the same coordinate system as the input, with added
 kinematic measures. For 2D data, includes translational kinematics
 (velocity components, speed, acceleration, path length) and rotational
 kinematics (heading, angular velocity, angular speed, angular acceleration).
+Heading is the direction of travel, so it is \code{NA} where speed is zero.
 For 3D data, includes translational kinematics only (rotational measures
 for 3D are not yet implemented).
 }

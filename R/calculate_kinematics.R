@@ -12,6 +12,7 @@
 #'   kinematic measures. For 2D data, includes translational kinematics
 #'   (velocity components, speed, acceleration, path length) and rotational
 #'   kinematics (heading, angular velocity, angular speed, angular acceleration).
+#'   Heading is the direction of travel, so it is `NA` where speed is zero.
 #'   For 3D data, includes translational kinematics only (rotational measures
 #'   for 3D are not yet implemented).
 #'
@@ -136,16 +137,20 @@ calculate_translation_3d <- function(data) {
 #' Calculate rotational kinematics in 2D
 #'
 #' Computes heading angles and angular kinematics based on the velocity vector.
-#' Heading is calculated as atan2(v_y, v_x).
+#' Heading is calculated as atan2(v_y, v_x), and is `NA` where speed is zero.
 #'
-#' @param data An anipoint with v_x, v_y, and time columns
+#' @param data An anipoint with v_x, v_y, speed, and time columns
 #' @return The anipoint with added rotational kinematic columns
 #' @keywords internal
 calculate_rotation_2d <- function(data) {
   data |>
     dplyr::mutate(
-      heading = atan2(.data$v_y, .data$v_x),
-      heading = dplyr::if_else(.data$heading == pi, 0, .data$heading),
+      # Direction of travel is undefined when the animal is not moving
+      heading = dplyr::if_else(
+        .data$speed == 0,
+        NA_real_,
+        atan2(.data$v_y, .data$v_x)
+      ),
       heading_unwrapped = anicore::unwrap_angle(.data$heading),
       angular_path_length = cumsum_na(abs(diff(c(
         0,
