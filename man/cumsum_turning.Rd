@@ -2,19 +2,20 @@
 % Please edit documentation in R/utils.R
 \name{cumsum_turning}
 \alias{cumsum_turning}
-\title{Cumulative absolute turning of an unwrapped angle}
+\title{Cumulative absolute turning of an angle series}
 \usage{
 cumsum_turning(x)
 }
 \arguments{
-\item{x}{Numeric vector of unwrapped angles.}
+\item{x}{Numeric vector of angles, in radians. They need not be unwrapped.}
 }
 \value{
 Numeric vector of the same length as \code{x}.
 }
 \description{
-Starts at 0 and accumulates the absolute change between consecutive
-non-\code{NA} angles, so turning across a gap is counted once, where the angle
-is next defined. Rows with an \code{NA} angle carry the running total.
+Starts at 0 and accumulates the absolute turn between consecutive
+non-\code{NA} angles, taken the shorter way round the circle, so turning across
+a gap is counted once, where the angle is next defined. Rows with an \code{NA}
+angle carry the running total.
 }
 \keyword{internal}
