@@ -2,7 +2,7 @@
 #
 # - summarise_tortuosity returns correct columns for 2D data
 # - summarise_tortuosity returns correct columns for 3D data
-# - summarise_tortuosity includes cumulative_turning only for 2D
+# - summarise_tortuosity includes total_turning for 2D and 3D
 # - summarise_tortuosity preserves grouping structure
 # - summarise_tortuosity validates input with .check = TRUE
 # - summarise_tortuosity_2d computes total_path_length correctly
@@ -112,12 +112,11 @@ test_that("summarise_tortuosity returns correct columns for 3D data", {
     "net_displacement",
     "straightness",
     "sinuosity",
-    "emax"
+    "emax",
+    "total_turning"
   )
-  excluded_cols <- "total_turning"
 
   expect_true(all(expected_cols %in% names(result)))
-  expect_false(any(excluded_cols %in% names(result)))
   expect_equal(nrow(result), 1L)
 })
 
@@ -309,7 +308,7 @@ test_that("summarise_tortuosity works with plain 3D aniframe", {
   )
 
   expect_true(all(expected_cols %in% names(result)))
-  expect_false("total_turning" %in% names(result))
+  expect_true("total_turning" %in% names(result))
   expect_equal(nrow(result), 1L)
 })
 

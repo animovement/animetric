@@ -172,26 +172,42 @@ test_that("course is NA where the animal is stationary", {
   expect_equal(max(result$cumulative_turning), 0)
 })
 
-test_that("turning_rate matches differentiate of unwrapped course", {
-  # Create circular motion
-  t <- seq(0, 2 * pi, length.out = 50)
-  data <- data.frame(
-    time = t,
-    x = cos(t),
-    y = sin(t)
-  ) |>
+test_that("turning_rate is the signed rate of change of the course", {
+  # A unit circle at unit angular speed turns at 1 rad per unit time:
+  # positive anticlockwise, negative clockwise
+  t <- seq(0, 2 * pi, length.out = 200)
+  interior <- 3:198
+  anticlockwise <- data.frame(time = t, x = cos(t), y = sin(t)) |>
+    anicore::as_anipoint()
+  clockwise <- data.frame(time = t, x = cos(t), y = -sin(t)) |>
+    anicore::as_anipoint()
+
+  result <- calculate_kinematics(anticlockwise)
+  expect_equal(result$turning_rate[interior], rep(1, 196), tolerance = 1e-3)
+  expect_equal(
+    calculate_kinematics(clockwise)$turning_rate[interior],
+    rep(-1, 196),
+    tolerance = 1e-3
+  )
+
+  # It is the derivative of the unwrapped course
+  expect_equal(
+    result$turning_rate[interior],
+    differentiate(result$course_unwrapped, t)[interior],
+    tolerance = 1e-3
+  )
+})
+
+test_that("turning_rate scales with curvature and speed", {
+  # Radius 2 at speed 4: curvature 1/2, so 2 rad per unit time
+  t <- seq(0, pi, length.out = 200)
+  data <- data.frame(time = t, x = 2 * cos(2 * t), y = 2 * sin(2 * t)) |>
     anicore::as_anipoint()
 
   result <- calculate_kinematics(data)
 
-  # Angular velocity should match differentiate(course_unwrapped)
-  expected_ang_vel <- differentiate(
-    result$course_unwrapped,
-    data$time,
-    order = 1
-  )
-
-  expect_equal(result$turning_rate, expected_ang_vel)
+  expect_equal(result$turning_rate[3:198], rep(2, 196), tolerance = 1e-3)
+  expect_equal(result$speed[3:198], rep(4, 196), tolerance = 1e-3)
 })
 
 test_that("turning_speed is absolute value of turning_rate", {
@@ -208,7 +224,7 @@ test_that("turning_speed is absolute value of turning_rate", {
   expect_equal(result$turning_speed, abs(result$turning_rate))
 })
 
-test_that("turning_acceleration matches differentiate of unwrapped course", {
+test_that("turning_acceleration is the derivative of the turning rate", {
   t <- seq(0, 2 * pi, length.out = 50)
   data <- data.frame(
     time = t,
@@ -219,14 +235,10 @@ test_that("turning_acceleration matches differentiate of unwrapped course", {
 
   result <- calculate_kinematics(data)
 
-  # Angular acceleration should match second derivative of course
-  expected_ang_acc <- differentiate(
-    result$course_unwrapped,
-    data$time,
-    order = 2
+  expect_equal(
+    result$turning_acceleration,
+    differentiate(result$turning_rate, data$time)
   )
-
-  expect_equal(result$turning_acceleration, expected_ang_acc)
 })
 
 test_that("stationary object has zero kinematics", {

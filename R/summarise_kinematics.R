@@ -11,8 +11,10 @@
 #'   tendency and dispersion measures (prefixed with median_/mad_ or mean_/sd_)
 #'
 #'   - Speed, acceleration
-#'   - Turning speed, rate, acceleration (2D only)
-#'   - Course (2D only, using circular statistics)
+#'   - Turning speed (2D and 3D)
+#'   - Turning rate and acceleration, and course (circular statistics): 2D,
+#'     and 3D when [calculate_kinematics()] was given a `vertical`
+#'   - Course elevation (3D with a `vertical`)
 #'
 #'   Angular summaries are in the frame's declared `unit_angle`.
 #'
@@ -36,10 +38,15 @@ summarise_kinematics <- function(
   }
   measures <- match.arg(measures)
 
-  # Rotational measures are only present where they are defined (2D)
+  # Rotational measures are only present where they are defined
   linear_cols <- c("speed", "acceleration")
   angular_cols <- intersect(
-    c("turning_speed", "turning_rate", "turning_acceleration"),
+    c(
+      "turning_speed",
+      "turning_rate",
+      "turning_acceleration",
+      "course_elevation"
+    ),
     names(data)
   )
   has_course <- "course" %in% names(data)

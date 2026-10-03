@@ -4,37 +4,59 @@
 \alias{calculate_kinematics}
 \title{Calculate kinematic measures from trajectory data}
 \usage{
-calculate_kinematics(data)
+calculate_kinematics(data, vertical = NULL)
 }
 \arguments{
 \item{data}{An anipoint with position coordinates (x, x/y or x/y/z for
 Cartesian; rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for
 spherical) and an index. The axes and the index are read from the frame's
 declared variables, so the columns can have any name.}
+
+\item{vertical}{For 3D data, the axis that points up in the world, against
+gravity: one of \code{"x"}, \code{"y"} or \code{"z"}, or with a minus sign (\code{"-y"}) when
+that axis points down. It defines the horizontal plane that course is
+measured in. The frame's \code{axis_directions} cannot supply it, since they
+are relative to the camera: in a recording filmed from above, the axis
+pointing at the camera is the vertical one. A metadata field for it is
+proposed in animovement/anicore#172. \code{NULL} (the default) gives
+only the measures that need no vertical. Ignored for 1D and 2D data,
+where course is measured in the plane of the data.}
 }
 \value{
 An anipoint in the same coordinate system as the input, with added
 kinematic measures. Translational kinematics (velocity and acceleration
 components, speed, acceleration, path length) are computed for 1D, 2D and
 3D data, with components named by axis role (\code{v_x}, \code{v_y}, ...) whatever
-the input columns are called. For 2D data, measures of the path's
-direction are added too:
+the input columns are called. For 2D and 3D data, measures of how the
+direction of travel changes are added too:
 \describe{
-\item{\code{course}}{Direction of travel, \code{atan2(v_y, v_x)}. It is \code{NA}
-where speed is zero, since a stationary animal has no direction of
-travel. \code{course_unwrapped} is the same, without jumps at +/-pi.}
-\item{\code{turning_rate}}{Rate of change of the course: signed curvature
-times speed.}
-\item{\code{turning_speed}}{Absolute turning rate.}
+\item{\code{turning_speed}}{How fast the direction of travel turns, in any
+direction: curvature times speed. In 2D it is the size of the turning
+rate. In 3D it also counts climbing and diving, and is the angle
+between the velocities either side of each row, over the time between
+them.}
+\item{\code{cumulative_turning}}{Turning accumulated since the first row:
+the angle between successive velocities, summed. A turn made while
+stationary is counted when the animal moves off.}
+}
+In 2D, and in 3D when \code{vertical} is given, the measures that need a
+direction to count from:
+\describe{
+\item{\code{course}}{Direction of travel in the horizontal plane (in 2D, the
+plane of the data): \code{atan2(v_y, v_x)} in 2D. It is \code{NA} where there is
+no horizontal movement, since the direction is then undefined.
+\code{course_unwrapped} is the same, without jumps at +/-pi.}
+\item{\code{course_elevation}}{3D only: the angle of travel above the
+horizontal plane, from -pi/2 (straight down) to pi/2 (straight up).}
+\item{\code{turning_rate}}{Signed rate of change of the course, the
+derivative of \code{course_unwrapped}. In 3D it counts horizontal turning
+only.}
 \item{\code{turning_acceleration}}{Rate of change of the turning rate.}
-\item{\code{cumulative_turning}}{Absolute turning accumulated since the
-first row.}
 }
 These describe the path, not the body: course is where the animal is
 going, not where it is facing, and the two differ for any animal that
 does not move nose-first. The names heading and angular velocity are
-kept for body orientation. Measures of the path's direction for 1D and 3D
-are not yet implemented.
+kept for body orientation. 1D data gets translational measures only.
 
 Angular measures are in the frame's declared \code{unit_angle}, radians or
 degrees; turning rate and acceleration are per unit of the index.
@@ -43,7 +65,10 @@ convention: course counts from the \code{x} axis toward the \code{y} axis, which
 is counter-clockwise when \code{\link[anicore:get_angle_direction]{anicore::get_angle_direction()}} says so (\code{y}
 pointing up, as aniread leaves image data) and clockwise in a frame whose
 \code{y} points down. To change convention, change the coordinates, for
-example with \code{\link[anicore:reflect_axis]{anicore::reflect_axis()}}, and the angles follow.
+example with \code{\link[anicore:reflect_axis]{anicore::reflect_axis()}}, and the angles follow. In 3D,
+course counts about \code{vertical} by the right-hand rule, from the next
+axis in the cycle x, y, z: from \code{x} toward \code{y} when \code{z} is vertical, from
+\code{z} toward \code{x} when \code{y} is, from \code{y} toward \code{z} when \code{x} is.
 }
 \description{
 Computes translational and rotational kinematic measures from movement data.
@@ -60,8 +85,10 @@ The function preserves the original coordinate system by:
 }
 
 All kinematic calculations are performed using numerical differentiation
-via the \code{differentiate} function. Angles are unwrapped to handle
-discontinuities at ±π.
+via the \code{differentiate} function. Course is unwrapped before it is
+differentiated, so the turning rate has no jump at +/-pi. The turning
+speed in 3D needs no angle to unwrap, and has no singularity when travel
+is vertical.
 }
 \examples{
 # 2D Cartesian data
@@ -72,4 +99,14 @@ kinematics_2d <- calculate_kinematics(traj_2d)
 # Polar data (automatically converted and converted back)
 traj_polar <- anispace::map_to_polar(traj_2d)
 kinematics_polar <- calculate_kinematics(traj_polar)
+
+# 3D data with z pointing up: course and elevation of travel
+traj_3d <- data.frame(
+  time = 0:10,
+  x = cos(0:10 / 2),
+  y = sin(0:10 / 2),
+  z = 0:10 / 10
+) |>
+  anicore::as_anipoint()
+kinematics_3d <- calculate_kinematics(traj_3d, vertical = "z")
 }

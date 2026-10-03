@@ -20,6 +20,8 @@
 
 ## Changed
 
+* `calculate_kinematics()` gives turning measures for 3D data too (#63). Every 3D frame gets `turning_speed` (how fast the direction of travel turns, in any direction) and `cumulative_turning`, and `calculate_kinematics(data, vertical = "z")` adds `course` and `course_unwrapped` in the horizontal plane, `course_elevation` (the angle of travel above it), and the signed horizontal `turning_rate` and `turning_acceleration`. The new `vertical` argument names the axis that points up in the world, with a minus sign when it points down (`"-y"`); the frame's `axis_directions` cannot supply it, since they are relative to the camera (animovement/anicore#172 proposes declaring it). Course counts about the vertical by the right-hand rule. The 3D turning speed is the angle between the velocities either side of each row over the time between them, so it has no wrap at +/-pi and no singularity when travel is vertical; 2D results are unchanged. `summarise_kinematics()` and `summarise_tortuosity()` summarise the new columns, and `total_turning` is now reported for 3D.
+
 * **Breaking:** the velocity-derived angular columns are renamed to say they describe the path, not the body (#70). Course is the direction of travel and turning rate is how fast it changes, while heading and angular velocity are where the animal faces and how fast that turns. They differ for any animal that does not move nose-first, and the orientation names are kept free for body orientation once anicore records it (animovement/anicore#46).
 
   | Old | New |

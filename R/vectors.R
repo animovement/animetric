@@ -48,3 +48,50 @@ cos_turning <- function(velocity) {
   previous <- rbind(NA_real_, v[-nrow(v), , drop = FALSE])
   cos(anicore::angle_between(previous, v))
 }
+
+#' Pad vectors given by their components to three dimensions
+#'
+#' @param components A list or data frame of numeric vectors, one per axis,
+#'   two or three of them.
+#' @return A numeric matrix with three columns, missing axes filled with 0.
+#' @keywords internal
+as_3d <- function(components) {
+  m <- as.matrix(as.data.frame(components))
+  cbind(m, matrix(0, nrow(m), 3L - ncol(m)))
+}
+
+#' Row-wise cross product of two three-column matrices
+#'
+#' @param u,v Numeric matrices with three columns.
+#' @return A numeric matrix with three columns.
+#' @keywords internal
+cross_rows <- function(u, v) {
+  cbind(
+    u[, 2] * v[, 3] - u[, 3] * v[, 2],
+    u[, 3] * v[, 1] - u[, 1] * v[, 3],
+    u[, 1] * v[, 2] - u[, 2] * v[, 1]
+  )
+}
+
+#' Cumulative turning of a sequence of velocity vectors
+#'
+#' Starts at 0 and accumulates the angle between consecutive velocities where
+#' the animal is moving, so turning across a pause is counted once, when it
+#' moves off again. Stationary or missing rows carry the running total.
+#'
+#' @param v Numeric matrix of velocities, one row per observation.
+#' @param moving Logical vector, whether each row's velocity is defined and
+#'   non-zero.
+#' @return Numeric vector, in radians.
+#' @keywords internal
+cumulative_turning <- function(v, moving) {
+  steps <- numeric(nrow(v))
+  idx <- which(moving)
+  if (length(idx) > 1L) {
+    steps[idx[-1]] <- anicore::angle_between(
+      v[idx[-length(idx)], , drop = FALSE],
+      v[idx[-1], , drop = FALSE]
+    )
+  }
+  cumsum(steps)
+}
