@@ -329,3 +329,17 @@ test_that("summarise_tortuosity works with grouped plain 3D aniframe", {
   expect_equal(nrow(result), 2L)
   expect_true("individual" %in% names(result))
 })
+
+test_that("summarise_tortuosity() errors for kinematics in polar coordinates", {
+  polar <- data.frame(
+    time = 1:10,
+    x = cumsum(1:10),
+    y = sin(1:10)
+  ) |>
+    anicore::as_anipoint() |>
+    anispace::map_to_polar() |>
+    calculate_kinematics()
+
+  expect_true(is_aniframe_kin(polar))
+  expect_error(summarise_tortuosity(polar), "Cartesian")
+})

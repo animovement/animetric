@@ -446,3 +446,17 @@ test_that("the turning angle is the same in 2D and 3D for a planar path", {
     )
   )
 })
+
+test_that("calculate_tortuosity() errors for non-Cartesian data", {
+  polar <- anispace::map_to_polar(make_circular_path_2d())
+
+  expect_error(
+    calculate_tortuosity(polar, window_width = 5L),
+    "Cartesian"
+  )
+})
+
+test_that("the turning angle is NA for fewer than two velocities", {
+  expect_equal(cos_turning(data.frame(v_x = 1, v_y = 0)), NA_real_)
+  expect_equal(cos_turning(data.frame(v_x = numeric(0))), numeric(0))
+})

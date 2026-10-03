@@ -166,3 +166,18 @@ test_that("summaries work on 1D data", {
   expect_equal(tort_summary$total_path_length, 9)
   expect_equal(tort_summary$net_displacement, 1)
 })
+
+test_that("calculate_kinematics() returns cylindrical input in cylindrical coordinates", {
+  cartesian <- data.frame(
+    time = 0:9,
+    x = cumsum(1:10),
+    y = sin(0:9),
+    z = 0:9 / 2
+  ) |>
+    anicore::as_anipoint()
+
+  result <- calculate_kinematics(anispace::map_to_cylindrical(cartesian))
+
+  expect_true(anicore::is_cylindrical(result))
+  expect_equal(result$speed, calculate_kinematics(cartesian)$speed)
+})
