@@ -133,9 +133,43 @@ test_that("heading is calculated correctly from velocity", {
 
   # For 45-degree motion, heading should be pi/4
   expected_heading <- atan2(result$v_y, result$v_x)
-  expected_heading <- ifelse(expected_heading == pi, 0, expected_heading)
 
   expect_equal(result$heading, expected_heading)
+})
+
+test_that("heading along -x is pi, not 0", {
+  data <- data.frame(
+    time = 0:5,
+    x = 5:0,
+    y = rep(0, 6)
+  ) |>
+    anicore::as_anipoint()
+
+  result <- calculate_kinematics_2d(data)
+
+  expect_equal(result$heading, rep(pi, 6))
+  expect_equal(result$angular_velocity, rep(0, 6))
+  expect_equal(result$angular_path_length, rep(0, 6))
+})
+
+test_that("heading is NA where the animal is stationary", {
+  # Moves along -x, pauses at x = 2, then moves on along -x
+  data <- data.frame(
+    time = 0:8,
+    x = c(5, 4, 3, 2, 2, 2, 1, 0, -1),
+    y = rep(0, 9)
+  ) |>
+    anicore::as_anipoint()
+
+  result <- calculate_kinematics_2d(data)
+
+  stationary <- result$speed == 0
+  expect_true(any(stationary))
+  expect_true(all(is.na(result$heading[stationary])))
+  expect_equal(result$heading[!stationary], rep(pi, sum(!stationary)))
+
+  # The pause must not register as turning
+  expect_equal(max(result$angular_path_length), 0)
 })
 
 test_that("angular_velocity matches differentiate of unwrapped heading", {
