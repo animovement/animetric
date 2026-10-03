@@ -33,6 +33,12 @@
 
 ### Changed
 
+- data.table is now a hard dependency
+  ([\#27](https://github.com/animovement/animetric/issues/27)).
+  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
+  cannot work without it, so the first call on a fresh install used to
+  stop and offer to install it.
+
 - Works with anicore’s `anipoint` class and rebuilt accessor API
   (animovement/anicore#154).
   [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
