@@ -14,6 +14,8 @@
 #'   - Angular speed, velocity, acceleration (2D only)
 #'   - Heading (2D only, using circular statistics)
 #'
+#'   Angular summaries are in the frame's declared `unit_angle`.
+#'
 #' @examples
 #' kin <- calculate_kinematics(
 #'   anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
@@ -42,6 +44,12 @@ summarise_kinematics <- function(
   )
   has_heading <- "heading" %in% names(data)
 
+  # Circular statistics work in radians; report them in the frame's unit
+  unit <- angle_unit(data)
+  circular <- function(stat) {
+    rlang::quo(rad_to_unit(stat(unit_to_rad(.data$heading, unit)), unit))
+  }
+
   if (measures == "median_mad") {
     stats <- list(
       median = ~ stats::median(.x, na.rm = TRUE),
@@ -49,8 +57,8 @@ summarise_kinematics <- function(
     )
     heading <- if (has_heading) {
       list(
-        median_heading = rlang::quo(anicore::circ_median(.data$heading)),
-        mad_heading = rlang::quo(anicore::circ_mad(.data$heading))
+        median_heading = circular(anicore::circ_median),
+        mad_heading = circular(anicore::circ_mad)
       )
     }
   } else {
@@ -60,8 +68,8 @@ summarise_kinematics <- function(
     )
     heading <- if (has_heading) {
       list(
-        mean_heading = rlang::quo(anicore::circ_mean(.data$heading)),
-        sd_heading = rlang::quo(anicore::circ_sd(.data$heading))
+        mean_heading = circular(anicore::circ_mean),
+        sd_heading = circular(anicore::circ_sd)
       )
     }
   }

@@ -322,3 +322,81 @@ test_that("angular_path_length is 0 for a stationary track", {
 
   expect_equal(result$angular_path_length, rep(0, 6))
 })
+
+# Angular units and sign convention (#80) ------------------------------------
+
+test_that("angular measures are returned in the frame's unit_angle", {
+  t <- seq(0, 2 * pi, length.out = 40)
+  d <- data.frame(time = t, x = cos(t) + t / 4, y = sin(t))
+  rad <- anicore::as_anipoint(d)
+  deg <- anicore::set_metadata(rad, unit_angle = "deg")
+
+  in_rad <- calculate_kinematics(rad)
+  in_deg <- calculate_kinematics(deg)
+
+  angular_cols <- c(
+    "heading",
+    "heading_unwrapped",
+    "angular_velocity",
+    "angular_speed",
+    "angular_acceleration",
+    "angular_path_length"
+  )
+  for (col in angular_cols) {
+    expect_equal(in_deg[[col]], in_rad[[col]] * 180 / pi, label = col)
+  }
+  # Translational measures are untouched
+  expect_equal(in_deg$speed, in_rad$speed)
+  expect_equal(as.character(anicore::get_metadata(in_deg, "unit_angle")), "deg")
+})
+
+test_that("heading summaries are in the frame's unit_angle", {
+  t <- seq(0, 2 * pi, length.out = 40)
+  d <- data.frame(time = t, x = cos(t) + t / 4, y = sin(t))
+  rad <- calculate_kinematics(anicore::as_anipoint(d))
+  deg <- calculate_kinematics(
+    anicore::set_metadata(anicore::as_anipoint(d), unit_angle = "deg")
+  )
+
+  for (measures in c("median_mad", "mean_sd")) {
+    s_rad <- summarise_kinematics(rad, measures = measures)
+    s_deg <- summarise_kinematics(deg, measures = measures)
+    angular <- grep("heading|angular", names(s_rad), value = TRUE)
+    expect_length(angular, 8)
+    for (col in angular) {
+      expect_equal(s_deg[[col]], s_rad[[col]] * 180 / pi, label = col)
+    }
+  }
+
+  expect_equal(
+    summarise_tortuosity(deg)$total_angular_path_length,
+    summarise_tortuosity(rad)$total_angular_path_length * 180 / pi
+  )
+})
+
+test_that("signed angles follow the frame's own axes", {
+  # Moving +x then turning toward +y. In a y-down frame that is clockwise on
+  # screen, and the angles say so in the frame's own terms: they match the
+  # coordinates, not a fixed physical sense.
+  d <- data.frame(
+    time = 0:6,
+    x = c(0, 1, 2, 3, 3, 3, 3),
+    y = c(0, 0, 0, 0, 1, 2, 3)
+  )
+  up <- anicore::set_axis_directions(
+    anicore::as_anipoint(d),
+    c(x = "right", y = "up")
+  )
+  down <- anicore::set_axis_directions(
+    anicore::as_anipoint(d),
+    c(x = "right", y = "down")
+  )
+
+  expect_equal(anicore::get_angle_direction(up), "counter_clockwise")
+  expect_equal(anicore::get_angle_direction(down), "clockwise")
+  expect_equal(
+    calculate_kinematics(down)$heading,
+    calculate_kinematics(up)$heading
+  )
+  expect_equal(dplyr::last(calculate_kinematics(up)$heading), pi / 2)
+})

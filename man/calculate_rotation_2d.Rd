@@ -15,5 +15,7 @@ The anipoint with added rotational kinematic columns
 \description{
 Computes heading angles and angular kinematics based on the velocity vector.
 Heading is calculated as atan2(v_y, v_x), and is \code{NA} where speed is zero.
+The angles are computed in radians and returned in the frame's
+\code{unit_angle}.
 }
 \keyword{internal}

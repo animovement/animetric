@@ -34,6 +34,8 @@ tendency and dispersion measures (prefixed with median_/mad_ or mean_/sd_)
 \item Angular speed, velocity, acceleration (2D only)
 \item Heading (2D only, using circular statistics)
 }
+
+Angular summaries are in the frame's declared \code{unit_angle}.
 }
 \description{
 Calculate central tendency and dispersion for translational and rotational

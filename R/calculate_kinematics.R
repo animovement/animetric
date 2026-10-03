@@ -18,6 +18,15 @@
 #'   Heading is the direction of travel, so it is `NA` where speed is zero.
 #'   Rotational measures for 1D and 3D are not yet implemented.
 #'
+#'   Angular measures are in the frame's declared `unit_angle`, radians or
+#'   degrees; angular velocity and acceleration are per unit of the index.
+#'   Signed angles (heading, angular velocity) follow the frame's own
+#'   convention: heading counts from the `x` axis toward the `y` axis, which
+#'   is counter-clockwise when [anicore::get_angle_direction()] says so (`y`
+#'   pointing up, as aniread leaves image data) and clockwise in a frame whose
+#'   `y` points down. To change convention, change the coordinates, for
+#'   example with [anicore::reflect_axis()], and the angles follow.
+#'
 #' @details
 #' The function preserves the original coordinate system by:
 #' \enumerate{
@@ -124,12 +133,24 @@ calculate_translation <- function(data) {
 #'
 #' Computes heading angles and angular kinematics based on the velocity vector.
 #' Heading is calculated as atan2(v_y, v_x), and is `NA` where speed is zero.
+#' The angles are computed in radians and returned in the frame's
+#' `unit_angle`.
 #'
 #' @param data An anipoint with v_x, v_y and speed columns, and an index
 #' @return The anipoint with added rotational kinematic columns
 #' @keywords internal
 calculate_rotation_2d <- function(data) {
   index <- anicore::get_index(data)
+  unit <- angle_unit(data)
+  angular_cols <- c(
+    "heading",
+    "heading_unwrapped",
+    "angular_path_length",
+    "angular_velocity",
+    "angular_speed",
+    "angular_acceleration"
+  )
+
   data |>
     dplyr::mutate(
       # Direction of travel is undefined when the animal is not moving
@@ -152,6 +173,10 @@ calculate_rotation_2d <- function(data) {
         order = 2
       )
     ) |>
+    dplyr::mutate(dplyr::across(
+      dplyr::all_of(angular_cols),
+      \(x) rad_to_unit(x, unit)
+    )) |>
     dplyr::relocate("angular_speed", .before = "angular_path_length") |>
     dplyr::relocate("angular_velocity", .before = "angular_path_length") |>
     dplyr::relocate("angular_acceleration", .before = "angular_path_length")
