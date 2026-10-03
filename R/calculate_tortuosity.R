@@ -82,9 +82,6 @@ calculate_tortuosity <- function(data, window_width = 11L) {
 
 #' @keywords internal
 calculate_tortuosity_2d <- function(data, window_width = 11L) {
-  # Check that data.table is installed
-  dt_check()
-
   # Validate that it is an anipoint
   anicore::ensure_is_anipoint(data)
 
@@ -179,9 +176,6 @@ calculate_tortuosity_2d <- function(data, window_width = 11L) {
 
 #' @keywords internal
 calculate_tortuosity_3d <- function(data, window_width = 11L) {
-  # Check that data.table is installed
-  dt_check()
-
   # Validate that it is an anipoint
   anicore::ensure_is_anipoint(data)
 
