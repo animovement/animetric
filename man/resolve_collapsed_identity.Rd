@@ -9,7 +9,8 @@ resolve_collapsed_identity(data, across = NULL, call = rlang::caller_env())
 \arguments{
 \item{data}{An anipoint.}
 
-\item{across}{Identity variables to collapse, or \code{NULL} for the finest one.}
+\item{across}{Identity variables to collapse, or \code{NULL} for the frame's only
+one.}
 }
 \value{
 Character vector naming the columns to collapse.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/identity_roles.R
 \name{retained_grouping}
 \alias{retained_grouping}
-\title{The columns a summary should keep, having collapsed the finest identity}
+\title{The columns a summary should keep, having collapsed some identity}
 \usage{
 retained_grouping(data, collapsed)
 }

@@ -6,7 +6,7 @@
 # what detection emits, not a hierarchy a frame asserts, and identity
 # variables need not nest at all (animovement/anicore#141).
 
-#' The columns a summary should keep, having collapsed the finest identity
+#' The columns a summary should keep, having collapsed some identity
 #'
 #' Everything the frame groups by except the level being summarised over,
 #' plus the index -- one row per remaining entity per position.
@@ -36,7 +36,8 @@ retained_grouping <- function(data, collapsed) {
 #' A frame declaring exactly one has nothing to be ambiguous about.
 #'
 #' @param data An anipoint.
-#' @param across Identity variables to collapse, or `NULL` for the finest one.
+#' @param across Identity variables to collapse, or `NULL` for the frame's only
+#'   one.
 #'
 #' @return Character vector naming the columns to collapse.
 #' @keywords internal
