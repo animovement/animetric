@@ -19,11 +19,13 @@ reference:
   - calculate_nnd
 
 - title: "Summarise"
-  desc: These functions return a single value per group, or a full summary.
+  desc: >
+    One row per group: the distribution of per-row measures with
+    `summarise_aniframe()`, or the geometry of each whole trajectory with
+    `summarise_path()`.
   contents:
   - summarise_aniframe
-  - summarise_kinematics
-  - summarise_tortuosity
+  - summarise_path
   - add_centroid
 
 - title: "Compute"
@@ -37,6 +39,9 @@ reference:
   - compute_centroid
   - compute_nnd
 
-- title: "Helpers"
+- title: "Deprecated"
+  desc: Kept for one release; see each page for its replacement.
   contents:
+  - summarise_kinematics
+  - summarise_tortuosity
   - is_aniframe_kin

@@ -3,35 +3,93 @@
 \name{summarise_aniframe}
 \alias{summarise_aniframe}
 \alias{summarize_aniframe}
-\title{Summarise an aniframe}
+\alias{summarise_aniframe.anipoint}
+\alias{summarise_aniframe.anisegment}
+\alias{summarise_aniframe.anijoint}
+\alias{summarise_aniframe.anievent}
+\alias{summarise_aniframe.default}
+\title{Summarise the time series of an aniframe}
 \usage{
-summarise_aniframe(
+summarise_aniframe(data, ...)
+
+summarize_aniframe(data, ...)
+
+\method{summarise_aniframe}{anipoint}(
   data,
-  type = c("kinematics", "tortuosity"),
-  measures = c("median_mad", "mean_sd")
+  cols = NULL,
+  measures = c("median_mad", "mean_sd"),
+  ...
 )
 
-summarize_aniframe(
+\method{summarise_aniframe}{anisegment}(
   data,
-  type = c("kinematics", "tortuosity"),
-  measures = c("median_mad", "mean_sd")
+  cols = NULL,
+  measures = c("median_mad", "mean_sd"),
+  ...
 )
+
+\method{summarise_aniframe}{anijoint}(
+  data,
+  cols = NULL,
+  measures = c("median_mad", "mean_sd"),
+  ...
+)
+
+\method{summarise_aniframe}{anievent}(data, ...)
+
+\method{summarise_aniframe}{default}(data, ...)
 }
 \arguments{
-\item{data}{A kinematics anipoint (output of \code{calculate_kinematics()})}
+\item{data}{An anipoint, anisegment or anijoint.}
 
-\item{type}{Character vector of summary types. Options are \code{"kinematics"}
-and \code{"tortuosity"}. Default is both.}
+\item{...}{Not used. Passing \code{type} (the \code{"kinematics"} and \code{"tortuosity"}
+summaries this function used to combine) is deprecated: use
+\code{summarise_aniframe()} and \code{\link[=summarise_path]{summarise_path()}} instead.}
 
-\item{measures}{Measures of central tendency and dispersion for kinematics.
-Options are \code{"median_mad"} (default) and \code{"mean_sd"}.}
+\item{cols}{Character vector of columns to summarise, in place of the
+class's default set. A known angle among them is still summarised with
+circular statistics.}
+
+\item{measures}{Measures of central tendency and dispersion:
+\code{"median_mad"} (default) or \code{"mean_sd"}.}
 }
 \value{
-A summarised data frame with one row per group.
+A data frame with one row per group: the grouping columns, then
+\verb{<measure>_<column>} for each measure, e.g. \code{median_speed} and
+\code{mad_speed}.
 }
 \description{
-Calculate summary statistics for aniframe data by dispatching to specialised
-summary functions.
+Summarises the per-row measures of a frame over each group: a measure of
+central tendency and of dispersion for each, one row per group. It
+describes the measures the frame already carries — the output of
+\code{\link[=calculate_kinematics]{calculate_kinematics()}}, \code{\link[=calculate_tortuosity]{calculate_tortuosity()}} or your own \code{mutate()} —
+and computes no new ones. Any grouping is allowed, since a median of rows
+means the same whether the rows are one keypoint's or a whole animal's.
+
+Properties of a trajectory as a whole, such as how far it ended up from
+where it started, are not a statistic of any column; see
+\code{\link[=summarise_path]{summarise_path()}}.
+
+Each frame class has its own default set of measures:
+\describe{
+\item{anipoint}{\code{speed}, \code{acceleration}, \code{turning_speed}, \code{turning_rate},
+\code{turning_acceleration}, \code{course_elevation}, the windowed
+\code{straightness}, \code{sinuosity} and \code{emax}, and \code{confidence}; circular
+statistics for \code{course} and for a declared \code{yaw}, reported as
+\verb{*_heading}.}
+\item{anisegment}{\code{length} and \code{confidence}.}
+\item{anijoint}{\code{angle}, with circular statistics, and \code{confidence}.}
+}
+Only the measures present are summarised. Velocity and acceleration
+components, \code{course_unwrapped}, and the running totals \code{path_length} and
+\code{cumulative_turning} are left out by default; \code{\link[=summarise_path]{summarise_path()}} reports
+the totals.
+
+Angles are summarised with circular statistics (\code{\link[anicore:circ_mean]{anicore::circ_mean()}} and
+its siblings), so that the mean of 350 and 10 degrees is 0 rather than 180.
+They are computed in radians and reported in the frame's \code{unit_angle}.
+Only the angles animetric knows of are treated as circular; any other
+column is summarised as a linear quantity.
 }
 \examples{
 kin <- calculate_kinematics(
@@ -39,9 +97,12 @@ kin <- calculate_kinematics(
 )
 summarise_aniframe(kin)
 
-# Tortuosity measures instead of kinematics
-summarise_aniframe(calculate_tortuosity(kin), type = "tortuosity")
+# Mean and standard deviation instead of median and MAD
+summarise_aniframe(kin, measures = "mean_sd")
+
+# Only some measures
+summarise_aniframe(kin, cols = c("speed", "course"))
 }
 \seealso{
-\code{\link[=summarise_kinematics]{summarise_kinematics()}}, \code{\link[=summarise_tortuosity]{summarise_tortuosity()}}
+\code{\link[=summarise_path]{summarise_path()}} for whole-trajectory measures.
 }

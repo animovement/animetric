@@ -1,21 +1,21 @@
 # Tests for summarise_tortuosity
 #
-# - summarise_tortuosity returns correct columns for 2D data
-# - summarise_tortuosity returns correct columns for 3D data
-# - summarise_tortuosity includes total_turning for 2D and 3D
-# - summarise_tortuosity preserves grouping structure
-# - summarise_tortuosity validates input with .check = TRUE
-# - summarise_tortuosity_2d computes total_path_length correctly
-# - summarise_tortuosity_2d computes net_displacement correctly
-# - summarise_tortuosity_2d computes straightness correctly
-# - summarise_tortuosity_3d computes total_path_length correctly
-# - summarise_tortuosity_3d computes net_displacement correctly
+# - summarise_path returns correct columns for 2D data
+# - summarise_path returns correct columns for 3D data
+# - summarise_path includes total_turning for 2D and 3D
+# - summarise_path preserves grouping structure
+# - summarise_path validates input
+# - summarise_path_2d computes total_path_length correctly
+# - summarise_path_2d computes net_displacement correctly
+# - summarise_path_2d computes straightness correctly
+# - summarise_path_3d computes total_path_length correctly
+# - summarise_path_3d computes net_displacement correctly
 # - straightness is 1 for straight path
 # - straightness is less than 1 for non-straight path
-# - summarise_tortuosity calculates kinematics when given plain aniframe
-# - summarise_tortuosity produces same result for plain vs pre-calculated input
-# - summarise_tortuosity works with plain 3D aniframe
-# - summarise_tortuosity works with grouped plain aniframe
+# - summarise_path calculates kinematics when given plain aniframe
+# - summarise_path produces same result for plain vs pre-calculated input
+# - summarise_path works with plain 3D aniframe
+# - summarise_path works with grouped plain aniframe
 
 # Helper to create mock 2D kinematics aniframe
 mock_kin_2d <- function(n = 10, grouped = FALSE, calculate_kinematics = TRUE) {
@@ -81,11 +81,11 @@ mock_straight_path_2d <- function(n = 10, calculate_kinematics = TRUE) {
 }
 
 
-# summarise_tortuosity: 2D output columns --------------------------------
+# summarise_path: 2D output columns --------------------------------
 
-test_that("summarise_tortuosity returns correct columns for 2D data", {
+test_that("summarise_path returns correct columns for 2D data", {
   data <- mock_kin_2d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expected_cols <- c(
     "total_path_length",
@@ -101,11 +101,11 @@ test_that("summarise_tortuosity returns correct columns for 2D data", {
 })
 
 
-# summarise_tortuosity: 3D output columns --------------------------------
+# summarise_path: 3D output columns --------------------------------
 
-test_that("summarise_tortuosity returns correct columns for 3D data", {
+test_that("summarise_path returns correct columns for 3D data", {
   data <- mock_kin_3d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expected_cols <- c(
     "total_path_length",
@@ -121,38 +121,38 @@ test_that("summarise_tortuosity returns correct columns for 3D data", {
 })
 
 
-# summarise_tortuosity: grouping -----------------------------------------
+# summarise_path: grouping -----------------------------------------
 
-test_that("summarise_tortuosity preserves grouping structure for 2D", {
+test_that("summarise_path preserves grouping structure for 2D", {
   data <- mock_kin_2d(grouped = TRUE)
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expect_equal(nrow(result), 2L)
   expect_true("individual" %in% names(result))
 })
 
-test_that("summarise_tortuosity preserves grouping structure for 3D", {
+test_that("summarise_path preserves grouping structure for 3D", {
   data <- mock_kin_3d(grouped = TRUE)
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expect_equal(nrow(result), 2L)
   expect_true("individual" %in% names(result))
 })
 
 
-# summarise_tortuosity: computation correctness --------------------------
+# summarise_path: computation correctness --------------------------
 
-test_that("summarise_tortuosity() on 2D data computes total_path_length correctly", {
+test_that("summarise_path() on 2D data computes total_path_length correctly", {
   data <- mock_kin_2d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expected <- dplyr::last(data$path_length) - dplyr::first(data$path_length)
   expect_equal(result$total_path_length, expected)
 })
 
-test_that("summarise_tortuosity() on 2D data computes net_displacement correctly", {
+test_that("summarise_path() on 2D data computes net_displacement correctly", {
   data <- mock_kin_2d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expected <- sqrt(
     (dplyr::last(data$x) - dplyr::first(data$x))^2 +
@@ -161,17 +161,17 @@ test_that("summarise_tortuosity() on 2D data computes net_displacement correctly
   expect_equal(result$net_displacement, expected)
 })
 
-test_that("summarise_tortuosity() on 3D data computes total_path_length correctly", {
+test_that("summarise_path() on 3D data computes total_path_length correctly", {
   data <- mock_kin_3d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expected <- dplyr::last(data$path_length) - dplyr::first(data$path_length)
   expect_equal(result$total_path_length, expected)
 })
 
-test_that("summarise_tortuosity() on 3D data computes net_displacement correctly", {
+test_that("summarise_path() on 3D data computes net_displacement correctly", {
   data <- mock_kin_3d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expected <- sqrt(
     (dplyr::last(data$x) - dplyr::first(data$x))^2 +
@@ -182,29 +182,29 @@ test_that("summarise_tortuosity() on 3D data computes net_displacement correctly
 })
 
 
-# summarise_tortuosity: straightness -------------------------------------
+# summarise_path: straightness -------------------------------------
 
 test_that("straightness is 1 for a perfectly straight path", {
   data <- mock_straight_path_2d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expect_equal(result$straightness, 1, tolerance = 1e-10)
 })
 
 test_that("straightness is between 0 and 1 for non-straight paths", {
   data <- mock_kin_2d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expect_true(result$straightness >= 0)
   expect_true(result$straightness <= 1)
 })
 
 
-# summarise_tortuosity: sinuosity and emax -------------------------------
+# summarise_path: sinuosity and emax -------------------------------
 
 test_that("sinuosity and emax are numeric and finite", {
   data <- mock_kin_2d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expect_true(is.numeric(result$sinuosity))
   expect_true(is.numeric(result$emax))
@@ -214,18 +214,18 @@ test_that("sinuosity and emax are numeric and finite", {
 
 test_that("sinuosity and emax work for 3D data", {
   data <- mock_kin_3d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expect_true(is.numeric(result$sinuosity))
   expect_true(is.numeric(result$emax))
 })
 
 
-# summarise_tortuosity: internal columns removed -------------------------
+# summarise_path: internal columns removed -------------------------
 
-test_that("summarise_tortuosity() on 2D data removes internal columns", {
+test_that("summarise_path() on 2D data removes internal columns", {
   data <- mock_kin_2d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   internal_cols <- c(
     ".first_x",
@@ -240,9 +240,9 @@ test_that("summarise_tortuosity() on 2D data removes internal columns", {
   expect_false(any(internal_cols %in% names(result)))
 })
 
-test_that("summarise_tortuosity() on 3D data removes internal columns", {
+test_that("summarise_path() on 3D data removes internal columns", {
   data <- mock_kin_3d()
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   internal_cols <- c(
     ".first_x",
@@ -259,11 +259,11 @@ test_that("summarise_tortuosity() on 3D data removes internal columns", {
   expect_false(any(internal_cols %in% names(result)))
 })
 
-# summarise_tortuosity: auto-calculation ---------------------------------
+# summarise_path: auto-calculation ---------------------------------
 
-test_that("summarise_tortuosity calculates kinematics when given plain aniframe", {
+test_that("summarise_path calculates kinematics when given plain aniframe", {
   data <- mock_kin_2d(calculate_kinematics = FALSE)
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expected_cols <- c(
     "total_path_length",
@@ -278,7 +278,7 @@ test_that("summarise_tortuosity calculates kinematics when given plain aniframe"
   expect_equal(nrow(result), 1L)
 })
 
-test_that("summarise_tortuosity produces same result for plain vs pre-calculated input", {
+test_that("summarise_path produces same result for plain vs pre-calculated input", {
   set.seed(123)
   data_plain <- mock_kin_2d(calculate_kinematics = FALSE)
 
@@ -287,17 +287,17 @@ test_that("summarise_tortuosity produces same result for plain vs pre-calculated
     calculate_kinematics() |>
     calculate_tortuosity()
 
-  result_plain <- summarise_tortuosity(data_plain)
-  result_kin <- summarise_tortuosity(data_kin)
+  result_plain <- summarise_path(data_plain)
+  result_kin <- summarise_path(data_kin)
 
   expect_equal(result_plain$total_path_length, result_kin$total_path_length)
   expect_equal(result_plain$net_displacement, result_kin$net_displacement)
   expect_equal(result_plain$straightness, result_kin$straightness)
 })
 
-test_that("summarise_tortuosity works with plain 3D aniframe", {
+test_that("summarise_path works with plain 3D aniframe", {
   data <- mock_kin_3d(calculate_kinematics = FALSE)
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expected_cols <- c(
     "total_path_length",
@@ -312,33 +312,33 @@ test_that("summarise_tortuosity works with plain 3D aniframe", {
   expect_equal(nrow(result), 1L)
 })
 
-test_that("summarise_tortuosity works with grouped plain aniframe", {
+test_that("summarise_path works with grouped plain aniframe", {
   data <- mock_kin_2d(grouped = TRUE, calculate_kinematics = FALSE)
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expect_equal(nrow(result), 2L)
   expect_true("individual" %in% names(result))
   expect_true("total_path_length" %in% names(result))
 })
 
-test_that("summarise_tortuosity works with grouped plain 3D aniframe", {
+test_that("summarise_path works with grouped plain 3D aniframe", {
   data <- mock_kin_3d(grouped = TRUE, calculate_kinematics = FALSE)
-  result <- summarise_tortuosity(data)
+  result <- summarise_path(data)
 
   expect_equal(nrow(result), 2L)
   expect_true("individual" %in% names(result))
 })
 
-test_that("summarise_tortuosity() errors for kinematics in polar coordinates", {
-  polar <- data.frame(
+test_that("summarise_path() works on polar frames, with or without kinematics", {
+  cartesian <- data.frame(
     time = 1:10,
     x = cumsum(1:10),
     y = sin(1:10)
   ) |>
-    anicore::as_anipoint() |>
-    anispace::map_to_polar() |>
-    calculate_kinematics()
+    anicore::as_anipoint()
+  polar <- anispace::map_to_polar(cartesian)
 
-  expect_true(is_aniframe_kin(polar))
-  expect_error(summarise_tortuosity(polar), "Cartesian")
+  expected <- summarise_path(cartesian)
+  expect_equal(summarise_path(polar), expected)
+  expect_equal(summarise_path(calculate_kinematics(polar)), expected)
 })

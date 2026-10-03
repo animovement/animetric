@@ -84,7 +84,7 @@ resolve_collapsed_identity <- function(
         "{.val {unknown}} {?is/are} not {?an/} identity variable{?s} of this anipoint.",
         "i" = "It declares {.val {what}}.",
         "i" = "Only identity variables can be collapsed into a summary point.",
-        "i" = "Collapsing a temporal variable or the index averages over time, which is what the {.fn summarise_kinematics} family does; this one adds a point at each position rather than removing them."
+        "i" = "Collapsing a temporal variable or the index averages over time, which is what {.fn summarise_aniframe} does; this one adds a point at each position rather than removing them."
       ),
       call = call
     )

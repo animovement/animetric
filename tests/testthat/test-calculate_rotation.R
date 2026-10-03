@@ -161,7 +161,7 @@ test_that("vertical is checked, and ignored outside 3D", {
 })
 
 test_that("summaries include course and elevation when there is a vertical", {
-  result <- summarise_kinematics(calculate_kinematics(helix(), vertical = "z"))
+  result <- summarise_aniframe(calculate_kinematics(helix(), vertical = "z"))
 
   expect_true(all(
     c(

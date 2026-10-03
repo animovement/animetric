@@ -16,7 +16,7 @@
 # - Warns when some requested keypoints are not present in data
 # - Groups correctly by session/trial/time
 # - Handles vector of keypoint_neighbour values
-# - Maintains aniframe_kin class
+# - Maintains incoming classes and columns
 
 test_that("returns aniframe with correct new columns (2D)", {
   data <- anicore::anipoint(
@@ -424,7 +424,8 @@ test_that("Maintains incoming classes", {
     calculate_kinematics() |>
     calculate_nnd(across = "individual")
 
-  expect_contains(class(data), "aniframe_kin")
+  expect_s3_class(data, "anipoint")
+  expect_true("speed" %in% names(data))
 })
 
 # ---- Explicit variable roles (#37) --------------------------------------

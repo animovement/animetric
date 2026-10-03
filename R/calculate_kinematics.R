@@ -112,7 +112,7 @@ calculate_kinematics <- function(data, vertical = NULL) {
     data <- anispace::map_to_cartesian(data)
   }
 
-  data <- new_aniframe_kin(add_kinematics(data, vertical = vertical))
+  data <- add_kinematics(data, vertical = vertical)
 
   # Convert back if needed
   if (as.character(original_system) == "polar") {

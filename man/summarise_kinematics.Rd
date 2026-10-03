@@ -18,37 +18,19 @@ summarize_kinematics(
 )
 }
 \arguments{
-\item{data}{A kinematics anipoint (output of \code{calculate_kinematics()})}
+\item{data}{An anipoint with kinematic columns.}
 
-\item{measures}{Measures of central tendency and dispersion for kinematics.
-Options are \code{"median_mad"} (default) and \code{"mean_sd"}.}
+\item{measures}{\code{"median_mad"} (default) or \code{"mean_sd"}.}
 
-\item{.check}{Whether to validate input. Set to \code{FALSE} when called from
-\code{summarise_aniframe()} to avoid redundant checks.}
+\item{.check}{Ignored.}
 }
 \value{
-A summarised data frame with one row per group containing central
-tendency and dispersion measures (prefixed with median_/mad_ or mean_/sd_)
-\itemize{
-\item Speed, acceleration
-\item Turning speed (2D and 3D)
-\item Turning rate and acceleration, and course (circular statistics): 2D,
-and 3D when \code{\link[=calculate_kinematics]{calculate_kinematics()}} was given a \code{vertical}
-\item Course elevation (3D with a \code{vertical})
-}
-
-Angular summaries are in the frame's declared \code{unit_angle}.
+A data frame with one row per group.
 }
 \description{
-Calculate central tendency and dispersion for translational and rotational
-kinematics.
+\strong{Deprecated.} Use \code{\link[=summarise_aniframe]{summarise_aniframe()}}, which summarises any per-row measure of a
+frame, not only kinematics. This keeps the old output: the median and MAD
+(or mean and SD) of \code{speed}, \code{acceleration}, the turning measures,
+\code{course_elevation} and, with circular statistics, \code{course}.
 }
-\examples{
-kin <- calculate_kinematics(
-  anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
-)
-summarise_kinematics(kin)
-
-# Mean and standard deviation instead of median and MAD
-summarise_kinematics(kin, measures = "mean_sd")
-}
+\keyword{internal}

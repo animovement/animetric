@@ -145,7 +145,7 @@ test_that("calculate_kinematics() computes translation for 1D data", {
 
   result <- calculate_kinematics(data)
 
-  expect_true(is_aniframe_kin(result))
+  expect_s3_class(result, "anipoint")
   expect_equal(result$v_x, differentiate(data$x, data$time))
   expect_equal(result$speed, abs(result$v_x))
   expect_equal(result$path_length, c(0, 1, 3, 6, 6, 8))
@@ -156,13 +156,13 @@ test_that("summaries work on 1D data", {
   data <- anicore::as_anipoint(data.frame(time = 0:9, x = c(0:5, 4:1)))
   kin <- calculate_kinematics(data)
 
-  kin_summary <- summarise_kinematics(kin)
+  kin_summary <- summarise_aniframe(kin)
   expect_true(all(
     c("median_speed", "mad_acceleration") %in% names(kin_summary)
   ))
   expect_false("median_course" %in% names(kin_summary))
 
-  tort_summary <- summarise_tortuosity(kin)
+  tort_summary <- summarise_path(kin)
   expect_equal(tort_summary$total_path_length, 9)
   expect_equal(tort_summary$net_displacement, 1)
 })
