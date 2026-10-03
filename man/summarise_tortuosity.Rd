@@ -16,7 +16,7 @@ summarize_tortuosity(data)
 A summarised data frame with one row per group containing:
 \itemize{
 \item \code{total_path_length}: Total distance traveled
-\item \code{total_turning}: Total absolute turning of the course (2D only)
+\item \code{total_turning}: Total turning of the direction of travel (2D and 3D)
 }
 
 \strong{Tortuosity metrics:}

@@ -156,9 +156,10 @@ test_that("summarise_aniframe works with 3D data", {
   data <- mock_kin_3d()
   result <- summarise_aniframe(data)
 
-  # 3D should not have angular columns
-  expect_false("median_turning_speed" %in% names(result))
-  expect_false("total_turning" %in% names(result))
+  # 3D gets turning, but no course without a vertical
+  expect_true("median_turning_speed" %in% names(result))
+  expect_true("total_turning" %in% names(result))
+  expect_false("median_course" %in% names(result))
 
   # But should have the basic columns
 

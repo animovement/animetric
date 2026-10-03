@@ -7,7 +7,7 @@
 #' @return A summarised data frame with one row per group containing:
 #'
 #'   - `total_path_length`: Total distance traveled
-#'   - `total_turning`: Total absolute turning of the course (2D only)
+#'   - `total_turning`: Total turning of the direction of travel (2D and 3D)
 #'
 #'   **Tortuosity metrics:**
 #'   - `net_displacement`: Straight-line distance from start to end

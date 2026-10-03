@@ -31,8 +31,10 @@ A summarised data frame with one row per group containing central
 tendency and dispersion measures (prefixed with median_/mad_ or mean_/sd_)
 \itemize{
 \item Speed, acceleration
-\item Turning speed, rate, acceleration (2D only)
-\item Course (2D only, using circular statistics)
+\item Turning speed (2D and 3D)
+\item Turning rate and acceleration, and course (circular statistics): 2D,
+and 3D when \code{\link[=calculate_kinematics]{calculate_kinematics()}} was given a \code{vertical}
+\item Course elevation (3D with a \code{vertical})
 }
 
 Angular summaries are in the frame's declared \code{unit_angle}.

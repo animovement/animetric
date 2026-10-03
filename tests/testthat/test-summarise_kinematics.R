@@ -111,9 +111,12 @@ test_that("summarise_kinematics returns correct columns for 3D median_mad", {
     "median_speed",
     "mad_speed",
     "median_acceleration",
-    "mad_acceleration"
+    "mad_acceleration",
+    "median_turning_speed",
+    "mad_turning_speed"
   )
-  excluded_cols <- c("median_course", "median_turning_speed")
+  # No vertical given, so no course and no signed turning rate
+  excluded_cols <- c("median_course", "median_turning_rate")
 
   expect_true(all(expected_cols %in% names(result)))
   expect_false(any(excluded_cols %in% names(result)))
@@ -128,9 +131,11 @@ test_that("summarise_kinematics returns correct columns for 3D mean_sd", {
     "mean_speed",
     "sd_speed",
     "mean_acceleration",
-    "sd_acceleration"
+    "sd_acceleration",
+    "mean_turning_speed",
+    "sd_turning_speed"
   )
-  excluded_cols <- c("mean_course", "mean_turning_speed")
+  excluded_cols <- c("mean_course", "mean_turning_rate")
 
   expect_true(all(expected_cols %in% names(result)))
   expect_false(any(excluded_cols %in% names(result)))
