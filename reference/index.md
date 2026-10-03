@@ -25,8 +25,8 @@ or the geometry of each whole trajectory with
 - [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
   [`summarize_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
   : Summarise each trajectory as a whole
-- [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
-  : Add a centroid to an anipoint
+- [`add_point()`](https://animovement.dev/animetric/reference/add_point.md)
+  : Add a derived point to an anipoint
 
 ## Compute
 
@@ -44,8 +44,8 @@ functions.
 - [`compute_emax()`](https://animovement.dev/animetric/reference/compute_emax.md)
   : Compute E_max (maximum expected displacement) from pre‑computed
   vectors
-- [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
-  : Compute the centroid of an identity level
+- [`compute_point()`](https://animovement.dev/animetric/reference/compute_point.md)
+  : Compute a derived point of an identity level
 - [`compute_nnd()`](https://animovement.dev/animetric/reference/compute_nnd.md)
   : Compute nearest neighbour distances within one group
 
@@ -59,5 +59,9 @@ Kept for one release; see each page for its replacement.
 - [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
   [`summarize_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
   : Calculate tortuosity summary statistics
+- [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
+  : Add a centroid to an anipoint
+- [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
+  : Compute the centroid of an identity level
 - [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
   : Test whether a frame holds kinematics

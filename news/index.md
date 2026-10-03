@@ -150,6 +150,30 @@
   Each deprecated call returns exactly what it did before. They will be
   removed after the next release.
 
+- [`add_point()`](https://animovement.dev/animetric/reference/add_point.md)
+  and
+  [`compute_point()`](https://animovement.dev/animetric/reference/compute_point.md)
+  replace
+  [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
+  and
+  [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
+  ([\#94](https://github.com/animovement/animetric/issues/94)). They
+  derive a new member of an identity level at each moment, as before,
+  and `method` now chooses how:
+
+  - `"centroid"`, the mean (the default, and what the old functions
+    did);
+  - `"median"`, robust to a stray keypoint;
+  - `"weighted"`, weighted by `confidence`;
+  - a function of your own, e.g. `\(x) mean(x, trim = 0.1)`.
+
+  A declared orientation is derived for the new member too: the circular
+  mean of `yaw`, or the mean quaternion in 3D. It used to be left `NA`.
+  [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
+  and
+  [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
+  are deprecated, and return exactly what they did.
+
 - **The `aniframe_kin` class is retired**
   ([\#58](https://github.com/animovement/animetric/issues/58)).
   [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)

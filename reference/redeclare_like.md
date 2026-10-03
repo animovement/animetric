@@ -1,30 +1,23 @@
-# Re-declare a derived frame the way its source was declared
+# Re-declare a derived frame like the one it came from
 
-Detection only recognises the standard identity names, so letting
-`as_anipoint()` re-detect gives a frame using its own names an invented
-`keypoint` column and a replaced declaration (#47). The rest of the
-source's metadata is carried over with it.
+Re-declare a derived frame like the one it came from
 
 ## Usage
 
 ``` r
-redeclare_like(derived, source, space_cols)
+redeclare_like(derived, source)
 ```
 
 ## Arguments
 
 - derived:
 
-  A plain data frame derived from `source`.
+  A data frame with the source's columns.
 
 - source:
 
-  The anipoint it came from.
-
-- space_cols:
-
-  The spatial columns `derived` carries.
+  The anipoint it was derived from.
 
 ## Value
 
-`derived` as an anipoint, declared as `source` was.
+An anipoint with the source's declarations and metadata.
