@@ -1,7 +1,7 @@
 Package: animetric
 Type: Package
 Title: An R package for calculating movement-based metrics
-Version: 0.5.0.9003
+Version: 0.5.0.9004
 Authors@R: 
     person(
       "Mikkel", 
@@ -20,7 +20,7 @@ Depends:
     R (>= 4.1.0)
 Imports: 
     anicore (>= 0.8.0.9004),
-    anispace (>= 0.3.0.9003),
+    anispace (>= 0.3.0.9005),
     cli,
     data.table,
     dplyr (>= 1.1.0),

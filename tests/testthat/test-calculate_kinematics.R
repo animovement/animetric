@@ -181,3 +181,24 @@ test_that("calculate_kinematics() returns cylindrical input in cylindrical coord
   expect_true(anicore::is_cylindrical(result))
   expect_equal(result$speed, calculate_kinematics(cartesian)$speed)
 })
+
+test_that("polar input in degrees gives the same kinematics as in radians", {
+  # Needs anispace >= 0.3.0.9005, whose map_to_*() honour unit_angle
+  # (animovement/anispace#47)
+  cartesian <- data.frame(
+    time = 0:9,
+    x = cos(0:9 / 3) * (1 + 0:9 / 10),
+    y = sin(0:9 / 3) * (1 + 0:9 / 10)
+  ) |>
+    anicore::as_anipoint()
+  polar_rad <- anispace::map_to_polar(cartesian)
+  polar_deg <- anicore::convert_unit_angle(polar_rad, "deg")
+
+  in_rad <- calculate_kinematics(polar_rad)
+  in_deg <- calculate_kinematics(polar_deg)
+
+  expect_equal(in_deg$speed, calculate_kinematics(cartesian)$speed)
+  expect_equal(in_deg$speed, in_rad$speed)
+  expect_equal(in_deg$course, in_rad$course * 180 / pi)
+  expect_equal(in_deg$phi, in_rad$phi * 180 / pi)
+})
