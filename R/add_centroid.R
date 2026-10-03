@@ -15,8 +15,10 @@
 #'
 #' @param data An anipoint with Cartesian coordinates.
 #' @param across Identity variables to collapse — the dimensions the summary
-#'   ranges over. Defaults to the finest one the frame declares. Collapsing
-#'   every level gives a single point per position.
+#'   ranges over. Required when the frame declares more than one identity
+#'   variable, since their order is not a hierarchy and there is no finest
+#'   one to assume; with a single identity variable, that one is the default.
+#'   Collapsing every level gives a single point per position.
 
 #' @param include,exclude Values of the collapsed level to keep or leave out.
 #'   Only meaningful when one level is collapsed.

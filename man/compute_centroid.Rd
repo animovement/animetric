@@ -16,9 +16,10 @@ compute_centroid(
 \item{data}{An anipoint with Cartesian coordinates.}
 
 \item{across}{Identity variables to collapse — the dimensions the summary
-ranges over. Defaults to the finest one the frame declares, which is the
-keypoint-style summary. Collapsing every level gives a single point per
-position.}
+ranges over. Required when the frame declares more than one identity
+variable, since their order is not a hierarchy and there is no finest
+one to assume; with a single identity variable, that one is the default.
+Collapsing every level gives a single point per position.}
 
 \item{include, exclude}{Values of the collapsed level to keep or leave out.
 Only meaningful when one level is collapsed.}
