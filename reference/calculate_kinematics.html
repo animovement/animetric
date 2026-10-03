@@ -62,7 +62,7 @@ for calculations, then converting back to the original system.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_kinematics</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_kinematics</span><span class="op">(</span><span class="va">data</span>, vertical <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,6 +75,18 @@ Cartesian; rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for
 spherical) and an index. The axes and the index are read from the frame's
 declared variables, so the columns can have any name.</p></dd>
 
+
+<dt id="arg-vertical">vertical<a class="anchor" aria-label="anchor" href="#arg-vertical"></a></dt>
+<dd><p>For 3D data, the axis that points up in the world, against
+gravity: one of <code>"x"</code>, <code>"y"</code> or <code>"z"</code>, or with a minus sign (<code>"-y"</code>) when
+that axis points down. It defines the horizontal plane that course is
+measured in. The frame's <code>axis_directions</code> cannot supply it, since they
+are relative to the camera: in a recording filmed from above, the axis
+pointing at the camera is the vertical one. A metadata field for it is
+proposed in animovement/anicore#172. <code>NULL</code> (the default) gives
+only the measures that need no vertical. Ignored for 1D and 2D data,
+where course is measured in the plane of the data.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -82,32 +94,44 @@ declared variables, so the columns can have any name.</p></dd>
 kinematic measures. Translational kinematics (velocity and acceleration
 components, speed, acceleration, path length) are computed for 1D, 2D and
 3D data, with components named by axis role (<code>v_x</code>, <code>v_y</code>, ...) whatever
-the input columns are called. For 2D data, measures of the path's
-direction are added too:</p><dl><dt><code>course</code></dt>
-<dd><p>Direction of travel, <code>atan2(v_y, v_x)</code>. It is <code>NA</code>
-where speed is zero, since a stationary animal has no direction of
-travel. <code>course_unwrapped</code> is the same, without jumps at +/-pi.</p></dd>
+the input columns are called. For 2D and 3D data, measures of how the
+direction of travel changes are added too:</p><dl><dt><code>turning_speed</code></dt>
+<dd><p>How fast the direction of travel turns, in any
+direction: curvature times speed. In 2D it is the size of the turning
+rate. In 3D it also counts climbing and diving, and is the angle
+between the velocities either side of each row, over the time between
+them.</p></dd>
+
+<dt><code>cumulative_turning</code></dt>
+<dd><p>Turning accumulated since the first row:
+the angle between successive velocities, summed. A turn made while
+stationary is counted when the animal moves off.</p></dd>
+
+
+</dl><p>In 2D, and in 3D when <code>vertical</code> is given, the measures that need a
+direction to count from:</p><dl><dt><code>course</code></dt>
+<dd><p>Direction of travel in the horizontal plane (in 2D, the
+plane of the data): <code>atan2(v_y, v_x)</code> in 2D. It is <code>NA</code> where there is
+no horizontal movement, since the direction is then undefined.
+<code>course_unwrapped</code> is the same, without jumps at +/-pi.</p></dd>
+
+<dt><code>course_elevation</code></dt>
+<dd><p>3D only: the angle of travel above the
+horizontal plane, from -pi/2 (straight down) to pi/2 (straight up).</p></dd>
 
 <dt><code>turning_rate</code></dt>
-<dd><p>Rate of change of the course: signed curvature
-times speed.</p></dd>
-
-<dt><code>turning_speed</code></dt>
-<dd><p>Absolute turning rate.</p></dd>
+<dd><p>Signed rate of change of the course, the
+derivative of <code>course_unwrapped</code>. In 3D it counts horizontal turning
+only.</p></dd>
 
 <dt><code>turning_acceleration</code></dt>
 <dd><p>Rate of change of the turning rate.</p></dd>
-
-<dt><code>cumulative_turning</code></dt>
-<dd><p>Absolute turning accumulated since the
-first row.</p></dd>
 
 
 </dl><p>These describe the path, not the body: course is where the animal is
 going, not where it is facing, and the two differ for any animal that
 does not move nose-first. The names heading and angular velocity are
-kept for body orientation. Measures of the path's direction for 1D and 3D
-are not yet implemented.</p>
+kept for body orientation. 1D data gets translational measures only.</p>
 <p>Angular measures are in the frame's declared <code>unit_angle</code>, radians or
 degrees; turning rate and acceleration are per unit of the index.
 Signed angles (course, turning rate) follow the frame's own
@@ -115,7 +139,10 @@ convention: course counts from the <code>x</code> axis toward the <code>y</code>
 is counter-clockwise when <code><a href="https://animovement.dev/anicore/reference/get_angle_direction.html" class="external-link">anicore::get_angle_direction()</a></code> says so (<code>y</code>
 pointing up, as aniread leaves image data) and clockwise in a frame whose
 <code>y</code> points down. To change convention, change the coordinates, for
-example with <code><a href="https://animovement.dev/anicore/reference/reflect_axis.html" class="external-link">anicore::reflect_axis()</a></code>, and the angles follow.</p>
+example with <code><a href="https://animovement.dev/anicore/reference/reflect_axis.html" class="external-link">anicore::reflect_axis()</a></code>, and the angles follow. In 3D,
+course counts about <code>vertical</code> by the right-hand rule, from the next
+axis in the cycle x, y, z: from <code>x</code> toward <code>y</code> when <code>z</code> is vertical, from
+<code>z</code> toward <code>x</code> when <code>y</code> is, from <code>y</code> toward <code>z</code> when <code>x</code> is.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -124,8 +151,10 @@ example with <code><a href="https://animovement.dev/anicore/reference/reflect_ax
 <li><p>Computing kinematics in Cartesian space</p></li>
 <li><p>Converting back to the original coordinate system</p></li>
 </ol><p>All kinematic calculations are performed using numerical differentiation
-via the <code>differentiate</code> function. Angles are unwrapped to handle
-discontinuities at ±π.</p>
+via the <code>differentiate</code> function. Course is unwrapped before it is
+differentiated, so the turning rate has no jump at +/-pi. The turning
+speed in 3D needs no angle to unwrap, and has no singularity when travel
+is vertical.</p>
     </div>
 
     <div class="section level2">
@@ -138,6 +167,16 @@ discontinuities at ±π.</p>
 <span class="r-in"><span><span class="co"># Polar data (automatically converted and converted back)</span></span></span>
 <span class="r-in"><span><span class="va">traj_polar</span> <span class="op">&lt;-</span> <span class="fu">anispace</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/anispace/reference/map_to_polar.html" class="external-link">map_to_polar</a></span><span class="op">(</span><span class="va">traj_2d</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">kinematics_polar</span> <span class="op">&lt;-</span> <span class="fu">calculate_kinematics</span><span class="op">(</span><span class="va">traj_polar</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># 3D data with z pointing up: course and elevation of travel</span></span></span>
+<span class="r-in"><span><span class="va">traj_3d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  time <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">10</span>,</span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">cos</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  z <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">10</span> <span class="op">/</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">anicore</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/anicore/reference/as_anipoint.html" class="external-link">as_anipoint</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">kinematics_3d</span> <span class="op">&lt;-</span> <span class="fu">calculate_kinematics</span><span class="op">(</span><span class="va">traj_3d</span>, vertical <span class="op">=</span> <span class="st">"z"</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

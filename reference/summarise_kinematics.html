@@ -94,8 +94,10 @@ Options are <code>"median_mad"</code> (default) and <code>"mean_sd"</code>.</p><
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A summarised data frame with one row per group containing central
 tendency and dispersion measures (prefixed with median_/mad_ or mean_/sd_)</p><ul><li><p>Speed, acceleration</p></li>
-<li><p>Turning speed, rate, acceleration (2D only)</p></li>
-<li><p>Course (2D only, using circular statistics)</p></li>
+<li><p>Turning speed (2D and 3D)</p></li>
+<li><p>Turning rate and acceleration, and course (circular statistics): 2D,
+and 3D when <code><a href="calculate_kinematics.html">calculate_kinematics()</a></code> was given a <code>vertical</code></p></li>
+<li><p>Course elevation (3D with a <code>vertical</code>)</p></li>
 </ul><p>Angular summaries are in the frame's declared <code>unit_angle</code>.</p>
     </div>
 

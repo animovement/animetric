@@ -45,9 +45,14 @@ mean\_/sd\_)
 
 - Speed, acceleration
 
-- Turning speed, rate, acceleration (2D only)
+- Turning speed (2D and 3D)
 
-- Course (2D only, using circular statistics)
+- Turning rate and acceleration, and course (circular statistics): 2D,
+  and 3D when
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  was given a `vertical`
+
+- Course elevation (3D with a `vertical`)
 
 Angular summaries are in the frame's declared `unit_angle`.
 
