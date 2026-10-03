@@ -2,7 +2,7 @@
 #
 # - summarise_tortuosity returns correct columns for 2D data
 # - summarise_tortuosity returns correct columns for 3D data
-# - summarise_tortuosity includes angular_path_length only for 2D
+# - summarise_tortuosity includes cumulative_turning only for 2D
 # - summarise_tortuosity preserves grouping structure
 # - summarise_tortuosity validates input with .check = TRUE
 # - summarise_tortuosity_2d computes total_path_length correctly
@@ -89,7 +89,7 @@ test_that("summarise_tortuosity returns correct columns for 2D data", {
 
   expected_cols <- c(
     "total_path_length",
-    "total_angular_path_length",
+    "total_turning",
     "net_displacement",
     "straightness",
     "sinuosity",
@@ -114,7 +114,7 @@ test_that("summarise_tortuosity returns correct columns for 3D data", {
     "sinuosity",
     "emax"
   )
-  excluded_cols <- "total_angular_path_length"
+  excluded_cols <- "total_turning"
 
   expect_true(all(expected_cols %in% names(result)))
   expect_false(any(excluded_cols %in% names(result)))
@@ -268,7 +268,7 @@ test_that("summarise_tortuosity calculates kinematics when given plain aniframe"
 
   expected_cols <- c(
     "total_path_length",
-    "total_angular_path_length",
+    "total_turning",
     "net_displacement",
     "straightness",
     "sinuosity",
@@ -309,7 +309,7 @@ test_that("summarise_tortuosity works with plain 3D aniframe", {
   )
 
   expect_true(all(expected_cols %in% names(result)))
-  expect_false("total_angular_path_length" %in% names(result))
+  expect_false("total_turning" %in% names(result))
   expect_equal(nrow(result), 1L)
 })
 

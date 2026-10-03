@@ -66,6 +66,6 @@ Cybernetics, 97(1), 47-61.
 }
 \seealso{
 \itemize{
-\item \code{\link[=calculate_kinematics]{calculate_kinematics()}} for computing velocity and heading
+\item \code{\link[=calculate_kinematics]{calculate_kinematics()}} for computing velocity and course
 }
 }

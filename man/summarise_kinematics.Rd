@@ -31,8 +31,8 @@ A summarised data frame with one row per group containing central
 tendency and dispersion measures (prefixed with median_/mad_ or mean_/sd_)
 \itemize{
 \item Speed, acceleration
-\item Angular speed, velocity, acceleration (2D only)
-\item Heading (2D only, using circular statistics)
+\item Turning speed, rate, acceleration (2D only)
+\item Course (2D only, using circular statistics)
 }
 
 Angular summaries are in the frame's declared \code{unit_angle}.

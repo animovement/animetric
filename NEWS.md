@@ -20,6 +20,19 @@
 
 ## Changed
 
+* **Breaking:** the velocity-derived angular columns are renamed to say they describe the path, not the body (#70). Course is the direction of travel and turning rate is how fast it changes, while heading and angular velocity are where the animal faces and how fast that turns. They differ for any animal that does not move nose-first, and the orientation names are kept free for body orientation once anicore records it (animovement/anicore#46).
+
+  | Old | New |
+  |---|---|
+  | `heading` | `course` |
+  | `heading_unwrapped` | `course_unwrapped` |
+  | `angular_velocity` | `turning_rate` |
+  | `angular_speed` | `turning_speed` |
+  | `angular_acceleration` | `turning_acceleration` |
+  | `angular_path_length` | `cumulative_turning` |
+
+  The summaries follow: `median_heading`, `mad_heading`, `mean_heading` and `sd_heading` become `*_course`, `*_angular_speed`, `*_angular_velocity` and `*_angular_acceleration` become `*_turning_speed`, `*_turning_rate` and `*_turning_acceleration`, and `summarise_tortuosity()`'s `total_angular_path_length` becomes `total_turning`. Values are unchanged.
+
 * data.table is now a hard dependency (#27). `calculate_tortuosity()` cannot work without it, so the first call on a fresh install used to stop and offer to install it.
 
 * Works with anicore's `anipoint` class and rebuilt accessor API (animovement/anicore#154). `calculate_kinematics()` returns a frame of class `c("aniframe_kin", "anipoint", "aniframe", ...)`.
