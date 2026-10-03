@@ -26,6 +26,13 @@
 
 ### Fixed
 
+- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  gives correct results for polar, cylindrical and spherical input
+  stored in degrees. It converts such input to Cartesian with anispace’s
+  `map_to_*()`, which read every angle as radians until
+  animovement/anispace#47, so `phi = 90` was taken as 90 radians.
+  animetric now requires anispace 0.3.0.9005, which has the fix.
+
 - `heading` from
   [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
   is `pi` for movement along `-x`, where it used to be rewritten to `0`
