@@ -99,8 +99,10 @@ was averaged over it.</p>
 
 <dt id="arg-across">across<a class="anchor" aria-label="anchor" href="#arg-across"></a></dt>
 <dd><p>Identity variables to collapse — the dimensions the summary
-ranges over. Defaults to the finest one the frame declares. Collapsing
-every level gives a single point per position.</p></dd>
+ranges over. Required when the frame declares more than one identity
+variable, since their order is not a hierarchy and there is no finest
+one to assume; with a single identity variable, that one is the default.
+Collapsing every level gives a single point per position.</p></dd>
 
 
 <dt id="arg-include-exclude">include, exclude<a class="anchor" aria-label="anchor" href="#arg-include-exclude"></a></dt>

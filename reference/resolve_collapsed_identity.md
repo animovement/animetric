@@ -20,7 +20,7 @@ resolve_collapsed_identity(data, across = NULL, call = rlang::caller_env())
 
 - across:
 
-  Identity variables to collapse, or `NULL` for the finest one.
+  Identity variables to collapse, or `NULL` for the frame's only one.
 
 ## Value
 

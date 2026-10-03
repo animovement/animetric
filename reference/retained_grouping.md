@@ -1,4 +1,4 @@
-# The columns a summary should keep, having collapsed the finest identity
+# The columns a summary should keep, having collapsed some identity
 
 Everything the frame groups by except the level being summarised over,
 plus the index – one row per remaining entity per position.
