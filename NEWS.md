@@ -10,6 +10,8 @@
 
 * `heading` from `calculate_kinematics()` is `pi` for movement along `-x`, where it used to be rewritten to `0` — the opposite direction (#69). The rewrite fired whenever `v_y` was exactly zero, which integer-pixel tracking produces routinely, so a trajectory along `-x` picked up 180-degree jumps that showed as spikes in `angular_velocity` and `angular_acceleration` and as turning in `angular_path_length` that never happened. `heading` is now `NA` where speed is zero, since a stationary animal has no direction of travel; before, it read as `0`, or as `pi` when the velocity was a negative zero.
 
+* `angular_path_length` from `calculate_kinematics()` starts at `0` (#68). When the first heading was negative it started at `2 * abs(heading)` and carried that offset along the whole trajectory, so a straight line at a heading of `-1` reported two radians of turning. `summarise_tortuosity()` takes the difference between the last and first values, so its `total_angular_path_length` was not affected. Turning made while the animal is stopped (where `heading` is `NA`) is counted when it moves off again.
+
 * `calculate_nnd()` keeps the input's metadata, such as `sampling_rate`, and works on frames whose axis columns have custom names. It used to rebuild its result by re-detecting the columns, which dropped both.
 
 ## Changed

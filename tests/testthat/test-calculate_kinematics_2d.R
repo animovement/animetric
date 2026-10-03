@@ -258,3 +258,67 @@ test_that("constant velocity has zero acceleration", {
   # (excluding edge effects from differentiate)
   expect_true(all(abs(result$acceleration[3:9]) < 1e-10))
 })
+
+test_that("angular_path_length starts at 0 when the first heading is negative", {
+  # Straight line at a heading of -1 rad: it never turns
+  t <- 0:5
+  data <- data.frame(
+    time = t,
+    x = t * cos(-1),
+    y = t * sin(-1)
+  ) |>
+    anicore::as_anipoint()
+
+  result <- calculate_kinematics_2d(data)
+
+  expect_equal(result$heading, rep(-1, 6))
+  expect_equal(result$angular_path_length, rep(0, 6))
+})
+
+test_that("angular_path_length accumulates absolute turning", {
+  t <- seq(0, 2 * pi, length.out = 50)
+  data <- data.frame(
+    time = t,
+    x = cos(t),
+    y = -sin(t)
+  ) |>
+    anicore::as_anipoint()
+
+  result <- calculate_kinematics_2d(data)
+
+  expect_equal(result$angular_path_length[1], 0)
+  expect_equal(
+    result$angular_path_length,
+    cumsum(c(0, abs(diff(result$heading_unwrapped))))
+  )
+})
+
+test_that("angular_path_length counts turning across a pause", {
+  # Moves along +x, stops, then moves back along -x
+  data <- data.frame(
+    time = 0:8,
+    x = c(0, 1, 2, 3, 3, 3, 2, 1, 0),
+    y = rep(0, 9)
+  ) |>
+    anicore::as_anipoint()
+
+  result <- calculate_kinematics_2d(data)
+
+  expect_true(any(is.na(result$heading)))
+  expect_false(anyNA(result$angular_path_length))
+  expect_equal(result$angular_path_length[1], 0)
+  expect_equal(dplyr::last(result$angular_path_length), pi)
+})
+
+test_that("angular_path_length is 0 for a stationary track", {
+  data <- data.frame(
+    time = 0:5,
+    x = rep(5, 6),
+    y = rep(3, 6)
+  ) |>
+    anicore::as_anipoint()
+
+  result <- calculate_kinematics_2d(data)
+
+  expect_equal(result$angular_path_length, rep(0, 6))
+})
