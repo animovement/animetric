@@ -128,7 +128,7 @@ summarise_aniframe(kin)
 #> # A tibble: 1 × 18
 #>   individual keypoint session trial median_speed mad_speed median_acceleration
 #>        <int> <fct>      <int> <int>        <dbl>     <dbl>               <dbl>
-#> 1          1 centroid       1     1        0.768     0.646             0.00881
+#> 1          1 centroid       1     1        0.743     0.480              0.0554
 #> # ℹ 11 more variables: mad_acceleration <dbl>, median_turning_speed <dbl>,
 #> #   mad_turning_speed <dbl>, median_turning_rate <dbl>, mad_turning_rate <dbl>,
 #> #   median_turning_acceleration <dbl>, mad_turning_acceleration <dbl>,
@@ -140,7 +140,7 @@ summarise_aniframe(kin, measures = "mean_sd")
 #> # A tibble: 1 × 18
 #>   individual keypoint session trial mean_speed sd_speed mean_acceleration
 #>        <int> <fct>      <int> <int>      <dbl>    <dbl>             <dbl>
-#> 1          1 centroid       1     1      0.954    0.539            0.0426
+#> 1          1 centroid       1     1      0.846    0.522            0.0264
 #> # ℹ 11 more variables: sd_acceleration <dbl>, mean_turning_speed <dbl>,
 #> #   sd_turning_speed <dbl>, mean_turning_rate <dbl>, sd_turning_rate <dbl>,
 #> #   mean_turning_acceleration <dbl>, sd_turning_acceleration <dbl>,
@@ -152,6 +152,6 @@ summarise_aniframe(kin, cols = c("speed", "course"))
 #> # A tibble: 1 × 8
 #>   individual keypoint session trial median_speed mad_speed median_course
 #>        <int> <fct>      <int> <int>        <dbl>     <dbl>         <dbl>
-#> 1          1 centroid       1     1        0.768     0.646          3.15
+#> 1          1 centroid       1     1        0.743     0.480          1.84
 #> # ℹ 1 more variable: mad_course <dbl>
 ```

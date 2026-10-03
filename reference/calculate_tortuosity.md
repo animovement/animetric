@@ -86,16 +86,16 @@ data |>
 #> # Trials:      1
 #>    individual keypoint session trial  time       x      y confidence speed
 #>         <int> <fct>      <int> <int> <int>   <dbl>  <dbl>      <dbl> <dbl>
-#>  1          1 centroid       1     1     1  0.614   0.749      0.836 2.94 
-#>  2          1 centroid       1     1     2 -0.618  -1.92       0.835 0.323
-#>  3          1 centroid       1     1     3  0.221   0.236      0.593 1.54 
-#>  4          1 centroid       1     1     4  1.13    0.629      0.774 0.802
-#>  5          1 centroid       1     1     5  1.81    0.418      0.855 0.906
-#>  6          1 centroid       1     1     6 -0.0838  1.98       0.914 0.513
-#>  7          1 centroid       1     1     7  1.37   -0.506      0.852 1.57 
-#>  8          1 centroid       1     1     8 -0.627  -1.11       0.826 0.822
-#>  9          1 centroid       1     1     9 -0.217  -0.949      0.521 0.794
-#> 10          1 centroid       1     1    10 -0.684   0.477      0.649 0.137
+#>  1          1 centroid       1     1     1  0.889   1.18       0.724 1.14 
+#>  2          1 centroid       1     1     2  0.0132  0.447      0.623 0.641
+#>  3          1 centroid       1     1     3  0.225   2.27       0.825 0.403
+#>  4          1 centroid       1     1     4 -0.730   0.136      0.759 2.26 
+#>  5          1 centroid       1     1     5 -1.22   -2.00       0.939 0.633
+#>  6          1 centroid       1     1     6  0.407  -0.421      0.928 0.844
+#>  7          1 centroid       1     1     7 -0.751  -0.378      0.965 0.869
+#>  8          1 centroid       1     1     8 -0.162   1.22       0.843 0.801
+#>  9          1 centroid       1     1     9  0.352  -1.54       0.741 0.768
+#> 10          1 centroid       1     1    10 -0.289  -0.310      0.469 0.770
 #> # ℹ 20 more rows
 #> # ℹ 15 more variables: acceleration <dbl>, path_length <dbl>, v_x <dbl>,
 #> #   v_y <dbl>, a_x <dbl>, a_y <dbl>, course <dbl>, course_unwrapped <dbl>,
@@ -112,16 +112,16 @@ data |>
 #> # Trials:      1
 #>    individual keypoint session trial  time       x      y confidence speed
 #>         <int> <fct>      <int> <int> <int>   <dbl>  <dbl>      <dbl> <dbl>
-#>  1          1 centroid       1     1     1  0.614   0.749      0.836 2.94 
-#>  2          1 centroid       1     1     2 -0.618  -1.92       0.835 0.323
-#>  3          1 centroid       1     1     3  0.221   0.236      0.593 1.54 
-#>  4          1 centroid       1     1     4  1.13    0.629      0.774 0.802
-#>  5          1 centroid       1     1     5  1.81    0.418      0.855 0.906
-#>  6          1 centroid       1     1     6 -0.0838  1.98       0.914 0.513
-#>  7          1 centroid       1     1     7  1.37   -0.506      0.852 1.57 
-#>  8          1 centroid       1     1     8 -0.627  -1.11       0.826 0.822
-#>  9          1 centroid       1     1     9 -0.217  -0.949      0.521 0.794
-#> 10          1 centroid       1     1    10 -0.684   0.477      0.649 0.137
+#>  1          1 centroid       1     1     1  0.889   1.18       0.724 1.14 
+#>  2          1 centroid       1     1     2  0.0132  0.447      0.623 0.641
+#>  3          1 centroid       1     1     3  0.225   2.27       0.825 0.403
+#>  4          1 centroid       1     1     4 -0.730   0.136      0.759 2.26 
+#>  5          1 centroid       1     1     5 -1.22   -2.00       0.939 0.633
+#>  6          1 centroid       1     1     6  0.407  -0.421      0.928 0.844
+#>  7          1 centroid       1     1     7 -0.751  -0.378      0.965 0.869
+#>  8          1 centroid       1     1     8 -0.162   1.22       0.843 0.801
+#>  9          1 centroid       1     1     9  0.352  -1.54       0.741 0.768
+#> 10          1 centroid       1     1    10 -0.289  -0.310      0.469 0.770
 #> # ℹ 20 more rows
 #> # ℹ 15 more variables: acceleration <dbl>, path_length <dbl>, v_x <dbl>,
 #> #   v_y <dbl>, a_x <dbl>, a_y <dbl>, course <dbl>, course_unwrapped <dbl>,

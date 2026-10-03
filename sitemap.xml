@@ -8,6 +8,7 @@
 <url><loc>https://animovement.dev/animetric/news/index.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_centroid.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_kinematics.html</loc></url>
+<url><loc>https://animovement.dev/animetric/reference/add_orientation.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_point.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/animetric-package.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/append_point.html</loc></url>
@@ -18,6 +19,7 @@
 <url><loc>https://animovement.dev/animetric/reference/calculate_tortuosity.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/calculate_translation.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/cartesian_axes.html</loc></url>
+<url><loc>https://animovement.dev/animetric/reference/check_members.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_single_level.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_summary_cols.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_vertical.html</loc></url>
@@ -52,6 +54,7 @@
 <url><loc>https://animovement.dev/animetric/reference/point_aggregator.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/redeclare_like.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/resolve_collapsed_identity.html</loc></url>
+<url><loc>https://animovement.dev/animetric/reference/resolve_orientation_name.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/resolve_point_method.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/retained_grouping.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/step_length.html</loc></url>

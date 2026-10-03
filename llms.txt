@@ -80,6 +80,8 @@ or the geometry of each whole trajectory with
   : Summarise each trajectory as a whole
 - [`add_point()`](https://animovement.dev/animetric/reference/add_point.md)
   : Add a derived point to an anipoint
+- [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
+  : Declare orientation from the positions of points
 
 ## Compute
 

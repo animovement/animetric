@@ -100,6 +100,25 @@
   frames whose axis columns have custom names. It used to rebuild its
   result by re-detecting the columns, which dropped both.
 
+### Added
+
+- [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
+  declares which way a body faces from where its points are
+  ([\#97](https://github.com/animovement/animetric/issues/97)):
+  - **2D:** `heading`, the direction from `from` to `to`.
+  - **3D:** a unit quaternion (`qw`, `qx`, `qy`, `qz`), with a third
+    point, `plane`, to fix the roll. Any point off the `from`-`to` line
+    will do.
+  - **Across the body:** `perpendicular = TRUE` handles axes that run
+    across the body, such as right eye to left eye.
+  - **Where it goes:** `attach_to` puts the orientation on chosen
+    members, so a head and a body orientation can share the one declared
+    column.
+
+  Once declared, the orientation is a proper `where` variable, which
+  anispace’s egocentric transform can align by. Needs anispace
+  0.3.0.9006 (`quat_from_vectors()`).
+
 ### Changed
 
 - **The summaries are reorganised into two functions, by what they

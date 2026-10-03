@@ -116,18 +116,18 @@ add_point(af, across = "keypoint")
 #> # Keypoints:   head, neck, shoulder_right, centroid
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time        x      y confidence
-#>         <int> <fct>      <int> <int> <int>    <dbl>  <dbl>      <dbl>
-#>  1          1 head           1     1     1 -1.40    -0.504      0.186
-#>  2          1 head           1     1     2  0.255   -1.19       0.615
-#>  3          1 head           1     1     3 -2.44    -0.752      0.620
-#>  4          1 head           1     1     4 -0.00557  1.46       0.692
-#>  5          1 head           1     1     5  0.622   -0.829      0.710
-#>  6          1 head           1     1     6  1.15     0.290      0.577
-#>  7          1 head           1     1     7 -1.82    -0.480      0.764
-#>  8          1 head           1     1     8 -0.247   -0.605      0.809
-#>  9          1 head           1     1     9 -0.244    1.46       0.674
-#> 10          1 head           1     1    10 -0.283    0.150      0.893
+#>    individual keypoint session trial  time      x      y confidence
+#>         <int> <fct>      <int> <int> <int>  <dbl>  <dbl>      <dbl>
+#>  1          1 head           1     1     1  0.486 -0.866      0.592
+#>  2          1 head           1     1     2  1.67  -0.344      0.699
+#>  3          1 head           1     1     3 -0.354  1.06       0.623
+#>  4          1 head           1     1     4  0.946  0.813      0.923
+#>  5          1 head           1     1     5  1.32   1.80       0.487
+#>  6          1 head           1     1     6 -0.297 -0.105      0.778
+#>  7          1 head           1     1     7 -0.387  0.982      0.729
+#>  8          1 head           1     1     8 -0.785 -1.71       0.706
+#>  9          1 head           1     1     9 -1.06  -0.832      0.689
+#> 10          1 head           1     1    10 -0.796  1.10       0.875
 #> # ℹ 150 more rows
 
 # A median instead, robust to a stray keypoint
@@ -136,18 +136,18 @@ add_point(af, across = "keypoint", method = "median")
 #> # Keypoints:   head, neck, shoulder_right, median
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time        x      y confidence
-#>         <int> <fct>      <int> <int> <int>    <dbl>  <dbl>      <dbl>
-#>  1          1 head           1     1     1 -1.40    -0.504      0.186
-#>  2          1 head           1     1     2  0.255   -1.19       0.615
-#>  3          1 head           1     1     3 -2.44    -0.752      0.620
-#>  4          1 head           1     1     4 -0.00557  1.46       0.692
-#>  5          1 head           1     1     5  0.622   -0.829      0.710
-#>  6          1 head           1     1     6  1.15     0.290      0.577
-#>  7          1 head           1     1     7 -1.82    -0.480      0.764
-#>  8          1 head           1     1     8 -0.247   -0.605      0.809
-#>  9          1 head           1     1     9 -0.244    1.46       0.674
-#> 10          1 head           1     1    10 -0.283    0.150      0.893
+#>    individual keypoint session trial  time      x      y confidence
+#>         <int> <fct>      <int> <int> <int>  <dbl>  <dbl>      <dbl>
+#>  1          1 head           1     1     1  0.486 -0.866      0.592
+#>  2          1 head           1     1     2  1.67  -0.344      0.699
+#>  3          1 head           1     1     3 -0.354  1.06       0.623
+#>  4          1 head           1     1     4  0.946  0.813      0.923
+#>  5          1 head           1     1     5  1.32   1.80       0.487
+#>  6          1 head           1     1     6 -0.297 -0.105      0.778
+#>  7          1 head           1     1     7 -0.387  0.982      0.729
+#>  8          1 head           1     1     8 -0.785 -1.71       0.706
+#>  9          1 head           1     1     9 -1.06  -0.832      0.689
+#> 10          1 head           1     1    10 -0.796  1.10       0.875
 #> # ℹ 150 more rows
 
 # The midpoint of two keypoints
@@ -156,18 +156,18 @@ add_point(af, across = "keypoint", include = c("head", "neck"), name = "neck_hea
 #> # Keypoints:   head, neck, shoulder_right, neck_head
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time        x      y confidence
-#>         <int> <fct>      <int> <int> <int>    <dbl>  <dbl>      <dbl>
-#>  1          1 head           1     1     1 -1.40    -0.504      0.186
-#>  2          1 head           1     1     2  0.255   -1.19       0.615
-#>  3          1 head           1     1     3 -2.44    -0.752      0.620
-#>  4          1 head           1     1     4 -0.00557  1.46       0.692
-#>  5          1 head           1     1     5  0.622   -0.829      0.710
-#>  6          1 head           1     1     6  1.15     0.290      0.577
-#>  7          1 head           1     1     7 -1.82    -0.480      0.764
-#>  8          1 head           1     1     8 -0.247   -0.605      0.809
-#>  9          1 head           1     1     9 -0.244    1.46       0.674
-#> 10          1 head           1     1    10 -0.283    0.150      0.893
+#>    individual keypoint session trial  time      x      y confidence
+#>         <int> <fct>      <int> <int> <int>  <dbl>  <dbl>      <dbl>
+#>  1          1 head           1     1     1  0.486 -0.866      0.592
+#>  2          1 head           1     1     2  1.67  -0.344      0.699
+#>  3          1 head           1     1     3 -0.354  1.06       0.623
+#>  4          1 head           1     1     4  0.946  0.813      0.923
+#>  5          1 head           1     1     5  1.32   1.80       0.487
+#>  6          1 head           1     1     6 -0.297 -0.105      0.778
+#>  7          1 head           1     1     7 -0.387  0.982      0.729
+#>  8          1 head           1     1     8 -0.785 -1.71       0.706
+#>  9          1 head           1     1     9 -1.06  -0.832      0.689
+#> 10          1 head           1     1    10 -0.796  1.10       0.875
 #> # ℹ 150 more rows
 
 # A custom rule
@@ -176,18 +176,18 @@ add_point(af, across = "keypoint", method = \(x) mean(x, trim = 0.1), name = "tr
 #> # Keypoints:   head, neck, shoulder_right, trimmed
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time        x      y confidence
-#>         <int> <fct>      <int> <int> <int>    <dbl>  <dbl>      <dbl>
-#>  1          1 head           1     1     1 -1.40    -0.504      0.186
-#>  2          1 head           1     1     2  0.255   -1.19       0.615
-#>  3          1 head           1     1     3 -2.44    -0.752      0.620
-#>  4          1 head           1     1     4 -0.00557  1.46       0.692
-#>  5          1 head           1     1     5  0.622   -0.829      0.710
-#>  6          1 head           1     1     6  1.15     0.290      0.577
-#>  7          1 head           1     1     7 -1.82    -0.480      0.764
-#>  8          1 head           1     1     8 -0.247   -0.605      0.809
-#>  9          1 head           1     1     9 -0.244    1.46       0.674
-#> 10          1 head           1     1    10 -0.283    0.150      0.893
+#>    individual keypoint session trial  time      x      y confidence
+#>         <int> <fct>      <int> <int> <int>  <dbl>  <dbl>      <dbl>
+#>  1          1 head           1     1     1  0.486 -0.866      0.592
+#>  2          1 head           1     1     2  1.67  -0.344      0.699
+#>  3          1 head           1     1     3 -0.354  1.06       0.623
+#>  4          1 head           1     1     4  0.946  0.813      0.923
+#>  5          1 head           1     1     5  1.32   1.80       0.487
+#>  6          1 head           1     1     6 -0.297 -0.105      0.778
+#>  7          1 head           1     1     7 -0.387  0.982      0.729
+#>  8          1 head           1     1     8 -0.785 -1.71       0.706
+#>  9          1 head           1     1     9 -1.06  -0.832      0.689
+#> 10          1 head           1     1    10 -0.796  1.10       0.875
 #> # ℹ 150 more rows
 
 # One point per keypoint, across the animals
@@ -196,17 +196,17 @@ add_point(af, across = "individual")
 #> # Keypoints:   head, neck, shoulder_right
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time        x      y confidence
-#>    <fct>      <fct>      <int> <int> <int>    <dbl>  <dbl>      <dbl>
-#>  1 1          head           1     1     1 -1.40    -0.504      0.186
-#>  2 1          head           1     1     2  0.255   -1.19       0.615
-#>  3 1          head           1     1     3 -2.44    -0.752      0.620
-#>  4 1          head           1     1     4 -0.00557  1.46       0.692
-#>  5 1          head           1     1     5  0.622   -0.829      0.710
-#>  6 1          head           1     1     6  1.15     0.290      0.577
-#>  7 1          head           1     1     7 -1.82    -0.480      0.764
-#>  8 1          head           1     1     8 -0.247   -0.605      0.809
-#>  9 1          head           1     1     9 -0.244    1.46       0.674
-#> 10 1          head           1     1    10 -0.283    0.150      0.893
+#>    individual keypoint session trial  time      x      y confidence
+#>    <fct>      <fct>      <int> <int> <int>  <dbl>  <dbl>      <dbl>
+#>  1 1          head           1     1     1  0.486 -0.866      0.592
+#>  2 1          head           1     1     2  1.67  -0.344      0.699
+#>  3 1          head           1     1     3 -0.354  1.06       0.623
+#>  4 1          head           1     1     4  0.946  0.813      0.923
+#>  5 1          head           1     1     5  1.32   1.80       0.487
+#>  6 1          head           1     1     6 -0.297 -0.105      0.778
+#>  7 1          head           1     1     7 -0.387  0.982      0.729
+#>  8 1          head           1     1     8 -0.785 -1.71       0.706
+#>  9 1          head           1     1     9 -1.06  -0.832      0.689
+#> 10 1          head           1     1    10 -0.796  1.10       0.875
 #> # ℹ 170 more rows
 ```

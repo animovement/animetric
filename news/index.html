@@ -68,6 +68,21 @@
 <li><p><code><a href="../reference/calculate_nnd.html">calculate_nnd()</a></code> keeps the input’s metadata, such as <code>sampling_rate</code>, and works on frames whose axis columns have custom names. It used to rebuild its result by re-detecting the columns, which dropped both.</p></li>
 </ul></div>
 <div class="section level3">
+<h3 id="added-development-version">Added<a class="anchor" aria-label="anchor" href="#added-development-version"></a></h3>
+<ul><li>
+<code><a href="../reference/add_orientation.html">add_orientation()</a></code> declares which way a body faces from where its points are (<a href="https://github.com/animovement/animetric/issues/97" class="external-link">#97</a>):
+<ul><li>
+<strong>2D:</strong> <code>heading</code>, the direction from <code>from</code> to <code>to</code>.</li>
+<li>
+<strong>3D:</strong> a unit quaternion (<code>qw</code>, <code>qx</code>, <code>qy</code>, <code>qz</code>), with a third point, <code>plane</code>, to fix the roll. Any point off the <code>from</code>-<code>to</code> line will do.</li>
+<li>
+<strong>Across the body:</strong> <code>perpendicular = TRUE</code> handles axes that run across the body, such as right eye to left eye.</li>
+<li>
+<strong>Where it goes:</strong> <code>attach_to</code> puts the orientation on chosen members, so a head and a body orientation can share the one declared column.</li>
+</ul>
+Once declared, the orientation is a proper <code>where</code> variable, which anispace’s egocentric transform can align by. Needs anispace 0.3.0.9006 (<code>quat_from_vectors()</code>).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="changed-development-version">Changed<a class="anchor" aria-label="anchor" href="#changed-development-version"></a></h3>
 <ul><li>
 <p><strong>The summaries are reorganised into two functions, by what they summarise</strong> (<a href="https://github.com/animovement/animetric/issues/58" class="external-link">#58</a>). Sliding windows stay in the <code>calculate_*()</code> functions; both summaries cover each group’s whole time range.</p>

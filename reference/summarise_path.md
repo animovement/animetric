@@ -60,7 +60,7 @@ summarise_path(traj)
 #> # A tibble: 1 × 10
 #>   individual keypoint session trial total_path_length total_turning
 #>        <int> <fct>      <int> <int>             <dbl>         <dbl>
-#> 1          1 centroid       1     1              29.5          30.1
+#> 1          1 centroid       1     1              27.3          29.2
 #> # ℹ 4 more variables: net_displacement <dbl>, straightness <dbl>,
 #> #   sinuosity <dbl>, emax <dbl>
 ```
