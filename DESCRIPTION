@@ -22,11 +22,11 @@ Imports:
     anicore (>= 0.8.0.9003),
     anispace (>= 0.3.0.9003),
     cli,
+    data.table,
     dplyr,
     purrr,
     rlang
 Suggests: 
-    data.table,
     knitr,
     sf,
     testthat (>= 3.0.0)

@@ -12,6 +12,8 @@
 
 ## Changed
 
+* data.table is now a hard dependency (#27). `calculate_tortuosity()` cannot work without it, so the first call on a fresh install used to stop and offer to install it.
+
 * Works with anicore's `anipoint` class and rebuilt accessor API (animovement/anicore#154). `calculate_kinematics()` returns a frame of class `c("aniframe_kin", "anipoint", "aniframe", ...)`.
 
 * The circular summaries in `summarise_kinematics()` come from anicore, and the `circular` package is no longer needed at all (animovement/anicore#147). It was a soft dependency behind a `check_installed()` prompt, so the first call to `summarise_kinematics()` on a fresh install used to stop and ask to install a package — for two columns of the summary table.
