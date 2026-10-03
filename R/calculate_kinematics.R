@@ -156,7 +156,7 @@ calculate_translation <- function(data) {
 #' @keywords internal
 calculate_rotation_2d <- function(data) {
   index <- anicore::get_index(data)
-  unit <- angle_unit(data)
+  unit <- anicore::get_metadata(data, "unit_angle")
   angular_cols <- c(
     "course",
     "course_unwrapped",
@@ -190,7 +190,7 @@ calculate_rotation_2d <- function(data) {
     ) |>
     dplyr::mutate(dplyr::across(
       dplyr::all_of(angular_cols),
-      \(x) rad_to_unit(x, unit)
+      \(x) anicore::angle_from_rad(x, unit)
     )) |>
     dplyr::relocate("turning_speed", .before = "cumulative_turning") |>
     dplyr::relocate("turning_rate", .before = "cumulative_turning") |>
