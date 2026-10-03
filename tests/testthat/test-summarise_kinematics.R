@@ -159,9 +159,9 @@ test_that("summarise_kinematics works with 3D grouped data", {
 
 # summarise_kinematics: computation correctness --------------------------
 
-test_that("summarise_kinematics_2d computes median/mad correctly", {
+test_that("summarise_kinematics() on 2D data computes median/mad correctly", {
   data <- mock_kin_2d()
-  result <- summarise_kinematics_2d(data, measures = "median_mad")
+  result <- summarise_kinematics(data, measures = "median_mad")
 
   expect_equal(result$median_speed, median(data$speed, na.rm = TRUE))
   expect_equal(result$mad_speed, mad(data$speed, na.rm = TRUE))
@@ -171,26 +171,26 @@ test_that("summarise_kinematics_2d computes median/mad correctly", {
   )
 })
 
-test_that("summarise_kinematics_2d computes mean/sd correctly", {
+test_that("summarise_kinematics() on 2D data computes mean/sd correctly", {
   data <- mock_kin_2d()
-  result <- summarise_kinematics_2d(data, measures = "mean_sd")
+  result <- summarise_kinematics(data, measures = "mean_sd")
 
   expect_equal(result$mean_speed, mean(data$speed, na.rm = TRUE))
   expect_equal(result$sd_speed, sd(data$speed, na.rm = TRUE))
   expect_equal(result$mean_acceleration, mean(data$acceleration, na.rm = TRUE))
 })
 
-test_that("summarise_kinematics_3d computes median/mad correctly", {
+test_that("summarise_kinematics() on 3D data computes median/mad correctly", {
   data <- mock_kin_3d()
-  result <- summarise_kinematics_3d(data, measures = "median_mad")
+  result <- summarise_kinematics(data, measures = "median_mad")
 
   expect_equal(result$median_speed, median(data$speed, na.rm = TRUE))
   expect_equal(result$mad_speed, mad(data$speed, na.rm = TRUE))
 })
 
-test_that("summarise_kinematics_3d computes mean/sd correctly", {
+test_that("summarise_kinematics() on 3D data computes mean/sd correctly", {
   data <- mock_kin_3d()
-  result <- summarise_kinematics_3d(data, measures = "mean_sd")
+  result <- summarise_kinematics(data, measures = "mean_sd")
 
   expect_equal(result$mean_speed, mean(data$speed, na.rm = TRUE))
   expect_equal(result$sd_speed, sd(data$speed, na.rm = TRUE))
@@ -198,14 +198,14 @@ test_that("summarise_kinematics_3d computes mean/sd correctly", {
 
 
 # summarise_kinematics: circular statistics ------------------------------
-test_that("summarise_kinematics_2d uses circular statistics for heading", {
+test_that("summarise_kinematics() on 2D data uses circular statistics for heading", {
   # Create data with known heading values
   data <- mock_kin_2d()
   data$heading <- rep(c(-pi + 0.1, pi - 0.1), length.out = nrow(data))
   data <- anicore::as_anipoint(data)
 
-  result_median <- summarise_kinematics_2d(data, measures = "median_mad")
-  result_mean <- summarise_kinematics_2d(data, measures = "mean_sd")
+  result_median <- summarise_kinematics(data, measures = "median_mad")
+  result_mean <- summarise_kinematics(data, measures = "mean_sd")
 
   # Circular median/mean of values near +/- pi should be near pi, not near 0
 

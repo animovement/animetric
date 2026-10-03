@@ -34,87 +34,50 @@ summarise_kinematics <- function(
   }
   measures <- match.arg(measures)
 
-  is_3d <- anicore::is_cartesian_3d(data)
+  # Rotational measures are only present where they are defined (2D)
+  linear_cols <- c("speed", "acceleration")
+  angular_cols <- intersect(
+    c("angular_speed", "angular_velocity", "angular_acceleration"),
+    names(data)
+  )
+  has_heading <- "heading" %in% names(data)
 
-  if (is_3d) {
-    summarise_kinematics_3d(data, measures)
+  if (measures == "median_mad") {
+    stats <- list(
+      median = ~ stats::median(.x, na.rm = TRUE),
+      mad = ~ stats::mad(.x, na.rm = TRUE)
+    )
+    heading <- if (has_heading) {
+      list(
+        median_heading = rlang::quo(anicore::circ_median(.data$heading)),
+        mad_heading = rlang::quo(anicore::circ_mad(.data$heading))
+      )
+    }
   } else {
-    summarise_kinematics_2d(data, measures)
+    stats <- list(
+      mean = ~ mean(.x, na.rm = TRUE),
+      sd = ~ stats::sd(.x, na.rm = TRUE)
+    )
+    heading <- if (has_heading) {
+      list(
+        mean_heading = rlang::quo(anicore::circ_mean(.data$heading)),
+        sd_heading = rlang::quo(anicore::circ_sd(.data$heading))
+      )
+    }
   }
+
+  data |>
+    dplyr::summarise(
+      dplyr::across(
+        dplyr::all_of(c(linear_cols, angular_cols)),
+        stats,
+        .names = "{.fn}_{.col}"
+      ),
+      !!!heading,
+      .groups = "drop"
+    )
 }
 
 #' @rdname summarise_kinematics
 #' @export
 summarize_kinematics <- summarise_kinematics
-
-#' @keywords internal
-summarise_kinematics_2d <- function(data, measures) {
-  linear_cols <- c("speed", "acceleration")
-  angular_cols <- c("angular_speed", "angular_velocity", "angular_acceleration")
-
-  if (measures == "median_mad") {
-    data |>
-      dplyr::summarise(
-        dplyr::across(
-          dplyr::all_of(c(linear_cols, angular_cols)),
-          list(
-            median = ~ stats::median(.x, na.rm = TRUE),
-            mad = ~ stats::mad(.x, na.rm = TRUE)
-          ),
-          .names = "{.fn}_{.col}"
-        ),
-        median_heading = anicore::circ_median(.data$heading),
-        mad_heading = anicore::circ_mad(.data$heading),
-        .groups = "drop"
-      )
-  } else {
-    data |>
-      dplyr::summarise(
-        dplyr::across(
-          dplyr::all_of(c(linear_cols, angular_cols)),
-          list(
-            mean = ~ mean(.x, na.rm = TRUE),
-            sd = ~ stats::sd(.x, na.rm = TRUE)
-          ),
-          .names = "{.fn}_{.col}"
-        ),
-        mean_heading = anicore::circ_mean(.data$heading),
-        sd_heading = anicore::circ_sd(.data$heading),
-        .groups = "drop"
-      )
-  }
-}
-
-
-#' @keywords internal
-summarise_kinematics_3d <- function(data, measures) {
-  linear_cols <- c("speed", "acceleration")
-
-  if (measures == "median_mad") {
-    data |>
-      dplyr::summarise(
-        dplyr::across(
-          dplyr::all_of(linear_cols),
-          list(
-            median = ~ stats::median(.x, na.rm = TRUE),
-            mad = ~ stats::mad(.x, na.rm = TRUE)
-          ),
-          .names = "{.fn}_{.col}"
-        ),
-        .groups = "drop"
-      )
-  } else {
-    data |>
-      dplyr::summarise(
-        dplyr::across(
-          dplyr::all_of(linear_cols),
-          list(
-            mean = ~ mean(.x, na.rm = TRUE),
-            sd = ~ stats::sd(.x, na.rm = TRUE)
-          ),
-          .names = "{.fn}_{.col}"
-        ),
-        .groups = "drop"
-      )
-  }
-}

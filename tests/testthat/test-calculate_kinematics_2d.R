@@ -5,7 +5,7 @@
 # - Column presence and structure
 # - Consistency with differentiate() function
 
-test_that("calculate_kinematics_2d adds all expected columns", {
+test_that("calculate_kinematics() on 2D data adds all expected columns", {
   data <- data.frame(
     time = 0:5,
     x = c(0, 1, 2, 3, 4, 5),
@@ -13,7 +13,7 @@ test_that("calculate_kinematics_2d adds all expected columns", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   expected_cols <- c(
     "v_x",
@@ -42,7 +42,7 @@ test_that("velocity components match differentiate()", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   # Calculate expected velocities using differentiate
   expected_v_x <- differentiate(data$x, data$time, order = 1)
@@ -60,7 +60,7 @@ test_that("acceleration components match differentiate()", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   # Calculate expected accelerations using differentiate
   expected_a_x <- differentiate(data$x, data$time, order = 2)
@@ -78,7 +78,7 @@ test_that("speed is calculated correctly from velocity components", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   # Speed should be sqrt(v_x^2 + v_y^2) = sqrt(9 + 16) = 5
   expected_speed <- sqrt(result$v_x^2 + result$v_y^2)
@@ -94,7 +94,7 @@ test_that("acceleration matches differentiate of speed", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   # Acceleration should match differentiate(speed)
   expected_acceleration <- differentiate(result$speed, data$time, order = 1)
@@ -111,7 +111,7 @@ test_that("path_length accumulates distance correctly", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   # Manual calculation: 3 + 4 + 3 + 4 = 14
   dx <- diff(data$x)
@@ -129,7 +129,7 @@ test_that("heading is calculated correctly from velocity", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   # For 45-degree motion, heading should be pi/4
   expected_heading <- atan2(result$v_y, result$v_x)
@@ -145,7 +145,7 @@ test_that("heading along -x is pi, not 0", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   expect_equal(result$heading, rep(pi, 6))
   expect_equal(result$angular_velocity, rep(0, 6))
@@ -161,7 +161,7 @@ test_that("heading is NA where the animal is stationary", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   stationary <- result$speed == 0
   expect_true(any(stationary))
@@ -182,7 +182,7 @@ test_that("angular_velocity matches differentiate of unwrapped heading", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   # Angular velocity should match differentiate(heading_unwrapped)
   expected_ang_vel <- differentiate(
@@ -203,7 +203,7 @@ test_that("angular_speed is absolute value of angular_velocity", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   expect_equal(result$angular_speed, abs(result$angular_velocity))
 })
@@ -217,7 +217,7 @@ test_that("angular_acceleration matches differentiate of unwrapped heading", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   # Angular acceleration should match second derivative of heading
   expected_ang_acc <- differentiate(
@@ -237,7 +237,7 @@ test_that("stationary object has zero kinematics", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   # All velocities and speed should be zero (except potentially first point)
   expect_true(all(result$speed[2:6] == 0))
@@ -252,7 +252,7 @@ test_that("constant velocity has zero acceleration", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   # Acceleration should be approximately zero for constant velocity
   # (excluding edge effects from differentiate)
@@ -269,7 +269,7 @@ test_that("angular_path_length starts at 0 when the first heading is negative", 
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   expect_equal(result$heading, rep(-1, 6))
   expect_equal(result$angular_path_length, rep(0, 6))
@@ -284,7 +284,7 @@ test_that("angular_path_length accumulates absolute turning", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   expect_equal(result$angular_path_length[1], 0)
   expect_equal(
@@ -302,7 +302,7 @@ test_that("angular_path_length counts turning across a pause", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   expect_true(any(is.na(result$heading)))
   expect_false(anyNA(result$angular_path_length))
@@ -318,7 +318,7 @@ test_that("angular_path_length is 0 for a stationary track", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics_2d(data)
+  result <- calculate_kinematics(data)
 
   expect_equal(result$angular_path_length, rep(0, 6))
 })

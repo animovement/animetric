@@ -12,6 +12,8 @@
 
 * `angular_path_length` from `calculate_kinematics()` starts at `0` (#68). When the first heading was negative it started at `2 * abs(heading)` and carried that offset along the whole trajectory, so a straight line at a heading of `-1` reported two radians of turning. `summarise_tortuosity()` takes the difference between the last and first values, so its `total_angular_path_length` was not affected. Turning made while the animal is stopped (where `heading` is `NA`) is counted when it moves off again.
 
+* `calculate_kinematics()`, `calculate_tortuosity()`, `summarise_kinematics()` and `summarise_tortuosity()` read the axes and the index from the frame's declared variables, so they work on frames whose columns are not called `x`, `y`, `z` and `time` (#81). They used to stop with "Column `x` not found". Velocity and acceleration components are named by axis role (`v_x`, `a_y`, ...) whatever the input columns are called. 1D frames get translational kinematics and tortuosity too; `calculate_kinematics()` used to return them unchanged. The 2D and 3D code paths are now one implementation, with turning angles from `anicore::angle_between()`. The only change in output is that 3D windowed tortuosity is `NA` at the first row where the window is incomplete, as it already was in 2D; the old 3D code filled the missing start of the window with the first position.
+
 * `calculate_nnd()` keeps the input's metadata, such as `sampling_rate`, and works on frames whose axis columns have custom names. It used to rebuild its result by re-detecting the columns, which dropped both.
 
 ## Changed

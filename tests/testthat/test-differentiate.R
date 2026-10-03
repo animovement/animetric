@@ -150,3 +150,7 @@ test_that("compute_gradient() defaults to the sample index as its coordinate", {
     compute_gradient(values, coords = seq_len(length(values)))
   )
 })
+
+test_that("compute_gradient() needs at least two points", {
+  expect_error(compute_gradient(1), "at least 2 points")
+})
