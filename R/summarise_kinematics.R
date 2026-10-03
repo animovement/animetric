@@ -45,9 +45,14 @@ summarise_kinematics <- function(
   has_course <- "course" %in% names(data)
 
   # Circular statistics work in radians; report them in the frame's unit
-  unit <- angle_unit(data)
+  unit <- anicore::get_metadata(data, "unit_angle")
   circular <- function(stat) {
-    rlang::quo(rad_to_unit(stat(unit_to_rad(.data$course, unit)), unit))
+    rlang::quo(
+      anicore::angle_from_rad(
+        stat(anicore::angle_to_rad(.data$course, unit)),
+        unit
+      )
+    )
   }
 
   if (measures == "median_mad") {
