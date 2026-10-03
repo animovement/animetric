@@ -414,7 +414,7 @@ test_that("errors when the frame declares no temporal context", {
     y = c(0, 0)
   ) |>
     anicore::set_variables(when = character(0))
-  data <- suppressWarnings(dplyr::select(dplyr::ungroup(data), -"time"))
+  data <- drop_column_unchecked(data, "time")
 
   expect_error(calculate_nnd(data, across = "individual"), "context")
 })
