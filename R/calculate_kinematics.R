@@ -8,15 +8,18 @@
 #'   Cartesian; rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for
 #'   spherical) and an index. The axes and the index are read from the frame's
 #'   declared variables, so the columns can have any name.
-#' @param vertical For 3D data, the axis that points up in the world, against
-#'   gravity: one of `"x"`, `"y"` or `"z"`, or with a minus sign (`"-y"`) when
-#'   that axis points down. It defines the horizontal plane that course is
-#'   measured in. The frame's `axis_directions` cannot supply it, since they
-#'   are relative to the camera: in a recording filmed from above, the axis
-#'   pointing at the camera is the vertical one. A metadata field for it is
-#'   proposed in animovement/anicore#172. `NULL` (the default) gives
-#'   only the measures that need no vertical. Ignored for 1D and 2D data,
-#'   where course is measured in the plane of the data.
+#' @param vertical `r lifecycle::badge("experimental")` For 3D data, the
+#'   axis that points up in the world, against gravity: one of `"x"`, `"y"`
+#'   or `"z"`, or with a minus sign (`"-y"`) when that axis points down. It
+#'   defines the horizontal plane that course is measured in. The frame's
+#'   `axis_directions` cannot supply it, since they are relative to the
+#'   camera: in a recording filmed from above, the axis pointing at the
+#'   camera is the vertical one. A metadata field for it is proposed in
+#'   animovement/anicore#172. `NULL` (the default) gives only the measures
+#'   that need no vertical. Ignored for 1D and 2D data, where course is
+#'   measured in the plane of the data. Experimental until that proposal is
+#'   settled: the argument may come to default to the declared vertical, and
+#'   to mean something for 2D side views.
 #'
 #' @return An anipoint in the same coordinate system as the input, with added
 #'   kinematic measures. Translational kinematics (velocity and acceleration

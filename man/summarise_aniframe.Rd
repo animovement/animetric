@@ -59,6 +59,8 @@ A data frame with one row per group: the grouping columns, then
 \code{mad_speed}.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Summarises the per-row measures of a frame over each group: a measure of
 central tendency and of dispersion for each, one row per group. It
 describes the measures the frame already carries — the output of

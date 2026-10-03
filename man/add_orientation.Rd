@@ -49,6 +49,8 @@ the rows being written, or an orientation declared in other columns.}
 The anipoint, with the orientation columns written and declared.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Works out which way a body faces from where its points are, and declares
 it as the frame's orientation: \code{heading} in 2D, a unit quaternion
 (\code{qw}, \code{qx}, \code{qy}, \code{qz}) in 3D. Once declared, it is a proper \code{where}
