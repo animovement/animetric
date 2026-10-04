@@ -32,23 +32,36 @@
 
 ## Changed
 
+* `add_kinematics()` and `add_tortuosity()` replace `calculate_kinematics()` and `calculate_tortuosity()`, with the same arguments (#103). Functions that return the frame with something added now all start with `add_`. Some columns are renamed on the way:
+
+  | Function | Old | New |
+  |---|---|---|
+  | `add_kinematics()` | `path_length` | `cumulative_distance` |
+  | `add_tortuosity()` | `straightness` | `straightness_11` |
+  | `add_tortuosity()` | `sinuosity` | `sinuosity_11` |
+  | `add_tortuosity()` | `emax` | `e_max_11` |
+
+  - `cumulative_distance` is the running total of distance travelled, and pairs with `cumulative_turning`. `acceleration` keeps its name, and its documentation now says what it is: the signed rate of change of speed along the path, not the size of the acceleration vector (`a_x`, `a_y`).
+  - `add_tortuosity()` names its columns with the window width, `11` being the default, and adds only those three. `calculate_tortuosity()` also added every kinematic column when the frame had none. The width in the name keeps the windowed measures apart from the whole-path ones of `summarise_path()`, and lets several widths sit side by side.
+  - `summarise_aniframe()` summarises the windowed measures at every width present (`median_straightness_11`, ...), as well as the unsuffixed columns of `calculate_tortuosity()`.
+
 * `summarise_aniframe()`, `add_orientation()` and the `vertical` argument of `calculate_kinematics()` are marked experimental (animovement/.github#46). They are new designs that have not been used in anger yet, so they may still change without a deprecation cycle; anything without a badge is stable, and changes only through one. `summarise_aniframe()` has open design questions (#91, #92, #22), the first uses of `add_orientation()` are still being designed (#25, #85), and `vertical` may come to default to a vertical declared in the frame's metadata (animovement/anicore#172).
 
-* **The summaries are reorganised into two functions, by what they summarise** (#58). Sliding windows stay in the `calculate_*()` functions; both summaries cover each group's whole time range.
+* **The summaries are reorganised into two functions, by what they summarise** (#58). Sliding windows stay in `add_tortuosity()`; both summaries cover each group's whole time range.
 
   - `summarise_aniframe()` summarises the *distribution* of per-row measures, with one row per group and any grouping allowed. It is now an S3 generic:
-    - **anipoints:** speed, acceleration, the turning measures, course and elevation, the windowed `straightness`, `sinuosity` and `emax`, `confidence`, and a declared `yaw` as `*_heading`.
+    - **anipoints:** speed, acceleration, the turning measures, course and elevation, the windowed measures of `add_tortuosity()`, `confidence`, and a declared `yaw` as `*_heading`.
     - **anisegments:** `length`.
     - **anijoints:** `angle`.
 
-    Angles (`course`, `yaw`, joint angles) get circular statistics, reported in the frame's `unit_angle`. `cols =` picks the measures. It no longer needs `calculate_kinematics()` to have been run: it summarises whichever measures the frame has.
-  - `summarise_path()` measures each trajectory as a whole: `total_path_length`, `total_turning`, `net_displacement`, `straightness`, `sinuosity` and `emax`. It works on any anipoint in any coordinate system, computing what it needs from the positions, and needs one trajectory per group.
+    Angles (`course`, `yaw`, joint angles) get circular statistics, reported in the frame's `unit_angle`. `cols =` picks the measures. It no longer needs `add_kinematics()` to have been run: it summarises whichever measures the frame has.
+  - `summarise_path()` measures each trajectory as a whole: `total_distance`, `total_turning`, `net_displacement`, `straightness`, `sinuosity` and `e_max`. It works on any anipoint in any coordinate system, computing what it needs from the positions, and needs one trajectory per group.
 
-  `median_straightness` from `summarise_aniframe()` is the typical straightness over windows; `straightness` from `summarise_path()` is how direct the whole route was.
+  `median_straightness_11` from `summarise_aniframe()` is the typical straightness over windows; `straightness` from `summarise_path()` is how direct the whole route was.
 
 * **Deprecated:**
   - `summarise_kinematics()` → `summarise_aniframe()`.
-  - `summarise_tortuosity()` → `summarise_path()`, which returns the same columns.
+  - `summarise_tortuosity()` → `summarise_path()`, which returns the same measures, with `total_path_length` and `emax` named `total_distance` and `e_max`.
   - `summarise_aniframe(type = )` keeps its old combined output, with a warning.
 
   Each deprecated call returns exactly what it did before. They will be removed after the next release.
@@ -85,6 +98,13 @@
 * The circular summaries in `summarise_kinematics()` come from anicore, and the `circular` package is no longer needed at all (animovement/anicore#147). It was a soft dependency behind a `check_installed()` prompt, so the first call to `summarise_kinematics()` on a fresh install used to stop and ask to install a package — for two columns of the summary table.
 
 * `mean_heading` is reported in `[0, 2*pi)`, like `median_heading` already was. It previously came back in `(-pi, pi]`, so the two summaries of the same column disagreed about where the circle starts; near `+/-pi` that showed up as a mean of `-3.13` beside a median of `3.15`. Both now use the range `anicore::wrap_angle()` gives by default. The direction is unchanged — only how it is written down.
+
+## Deprecated
+
+* `calculate_kinematics()` → `add_kinematics()` (#103).
+* `calculate_tortuosity()` → `add_tortuosity()` (#103).
+
+  Each returns exactly what it did, with the old column names (`path_length`, and `straightness`, `sinuosity` and `emax`), and `calculate_tortuosity()` still adds the kinematic columns. They will be removed after the next release.
 
 ## Fixed
 

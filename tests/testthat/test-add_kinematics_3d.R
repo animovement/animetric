@@ -1,11 +1,11 @@
 # Testing:
-# - Translational kinematics in 3D (velocity, acceleration, speed, path_length)
+# - Translational kinematics in 3D (velocity, acceleration, speed, cumulative_distance)
 # - 3D velocity components (v_x, v_y, v_z)
 # - 3D acceleration components (a_x, a_y, a_z)
 # - Edge cases (stationary, constant velocity)
 # - Consistency with differentiate() function
 
-test_that("calculate_kinematics() on 3D data adds all expected columns", {
+test_that("add_kinematics() on 3D data adds all expected columns", {
   data <- data.frame(
     time = 0:5,
     x = c(0, 1, 2, 3, 4, 5),
@@ -14,7 +14,7 @@ test_that("calculate_kinematics() on 3D data adds all expected columns", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expected_cols <- c(
     "v_x",
@@ -25,7 +25,7 @@ test_that("calculate_kinematics() on 3D data adds all expected columns", {
     "a_z",
     "speed",
     "acceleration",
-    "path_length"
+    "cumulative_distance"
   )
 
   expect_true(all(expected_cols %in% names(result)))
@@ -40,7 +40,7 @@ test_that("3D velocity components match differentiate()", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Calculate expected velocities using differentiate
   expected_v_x <- differentiate(data$x, data$time, order = 1)
@@ -61,7 +61,7 @@ test_that("3D acceleration components match differentiate()", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Calculate expected accelerations using differentiate
   expected_a_x <- differentiate(data$x, data$time, order = 2)
@@ -82,7 +82,7 @@ test_that("3D speed is calculated correctly from velocity components", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Speed should be sqrt(v_x^2 + v_y^2 + v_z^2)
   expected_speed <- sqrt(result$v_x^2 + result$v_y^2 + result$v_z^2)
@@ -99,7 +99,7 @@ test_that("3D acceleration matches differentiate of speed", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Acceleration should match differentiate(speed)
   expected_acceleration <- differentiate(result$speed, data$time, order = 1)
@@ -107,7 +107,7 @@ test_that("3D acceleration matches differentiate of speed", {
   expect_equal(result$acceleration, expected_acceleration)
 })
 
-test_that("3D path_length accumulates distance correctly", {
+test_that("3D cumulative_distance accumulates distance correctly", {
   # Create a simple 3D path
   data <- data.frame(
     time = 0:3,
@@ -117,7 +117,7 @@ test_that("3D path_length accumulates distance correctly", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Manual calculation
   dx <- diff(data$x)
@@ -125,7 +125,7 @@ test_that("3D path_length accumulates distance correctly", {
   dz <- diff(data$z)
   expected_path <- cumsum(c(0, sqrt(dx^2 + dy^2 + dz^2)))
 
-  expect_equal(result$path_length, expected_path)
+  expect_equal(result$cumulative_distance, expected_path)
 })
 
 test_that("stationary 3D object has zero kinematics", {
@@ -137,11 +137,11 @@ test_that("stationary 3D object has zero kinematics", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # All velocities should be zero
   expect_true(all(result$speed[2:6] == 0))
-  expect_equal(result$path_length[6], 0)
+  expect_equal(result$cumulative_distance[6], 0)
 })
 
 test_that("constant 3D velocity has zero acceleration", {
@@ -153,7 +153,7 @@ test_that("constant 3D velocity has zero acceleration", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Acceleration should be approximately zero (excluding edge effects)
   expect_true(all(abs(result$acceleration[3:9]) < 1e-10))
@@ -170,7 +170,7 @@ test_that("helical motion produces expected velocity structure", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # v_z should be approximately constant
   v_z_sd <- sd(result$v_z, na.rm = TRUE)

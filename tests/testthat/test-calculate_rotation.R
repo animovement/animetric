@@ -7,7 +7,7 @@ helix <- function(t = seq(0, 4 * pi, length.out = 400)) {
 interior <- 3:398
 
 test_that("3D gets turning speed and cumulative turning without a vertical", {
-  result <- calculate_kinematics(helix())
+  result <- add_kinematics(helix())
 
   expect_true(all(c("turning_speed", "cumulative_turning") %in% names(result)))
   expect_false(any(
@@ -23,7 +23,7 @@ test_that("3D gets turning speed and cumulative turning without a vertical", {
 })
 
 test_that("a vertical adds course, elevation and the horizontal turning rate", {
-  result <- calculate_kinematics(helix(), vertical = "z")
+  result <- add_kinematics(helix(), vertical = "z")
 
   # Climbing at 45 degrees, turning anticlockwise seen from above at 1 rad/s
   expect_equal(
@@ -59,13 +59,13 @@ test_that("course turns about the vertical by the right-hand rule", {
     anicore::as_anipoint()
 
   for (case in list(list(around_y, "y"), list(around_x, "x"))) {
-    result <- calculate_kinematics(case[[1]], vertical = case[[2]])
+    result <- add_kinematics(case[[1]], vertical = case[[2]])
     expect_equal(result$turning_rate[3:198], rep(1, 196), tolerance = 1e-3)
     expect_equal(result$course_elevation[3:198], rep(0, 196), tolerance = 1e-6)
   }
 
   # Seen from below, the same motion is clockwise
-  flipped <- calculate_kinematics(around_y, vertical = "-y")
+  flipped <- add_kinematics(around_y, vertical = "-y")
   expect_equal(flipped$turning_rate[3:198], rep(-1, 196), tolerance = 1e-3)
 })
 
@@ -73,8 +73,8 @@ test_that("a 3D path in the horizontal plane matches its 2D version", {
   t <- seq(0, 2 * pi, length.out = 100)
   flat <- data.frame(time = t, x = cos(t) + t / 3, y = sin(2 * t))
 
-  in_2d <- calculate_kinematics(anicore::as_anipoint(flat))
-  in_3d <- calculate_kinematics(
+  in_2d <- add_kinematics(anicore::as_anipoint(flat))
+  in_3d <- add_kinematics(
     anicore::as_anipoint(transform(flat, z = 0)),
     vertical = "z"
   )
@@ -95,7 +95,7 @@ test_that("course is NA where travel is vertical", {
   data <- data.frame(time = 0:5, x = 0, y = 0, z = c(0, 1, 2, 3, 4, 5)) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data, vertical = "z")
+  result <- add_kinematics(data, vertical = "z")
 
   expect_true(all(is.na(result$course)))
   expect_true(all(is.na(result$turning_rate)))
@@ -113,7 +113,7 @@ test_that("cumulative turning counts a turn made while stopped, in 3D", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expect_false(anyNA(result$cumulative_turning))
   expect_equal(result$cumulative_turning[1], 0)
@@ -121,8 +121,8 @@ test_that("cumulative turning counts a turn made while stopped, in 3D", {
 })
 
 test_that("3D angular measures are in the frame's unit_angle", {
-  rad <- calculate_kinematics(helix(), vertical = "z")
-  deg <- calculate_kinematics(
+  rad <- add_kinematics(helix(), vertical = "z")
+  deg <- add_kinematics(
     anicore::set_metadata(helix(), unit_angle = "deg"),
     vertical = "z"
   )
@@ -141,11 +141,11 @@ test_that("3D angular measures are in the frame's unit_angle", {
 
 test_that("vertical is checked, and ignored outside 3D", {
   expect_error(
-    calculate_kinematics(helix(), vertical = "up"),
+    add_kinematics(helix(), vertical = "up"),
     "must be"
   )
   expect_error(
-    calculate_kinematics(helix(), vertical = c("x", "y")),
+    add_kinematics(helix(), vertical = c("x", "y")),
     "must be"
   )
 
@@ -155,13 +155,13 @@ test_that("vertical is checked, and ignored outside 3D", {
     y = c(0, 1, 0, 1, 0)
   ))
   expect_equal(
-    calculate_kinematics(flat, vertical = "x")$course,
-    calculate_kinematics(flat)$course
+    add_kinematics(flat, vertical = "x")$course,
+    add_kinematics(flat)$course
   )
 })
 
 test_that("summaries include course and elevation when there is a vertical", {
-  result <- summarise_aniframe(calculate_kinematics(helix(), vertical = "z"))
+  result <- summarise_aniframe(add_kinematics(helix(), vertical = "z"))
 
   expect_true(all(
     c(

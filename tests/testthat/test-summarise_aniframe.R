@@ -32,7 +32,7 @@ mock_kin_2d <- function(n = 10, grouped = FALSE) {
   }
 
   anicore::as_anipoint(data) |>
-    calculate_kinematics()
+    add_kinematics()
 }
 
 # Helper to create mock 3D kinematics aniframe
@@ -52,7 +52,7 @@ mock_kin_3d <- function(n = 10, grouped = FALSE) {
   }
 
   anicore::as_anipoint(data) |>
-    calculate_kinematics()
+    add_kinematics()
 }
 
 
@@ -85,23 +85,56 @@ test_that("an anipoint's default measures are the kinematics it carries", {
 test_that("windowed tortuosity and confidence are summarised when present", {
   data <- mock_kin_2d(n = 20) |>
     dplyr::mutate(confidence = seq(0.5, 1, length.out = 20)) |>
-    calculate_tortuosity(window_width = 5L)
+    add_tortuosity(window_width = 5L)
 
   result <- summarise_aniframe(data)
 
   expect_true(all(
     c(
-      "median_straightness",
-      "median_sinuosity",
-      "median_emax",
+      "median_straightness_5",
+      "median_sinuosity_5",
+      "median_e_max_5",
       "median_confidence"
     ) %in%
       names(result)
   ))
   expect_equal(
-    result$median_straightness,
-    stats::median(data$straightness, na.rm = TRUE)
+    result$median_straightness_5,
+    stats::median(data$straightness_5, na.rm = TRUE)
   )
+})
+
+test_that("every window width present is summarised, and nothing else", {
+  data <- mock_kin_2d(n = 30) |>
+    add_tortuosity(window_width = 5L) |>
+    add_tortuosity(window_width = 11L) |>
+    dplyr::mutate(straightness_index = 1, my_e_max_5 = 1)
+
+  result <- summarise_aniframe(data)
+
+  windowed <- c(
+    "straightness_5",
+    "sinuosity_5",
+    "e_max_5",
+    "straightness_11",
+    "sinuosity_11",
+    "e_max_11"
+  )
+  expect_true(all(paste0("median_", windowed) %in% names(result)))
+  expect_false(any(grepl("straightness_index|my_e_max", names(result))))
+})
+
+test_that("the deprecated calculate_tortuosity()'s columns are summarised", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+  data <- mock_kin_2d(n = 20) |>
+    calculate_tortuosity(window_width = 5L)
+
+  result <- summarise_aniframe(data)
+
+  expect_true(all(
+    c("median_straightness", "median_sinuosity", "median_emax") %in%
+      names(result)
+  ))
 })
 
 test_that("components, unwrapped course and running totals are left out", {
@@ -111,7 +144,7 @@ test_that("components, unwrapped course and running totals are left out", {
     "v_x",
     "a_x",
     "course_unwrapped",
-    "path_length",
+    "cumulative_distance",
     "cumulative_turning"
   )
   for (col in left_out) {
@@ -126,7 +159,7 @@ test_that("3D kinematics are summarised, with course only given a vertical", {
 
   data <- data.frame(time = 1:20, x = cos(1:20), y = sin(1:20), z = 1:20) |>
     anicore::as_anipoint() |>
-    calculate_kinematics(vertical = "z")
+    add_kinematics(vertical = "z")
   with <- summarise_aniframe(data)
   expect_true(all(
     c("median_course", "median_course_elevation", "median_turning_rate") %in%
@@ -199,7 +232,7 @@ test_that("cols is checked", {
 
 test_that("an anipoint without measures says what to do", {
   plain <- anicore::as_anipoint(data.frame(time = 1:5, x = 1:5, y = 1:5))
-  expect_error(summarise_aniframe(plain), "calculate_kinematics")
+  expect_error(summarise_aniframe(plain), "add_kinematics")
 })
 
 test_that("summaries follow any grouping, one row per group", {
@@ -286,7 +319,15 @@ test_that("type still gives the old summaries, with a deprecation warning", {
     path <- summarise_aniframe(data, type = "tortuosity"),
     class = "lifecycle_warning_deprecated"
   )
-  expect_equal(path, summarise_path(data))
+  # The old names, which summarise_path() has since changed
+  expect_equal(
+    path,
+    dplyr::rename(
+      summarise_path(data),
+      total_path_length = "total_distance",
+      emax = "e_max"
+    )
+  )
 
   expect_warning(
     both <- summarise_aniframe(
@@ -322,7 +363,26 @@ test_that("summarise_kinematics() and summarise_tortuosity() are deprecated", {
     path <- summarise_tortuosity(data),
     class = "lifecycle_warning_deprecated"
   )
-  expect_equal(path, summarise_path(data))
+  expect_named(
+    path,
+    c(
+      "keypoint",
+      "total_path_length",
+      "total_turning",
+      "net_displacement",
+      "straightness",
+      "sinuosity",
+      "emax"
+    )
+  )
+  expect_equal(
+    path,
+    dplyr::rename(
+      summarise_path(data),
+      total_path_length = "total_distance",
+      emax = "e_max"
+    )
+  )
 })
 
 # join_summaries ---------------------------------------------------------

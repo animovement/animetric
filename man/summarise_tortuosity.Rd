@@ -13,14 +13,18 @@ summarize_tortuosity(data)
 \item{data}{An anipoint.}
 }
 \value{
-As \code{\link[=summarise_path]{summarise_path()}}.
+As \code{\link[=summarise_path]{summarise_path()}}, with \code{total_path_length} and \code{emax} in
+place of \code{total_distance} and \code{e_max}.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 Renamed to \code{\link[=summarise_path]{summarise_path()}}, which returns the same measures. The name
-suggested a summary of \code{\link[=calculate_tortuosity]{calculate_tortuosity()}}'s windowed output, which it
+suggested a summary of \code{\link[=add_tortuosity]{add_tortuosity()}}'s windowed output, which it
 never was: it measures the whole path. To summarise the windowed
 measures, use \code{\link[=summarise_aniframe]{summarise_aniframe()}}.
+
+This returns exactly what it did, with the columns \code{total_path_length} and
+\code{emax}, which \code{\link[=summarise_path]{summarise_path()}} calls \code{total_distance} and \code{e_max}.
 }
 \keyword{internal}

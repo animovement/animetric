@@ -64,7 +64,7 @@ A data frame with one row per group: the grouping columns, then
 Summarises the per-row measures of a frame over each group: a measure of
 central tendency and of dispersion for each, one row per group. It
 describes the measures the frame already carries — the output of
-\code{\link[=calculate_kinematics]{calculate_kinematics()}}, \code{\link[=calculate_tortuosity]{calculate_tortuosity()}} or your own \code{mutate()} —
+\code{\link[=add_kinematics]{add_kinematics()}}, \code{\link[=add_tortuosity]{add_tortuosity()}} or your own \code{mutate()} —
 and computes no new ones. Any grouping is allowed, since a median of rows
 means the same whether the rows are one keypoint's or a whole animal's.
 
@@ -75,17 +75,22 @@ where it started, are not a statistic of any column; see
 Each frame class has its own default set of measures:
 \describe{
 \item{anipoint}{\code{speed}, \code{acceleration}, \code{turning_speed}, \code{turning_rate},
-\code{turning_acceleration}, \code{course_elevation}, the windowed
-\code{straightness}, \code{sinuosity} and \code{emax}, and \code{confidence}; circular
+\code{turning_acceleration}, \code{course_elevation}, the windowed measures of
+\code{\link[=add_tortuosity]{add_tortuosity()}} at every window width present (\code{straightness_11},
+\code{sinuosity_11}, \code{e_max_11}, ...), and \code{confidence}; circular
 statistics for \code{course} and for a declared \code{yaw}, reported as
 \verb{*_heading}.}
 \item{anisegment}{\code{length} and \code{confidence}.}
 \item{anijoint}{\code{angle}, with circular statistics, and \code{confidence}.}
 }
-Only the measures present are summarised. Velocity and acceleration
-components, \code{course_unwrapped}, and the running totals \code{path_length} and
-\code{cumulative_turning} are left out by default; \code{\link[=summarise_path]{summarise_path()}} reports
-the totals.
+Only the measures present are summarised. The windowed measures are
+recognised by their names, \code{straightness}, \code{sinuosity} or \code{e_max} followed
+by \verb{_} and a window width, so a frame with several widths has each
+summarised. The unsuffixed \code{straightness}, \code{sinuosity} and \code{emax} of the
+deprecated \code{\link[=calculate_tortuosity]{calculate_tortuosity()}} are summarised too. Velocity and
+acceleration components, \code{course_unwrapped}, and the running totals
+\code{cumulative_distance} and \code{cumulative_turning} are left out by default;
+\code{\link[=summarise_path]{summarise_path()}} reports the totals.
 
 Angles are summarised with circular statistics (\code{\link[anicore:circ_mean]{anicore::circ_mean()}} and
 its siblings), so that the mean of 350 and 10 degrees is 0 rather than 180.
@@ -94,7 +99,7 @@ Only the angles animetric knows of are treated as circular; any other
 column is summarised as a linear quantity.
 }
 \examples{
-kin <- calculate_kinematics(
+kin <- add_kinematics(
   anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 )
 summarise_aniframe(kin)

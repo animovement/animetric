@@ -15,7 +15,7 @@
 #' new member's name — an individual's strain is still its strain, since
 #' nothing was derived over it.
 #'
-#' The new member is an ordinary member of its level: [calculate_kinematics()]
+#' The new member is an ordinary member of its level: [add_kinematics()]
 #' gives it kinematics, and [summarise_aniframe()] summarises it alongside the
 #' tracked points.
 #'
