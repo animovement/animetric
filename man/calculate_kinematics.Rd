@@ -7,23 +7,7 @@
 calculate_kinematics(data, vertical = NULL)
 }
 \arguments{
-\item{data}{An anipoint with position coordinates (x, x/y or x/y/z for
-Cartesian; rho/phi for polar; rho/phi/z for cylindrical; rho/phi/theta for
-spherical) and an index. The axes and the index are read from the frame's
-declared variables, so the columns can have any name.}
-
-\item{vertical}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} For 3D data, the
-axis that points up in the world, against gravity: one of \code{"x"}, \code{"y"}
-or \code{"z"}, or with a minus sign (\code{"-y"}) when that axis points down. It
-defines the horizontal plane that course is measured in. The frame's
-\code{axis_directions} cannot supply it, since they are relative to the
-camera: in a recording filmed from above, the axis pointing at the
-camera is the vertical one. A metadata field for it is proposed in
-animovement/anicore#172. \code{NULL} (the default) gives only the measures
-that need no vertical. Ignored for 1D and 2D data, where course is
-measured in the plane of the data. Experimental until that proposal is
-settled: the argument may come to default to the declared vertical, and
-to mean something for 2D side views.}
+\item{data, vertical}{See \code{\link[=add_kinematics]{add_kinematics()}}.}
 }
 \value{
 As \code{\link[=add_kinematics]{add_kinematics()}}, with \code{path_length} in place of
@@ -35,6 +19,8 @@ As \code{\link[=add_kinematics]{add_kinematics()}}, with \code{path_length} in p
 Renamed to \code{\link[=add_kinematics]{add_kinematics()}}, which takes the same arguments: functions
 that return the frame with columns added now start with \code{add_}. This
 returns exactly what it did, including the running total of distance as
-\code{path_length}, which \code{\link[=add_kinematics]{add_kinematics()}} calls \code{cumulative_distance}.
+\code{path_length}, which \code{\link[=add_kinematics]{add_kinematics()}} calls \code{cumulative_distance}, and
+every direction however short the step, as \code{\link[=add_kinematics]{add_kinematics()}} does with
+\code{min_step = 0}.
 }
 \keyword{internal}

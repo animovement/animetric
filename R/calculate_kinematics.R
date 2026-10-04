@@ -6,9 +6,11 @@
 #' Renamed to [add_kinematics()], which takes the same arguments: functions
 #' that return the frame with columns added now start with `add_`. This
 #' returns exactly what it did, including the running total of distance as
-#' `path_length`, which [add_kinematics()] calls `cumulative_distance`.
+#' `path_length`, which [add_kinematics()] calls `cumulative_distance`, and
+#' every direction however short the step, as [add_kinematics()] does with
+#' `min_step = 0`.
 #'
-#' @inheritParams add_kinematics
+#' @param data,vertical See [add_kinematics()].
 #'
 #' @return As [add_kinematics()], with `path_length` in place of
 #'   `cumulative_distance`.
@@ -20,7 +22,7 @@ calculate_kinematics <- function(data, vertical = NULL) {
     "calculate_kinematics()",
     "add_kinematics()"
   )
-  add_kinematics(data, vertical = vertical) |>
+  add_kinematics(data, vertical = vertical, min_step = 0) |>
     legacy_kinematics_names()
 }
 

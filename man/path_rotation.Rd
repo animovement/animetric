@@ -4,7 +4,7 @@
 \alias{path_rotation}
 \title{The turning measures of one trajectory}
 \usage{
-path_rotation(velocity, time, up)
+path_rotation(velocity, time, up, min_step = 0)
 }
 \arguments{
 \item{velocity}{A data frame of velocity components, one column per axis.}
@@ -13,6 +13,8 @@ path_rotation(velocity, time, up)
 
 \item{up}{The unit vertical, as from \code{\link[=vertical_vector]{vertical_vector()}}, or \code{NULL} for
 only the measures that need none.}
+
+\item{min_step}{The shortest step whose direction counts, a number.}
 }
 \value{
 A data frame of turning measures, in radians.

@@ -40,3 +40,90 @@ calculate_tortuosity <- function(data, window_width = 11L) {
     names = c("straightness", "sinuosity", "emax")
   )
 }
+
+#' Straightness, sinuosity and E_max over sliding windows, as
+#' `calculate_tortuosity()` computed them
+#'
+#' Turning angles are between successive velocities, frame by frame.
+#'
+#' @param data A Cartesian anipoint with velocity columns.
+#' @param window_width The window width, an integer of at least 3.
+#' @param v_cols The velocity columns, one per axis. Columns whose names
+#'   start with `.` are dropped from the result.
+#' @param names The names to give straightness, sinuosity and E_max.
+#' @return The anipoint with the three measures added.
+#' @keywords internal
+windowed_tortuosity <- function(data, window_width, v_cols, names) {
+  # Store original class for restoration
+  original_class <- class(data)
+
+  position_cols <- unname(cartesian_axes(data))
+  half_w <- window_width %/% 2L
+  other_half <- window_width - half_w - 1L
+
+  result <- data |>
+    dplyr::mutate(
+      # Step length between consecutive points
+      .step_length = step_length(dplyr::pick(dplyr::all_of(position_cols))),
+
+      # Turning angle between consecutive velocity vectors
+      .cos_turning = cos_turning(dplyr::pick(dplyr::all_of(v_cols))),
+
+      # Rolling sums using data.table (fast algorithm, centered window)
+      .roll_sum_step = data.table::frollsum(
+        .data$.step_length,
+        n = window_width - 1L,
+        algo = "fast",
+        align = "center",
+        na.rm = TRUE
+      ),
+      .roll_count_step = data.table::frollsum(
+        as.numeric(!is.na(.data$.step_length)),
+        n = window_width - 1L,
+        algo = "fast",
+        align = "center"
+      ),
+
+      .roll_sum_cos = data.table::frollsum(
+        .data$.cos_turning,
+        n = window_width - 1L,
+        algo = "fast",
+        align = "center",
+        na.rm = TRUE
+      ),
+      .roll_count_cos = data.table::frollsum(
+        as.numeric(!is.na(.data$.cos_turning)),
+        n = window_width - 1L,
+        algo = "fast",
+        align = "center"
+      ),
+
+      # Displacement between the window's start and end positions
+      .window_displacement = vector_norm(lapply(
+        dplyr::pick(dplyr::all_of(position_cols)),
+        \(x) dplyr::lead(x, n = other_half) - dplyr::lag(x, n = half_w)
+      )),
+
+      # Compute means
+      .window_path_length = .data$.roll_sum_step,
+      .mean_step = .data$.roll_sum_step / .data$.roll_count_step,
+      .mean_cos = .data$.roll_sum_cos / .data$.roll_count_cos
+    ) |>
+    dplyr::mutate(
+      !!names[[1]] := compute_straightness(
+        .data$.window_displacement,
+        .data$.window_path_length
+      ),
+      !!names[[2]] := compute_sinuosity(
+        .data$.mean_step,
+        .data$.mean_cos,
+        method = "corrected"
+      ),
+      !!names[[3]] := compute_emax(.data$.mean_cos)
+    ) |>
+    dplyr::select(-dplyr::starts_with("."))
+
+  # Restore original class
+  class(result) <- original_class
+  result
+}

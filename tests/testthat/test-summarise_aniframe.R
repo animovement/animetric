@@ -319,15 +319,8 @@ test_that("type still gives the old summaries, with a deprecation warning", {
     path <- summarise_aniframe(data, type = "tortuosity"),
     class = "lifecycle_warning_deprecated"
   )
-  # The old names, which summarise_path() has since changed
-  expect_equal(
-    path,
-    dplyr::rename(
-      summarise_path(data),
-      total_path_length = "total_distance",
-      emax = "e_max"
-    )
-  )
+  # The old names and values, which summarise_path() has since changed
+  expect_equal(path, summarise_path_legacy(data))
 
   expect_warning(
     both <- summarise_aniframe(
@@ -375,14 +368,7 @@ test_that("summarise_kinematics() and summarise_tortuosity() are deprecated", {
       "emax"
     )
   )
-  expect_equal(
-    path,
-    dplyr::rename(
-      summarise_path(data),
-      total_path_length = "total_distance",
-      emax = "e_max"
-    )
-  )
+  expect_equal(path, summarise_path_legacy(data))
 })
 
 # join_summaries ---------------------------------------------------------

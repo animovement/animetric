@@ -4,7 +4,7 @@
 \alias{add_kinematics}
 \title{Add kinematic measures to trajectory data}
 \usage{
-add_kinematics(data, vertical = NULL)
+add_kinematics(data, vertical = NULL, min_step = "auto")
 }
 \arguments{
 \item{data}{An anipoint with position coordinates (x, x/y or x/y/z for
@@ -24,6 +24,24 @@ that need no vertical. Ignored for 1D and 2D data, where course is
 measured in the plane of the data. Experimental until that proposal is
 settled: the argument may come to default to the declared vertical, and
 to mean something for 2D side views.}
+
+\item{min_step}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The shortest step,
+in the frame's spatial unit, whose direction counts. Where a point moves
+less than this per sample, its direction of travel is set by tracking
+noise rather than by where the animal is going, so the direction is
+treated as undefined: \code{course} is \code{NA} there, and the row adds no
+turning. One of:
+\describe{
+\item{\code{"auto"} (the default)}{Three times the tracking noise,
+estimated separately for each trajectory, and at most half its
+median step. See Details.}
+\item{a number}{A threshold of your own, such as the tracking
+precision in the frame's spatial unit.}
+\item{\code{0}}{Every direction counts, however short the step, as
+\code{\link[=calculate_kinematics]{calculate_kinematics()}} did.}
+}
+It affects only the direction measures (\code{course} and the turning
+measures), not \code{speed} or \code{cumulative_distance}.}
 }
 \value{
 An anipoint in the same coordinate system as the input, with added
@@ -55,14 +73,17 @@ between the velocities either side of each row, over the time between
 them.}
 \item{\code{cumulative_turning}}{Turning accumulated since the first row:
 the angle between successive velocities, summed. A turn made while
-stationary is counted when the animal moves off.}
+stationary, or while moving less than \code{min_step}, is counted when
+the animal moves off, as the angle between the directions before
+and after.}
 }
 In 2D, and in 3D when \code{vertical} is given, the measures that need a
 direction to count from:
 \describe{
 \item{\code{course}}{Direction of travel in the horizontal plane (in 2D, the
 plane of the data): \code{atan2(v_y, v_x)} in 2D. It is \code{NA} where there is
-no horizontal movement, since the direction is then undefined.
+no horizontal movement, or less than \code{min_step} per sample, since
+the direction is then undefined.
 \code{course_unwrapped} is the same, without jumps at +/-pi.}
 \item{\code{course_elevation}}{3D only: the angle of travel above the
 horizontal plane, from -pi/2 (straight down) to pi/2 (straight up).}
@@ -108,6 +129,52 @@ via the \code{differentiate} function. Course is unwrapped before it is
 differentiated, so the turning rate has no jump at +/-pi. The turning
 speed in 3D needs no angle to unwrap, and has no singularity when travel
 is vertical.
+\subsection{The minimum step}{
+
+When a point barely moves, the direction between successive positions is
+set by sub-pixel tracking noise, and swings at random from frame to
+frame. Every swing is turning to the measures above, so a resting animal
+accumulates turning as fast as a running one. \code{min_step} sets the step
+below which the direction is not trusted.
+
+The step of a row is the distance its velocity implies moving per sample:
+\code{speed} times the sampling interval, which for the central differences
+used here is half the distance between the positions either side. Course
+is measured against the horizontal part of the step alone.
+
+With \code{min_step = "auto"}, the threshold is three times the positional
+noise, \eqn{\sigma}, estimated for each trajectory from its second
+differences \eqn{p_{i+1} - 2 p_i + p_{i-1}}. For white noise of standard
+deviation \eqn{\sigma} on each axis these have standard deviation
+\eqn{\sqrt{6}\sigma}. Only their component along the direction of travel
+is used, which a path turning at constant speed leaves at zero, and their
+spread is measured with \code{\link[stats:mad]{stats::mad()}}, which a minority of large values
+barely moves. A point standing still under white noise makes steps longer
+than \eqn{3\sigma} with a probability of about 0.01\% (0.04\% in 3D), so
+the threshold removes the directions of a stationary point while keeping
+those of real movement.
+
+The threshold is also at most half the trajectory's median step (among
+steps that have a direction), so most steps always keep theirs. This
+matters when the sampling is coarse for the movement: a random walk
+recorded step by step has second differences as large as its steps, and
+the estimate would take the movement itself for noise.
+
+The estimate assumes the sampling is fast compared with changes in speed,
+as it is for video tracking. Two cases call for setting \code{min_step}
+yourself:
+\itemize{
+\item \strong{Smoothed positions.} Smoothing turns noise into slow wander,
+which second differences see less of, so the estimate is smaller than
+the jitter left in the data, and the threshold removes only part of it.
+\item \strong{Coarse sampling}, such as GPS fixes minutes apart, where speed
+changes a lot between samples. The estimate then includes real
+movement, so the threshold may be too large; use the positional
+precision instead, or \code{0}.
+}
+The threshold is not stored in the result. To know it exactly, give it as
+a number.
+}
 }
 \examples{
 # 2D Cartesian data
@@ -128,6 +195,10 @@ traj_3d <- data.frame(
 ) |>
   anicore::as_anipoint()
 kinematics_3d <- add_kinematics(traj_3d, vertical = "z")
+
+# A threshold of your own, in the frame's spatial unit, or 0 to count
+# every direction however short the step
+kinematics_2d <- add_kinematics(traj_2d, min_step = 0.1)
 }
 \seealso{
 \code{\link[=add_tortuosity]{add_tortuosity()}} for windowed measures of how winding the path

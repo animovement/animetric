@@ -4,13 +4,13 @@
 \alias{calculate_rotation}
 \title{Calculate how the direction of travel changes}
 \usage{
-calculate_rotation(data, vertical = NULL)
+calculate_rotation(data, vertical = NULL, min_step = 0)
 }
 \arguments{
 \item{data}{A 2D or 3D Cartesian anipoint with velocity (\verb{v_*}) columns,
 and an index.}
 
-\item{vertical}{See \code{\link[=add_kinematics]{add_kinematics()}}.}
+\item{vertical, min_step}{See \code{\link[=add_kinematics]{add_kinematics()}}.}
 }
 \value{
 The anipoint with added rotational kinematic columns.
