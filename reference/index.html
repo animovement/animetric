@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">animetric</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9005</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9006</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,6 +49,43 @@
     </div>
 
     <div class="section level2">
+      <h2 id="add">Add<a class="anchor" aria-label="anchor" href="#add"></a></h2>
+
+      <div class="section-desc"><p>These return your aniframe with something added: columns of per-row measures, a declared orientation, or a derived point.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="add_kinematics.html">add_kinematics()</a></code>
+
+        </dt>
+        <dd>Add kinematic measures to trajectory data</dd>
+
+        <dt>
+
+          <code><a href="add_tortuosity.html">add_tortuosity()</a></code>
+
+        </dt>
+        <dd>Add tortuosity measures over sliding windows</dd>
+
+        <dt>
+
+          <code><a href="add_orientation.html">add_orientation()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd>Declare orientation from the positions of points</dd>
+
+        <dt>
+
+          <code><a href="add_point.html">add_point()</a></code>
+
+        </dt>
+        <dd>Add a derived point to an anipoint</dd>
+      </dl></div><div class="section level2">
       <h2 id="calculate">Calculate<a class="anchor" aria-label="anchor" href="#calculate"></a></h2>
 
       <div class="section-desc"><p>These functions take your aniframe as input and give you results in return.</p></div>
@@ -59,20 +96,6 @@
 
 
       <dl><dt>
-
-          <code><a href="calculate_kinematics.html">calculate_kinematics()</a></code>
-
-        </dt>
-        <dd>Calculate kinematic measures from trajectory data</dd>
-
-        <dt>
-
-          <code><a href="calculate_tortuosity.html">calculate_tortuosity()</a></code>
-
-        </dt>
-        <dd>Calculate tortuosity metrics over sliding windows</dd>
-
-        <dt>
 
           <code><a href="calculate_nnd.html">calculate_nnd()</a></code>
 
@@ -101,24 +124,10 @@
 
         </dt>
         <dd>Summarise each trajectory as a whole</dd>
-
-        <dt>
-
-          <code><a href="add_point.html">add_point()</a></code>
-
-        </dt>
-        <dd>Add a derived point to an anipoint</dd>
-
-        <dt>
-
-          <code><a href="add_orientation.html">add_orientation()</a></code>
-          <span class="badge lifecycle lifecycle-experimental">experimental</span>
-        </dt>
-        <dd>Declare orientation from the positions of points</dd>
       </dl></div><div class="section level2">
       <h2 id="compute">Compute<a class="anchor" aria-label="anchor" href="#compute"></a></h2>
 
-      <div class="section-desc"><p>These functions are cogs used in <code>calculate_</code> and <code>summarise_</code> functions.</p></div>
+      <div class="section-desc"><p>These functions are cogs used in the <code>add_</code>, <code>calculate_</code> and <code>summarise_</code> functions.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -184,6 +193,20 @@
 
 
       <dl><dt>
+
+          <code><a href="calculate_kinematics.html">calculate_kinematics()</a></code>
+          <span class="badge lifecycle lifecycle-deprecated">deprecated</span>
+        </dt>
+        <dd>Calculate kinematic measures from trajectory data</dd>
+
+        <dt>
+
+          <code><a href="calculate_tortuosity.html">calculate_tortuosity()</a></code>
+          <span class="badge lifecycle lifecycle-deprecated">deprecated</span>
+        </dt>
+        <dd>Calculate tortuosity metrics over sliding windows</dd>
+
+        <dt>
 
           <code><a href="summarise_kinematics.html">summarise_kinematics()</a></code> <code><a href="summarise_kinematics.html">summarize_kinematics()</a></code>
           <span class="badge lifecycle lifecycle-deprecated">deprecated</span>

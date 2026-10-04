@@ -13,7 +13,7 @@ angles are computed in radians and returned in the frame's unit_angle."><meta pr
 
     <a class="navbar-brand me-2" href="../index.html">animetric</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9005</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9006</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,7 @@ angles are computed in radians and returned in the frame's unit_angle."><meta pr
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Calculate how the direction of travel changes</h1>
-      <small class="dont-index">Source: <a href="https://github.com/animovement/animetric/blob/main/R/calculate_kinematics.R" class="external-link"><code>R/calculate_kinematics.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/animovement/animetric/blob/main/R/add_kinematics.R" class="external-link"><code>R/add_kinematics.R</code></a></small>
       <div class="d-none name"><code>calculate_rotation.Rd</code></div>
     </div>
 
@@ -65,7 +65,7 @@ angles are computed in radians and returned in the frame's <code>unit_angle</cod
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_rotation</span><span class="op">(</span><span class="va">data</span>, vertical <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_rotation</span><span class="op">(</span><span class="va">data</span>, vertical <span class="op">=</span> <span class="cn">NULL</span>, min_step <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,8 +77,8 @@ angles are computed in radians and returned in the frame's <code>unit_angle</cod
 and an index.</p></dd>
 
 
-<dt id="arg-vertical">vertical<a class="anchor" aria-label="anchor" href="#arg-vertical"></a></dt>
-<dd><p>See <code><a href="calculate_kinematics.html">calculate_kinematics()</a></code>.</p></dd>
+<dt id="arg-vertical-min-step">vertical, min_step<a class="anchor" aria-label="anchor" href="#arg-vertical-min-step"></a></dt>
+<dd><p>See <code><a href="add_kinematics.html">add_kinematics()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

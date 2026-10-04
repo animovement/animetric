@@ -102,9 +102,39 @@
 
 ### Added
 
+- [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md)
+  and
+  [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
+  take `min_step`, the shortest step whose direction counts
+  ([\#104](https://github.com/animovement/animetric/issues/104)). A
+  point that barely moves takes its direction from tracking noise, which
+  swings at random from frame to frame and was all counted as turning.
+  Below `min_step`, `course` is `NA` and the row adds nothing to
+  `turning_speed`, `turning_rate`, `turning_acceleration`,
+  `cumulative_turning` or `total_turning`; a turn made in the meantime
+  is counted once, when the animal moves off. The default, `"auto"`, is
+  three times the positional noise estimated for each trajectory, and at
+  most half its median step. `min_step = 0` counts every direction, as
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  did. On the SLEAP sample, cleaned and smoothed as in the Get Started
+  guides, the centre’s `total_turning` falls from about 356,000 to
+  243,000 degrees.
+
+- [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
+  and
+  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
+  compute `sinuosity` and `e_max` from the path rediscretised to a
+  constant step length, as Benhamou (2004) defines sinuosity
+  ([\#104](https://github.com/animovement/animetric/issues/104)). Jitter
+  while an animal is still gives no steps, so it no longer dominates
+  them. A window of
+  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
+  in which the animal moved less than a step has `NA`.
+
 - [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
   declares which way a body faces from where its points are
   ([\#97](https://github.com/animovement/animetric/issues/97)):
+
   - **2D:** `heading`, the direction from `from` to `to`.
   - **3D:** a unit quaternion (`qw`, `qx`, `qy`, `qz`), with a third
     point, `plane`, to fix the roll. Any point off the `from`-`to` line
@@ -120,6 +150,44 @@
   0.3.0.9006 (`quat_from_vectors()`).
 
 ### Changed
+
+- [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md)
+  and
+  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
+  replace
+  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  and
+  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md),
+  with the same arguments
+  ([\#103](https://github.com/animovement/animetric/issues/103)).
+  Functions that return the frame with something added now all start
+  with `add_`. Some columns are renamed on the way:
+
+  | Function | Old | New |
+  |----|----|----|
+  | [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md) | `path_length` | `cumulative_distance` |
+  | [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md) | `straightness` | `straightness_11` |
+  | [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md) | `sinuosity` | `sinuosity_11` |
+  | [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md) | `emax` | `e_max_11` |
+
+  - `cumulative_distance` is the running total of distance travelled,
+    and pairs with `cumulative_turning`. `acceleration` keeps its name,
+    and its documentation now says what it is: the signed rate of change
+    of speed along the path, not the size of the acceleration vector
+    (`a_x`, `a_y`).
+  - [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
+    names its columns with the window width, `11` being the default, and
+    adds only those three.
+    [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
+    also added every kinematic column when the frame had none. The width
+    in the name keeps the windowed measures apart from the whole-path
+    ones of
+    [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md),
+    and lets several widths sit side by side.
+  - [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+    summarises the windowed measures at every width present
+    (`median_straightness_11`, …), as well as the unsuffixed columns of
+    [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md).
 
 - [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md),
   [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
@@ -145,31 +213,33 @@
 - **The summaries are reorganised into two functions, by what they
   summarise**
   ([\#58](https://github.com/animovement/animetric/issues/58)). Sliding
-  windows stay in the `calculate_*()` functions; both summaries cover
-  each group’s whole time range.
+  windows stay in
+  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md);
+  both summaries cover each group’s whole time range.
 
   - [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
     summarises the *distribution* of per-row measures, with one row per
     group and any grouping allowed. It is now an S3 generic:
     - **anipoints:** speed, acceleration, the turning measures, course
-      and elevation, the windowed `straightness`, `sinuosity` and
-      `emax`, `confidence`, and a declared `yaw` as `*_heading`.
+      and elevation, the windowed measures of
+      [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md),
+      `confidence`, and a declared `yaw` as `*_heading`.
     - **anisegments:** `length`.
     - **anijoints:** `angle`.
 
     Angles (`course`, `yaw`, joint angles) get circular statistics,
     reported in the frame’s `unit_angle`. `cols =` picks the measures.
     It no longer needs
-    [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+    [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md)
     to have been run: it summarises whichever measures the frame has.
   - [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
-    measures each trajectory as a whole: `total_path_length`,
+    measures each trajectory as a whole: `total_distance`,
     `total_turning`, `net_displacement`, `straightness`, `sinuosity` and
-    `emax`. It works on any anipoint in any coordinate system, computing
-    what it needs from the positions, and needs one trajectory per
-    group.
+    `e_max`. It works on any anipoint in any coordinate system,
+    computing what it needs from the positions, and needs one trajectory
+    per group.
 
-  `median_straightness` from
+  `median_straightness_11` from
   [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
   is the typical straightness over windows; `straightness` from
   [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
@@ -183,7 +253,8 @@
   - [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
     →
     [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md),
-    which returns the same columns.
+    which returns the same measures, with `total_path_length` and `emax`
+    named `total_distance` and `e_max`.
   - `summarise_aniframe(type = )` keeps its old combined output, with a
     warning.
 
@@ -302,6 +373,24 @@
   [`anicore::wrap_angle()`](https://animovement.dev/anicore/reference/wrap_angle.html)
   gives by default. The direction is unchanged — only how it is written
   down.
+
+### Deprecated
+
+- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  →
+  [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md)
+  ([\#103](https://github.com/animovement/animetric/issues/103)).
+
+- [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
+  →
+  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
+  ([\#103](https://github.com/animovement/animetric/issues/103)).
+
+  Each returns exactly what it did, with the old column names
+  (`path_length`, and `straightness`, `sinuosity` and `emax`), and
+  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
+  still adds the kinematic columns. They will be removed after the next
+  release.
 
 ### Fixed
 

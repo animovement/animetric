@@ -8,7 +8,7 @@ radians and returned in the frame's `unit_angle`.
 ## Usage
 
 ``` r
-calculate_rotation(data, vertical = NULL)
+calculate_rotation(data, vertical = NULL, min_step = 0)
 ```
 
 ## Arguments
@@ -18,10 +18,10 @@ calculate_rotation(data, vertical = NULL)
   A 2D or 3D Cartesian anipoint with velocity (`v_*`) columns, and an
   index.
 
-- vertical:
+- vertical, min_step:
 
   See
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md).
+  [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md).
 
 ## Value
 

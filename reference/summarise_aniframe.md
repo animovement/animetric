@@ -5,8 +5,8 @@
 Summarises the per-row measures of a frame over each group: a measure of
 central tendency and of dispersion for each, one row per group. It
 describes the measures the frame already carries — the output of
-[`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
-[`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
+[`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md),
+[`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
 or your own `mutate()` — and computes no new ones. Any grouping is
 allowed, since a median of rows means the same whether the rows are one
 keypoint's or a whole animal's.
@@ -20,10 +20,11 @@ Each frame class has its own default set of measures:
 - anipoint:
 
   `speed`, `acceleration`, `turning_speed`, `turning_rate`,
-  `turning_acceleration`, `course_elevation`, the windowed
-  `straightness`, `sinuosity` and `emax`, and `confidence`; circular
-  statistics for `course` and for a declared `yaw`, reported as
-  `*_heading`.
+  `turning_acceleration`, `course_elevation`, the windowed measures of
+  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
+  at every window width present (`straightness_11`, `sinuosity_11`,
+  `e_max_11`, ...), and `confidence`; circular statistics for `course`
+  and for a declared `yaw`, reported as `*_heading`.
 
 - anisegment:
 
@@ -33,8 +34,14 @@ Each frame class has its own default set of measures:
 
   `angle`, with circular statistics, and `confidence`.
 
-Only the measures present are summarised. Velocity and acceleration
-components, `course_unwrapped`, and the running totals `path_length` and
+Only the measures present are summarised. The windowed measures are
+recognised by their names, `straightness`, `sinuosity` or `e_max`
+followed by `_` and a window width, so a frame with several widths has
+each summarised. The unsuffixed `straightness`, `sinuosity` and `emax`
+of the deprecated
+[`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
+are summarised too. Velocity and acceleration components,
+`course_unwrapped`, and the running totals `cumulative_distance` and
 `cumulative_turning` are left out by default;
 [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
 reports the totals.
@@ -123,14 +130,14 @@ for whole-trajectory measures.
 ## Examples
 
 ``` r
-kin <- calculate_kinematics(
+kin <- add_kinematics(
   anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 )
 summarise_aniframe(kin)
 #> # A tibble: 1 × 18
 #>   individual keypoint session trial median_speed mad_speed median_acceleration
 #>        <int> <fct>      <int> <int>        <dbl>     <dbl>               <dbl>
-#> 1          1 centroid       1     1        0.743     0.480              0.0554
+#> 1          1 centroid       1     1        0.741     0.527              0.0870
 #> # ℹ 11 more variables: mad_acceleration <dbl>, median_turning_speed <dbl>,
 #> #   mad_turning_speed <dbl>, median_turning_rate <dbl>, mad_turning_rate <dbl>,
 #> #   median_turning_acceleration <dbl>, mad_turning_acceleration <dbl>,
@@ -142,7 +149,7 @@ summarise_aniframe(kin, measures = "mean_sd")
 #> # A tibble: 1 × 18
 #>   individual keypoint session trial mean_speed sd_speed mean_acceleration
 #>        <int> <fct>      <int> <int>      <dbl>    <dbl>             <dbl>
-#> 1          1 centroid       1     1      0.846    0.522            0.0264
+#> 1          1 centroid       1     1      0.884    0.713             0.168
 #> # ℹ 11 more variables: sd_acceleration <dbl>, mean_turning_speed <dbl>,
 #> #   sd_turning_speed <dbl>, mean_turning_rate <dbl>, sd_turning_rate <dbl>,
 #> #   mean_turning_acceleration <dbl>, sd_turning_acceleration <dbl>,
@@ -154,6 +161,6 @@ summarise_aniframe(kin, cols = c("speed", "course"))
 #> # A tibble: 1 × 8
 #>   individual keypoint session trial median_speed mad_speed median_course
 #>        <int> <fct>      <int> <int>        <dbl>     <dbl>         <dbl>
-#> 1          1 centroid       1     1        0.743     0.480          1.84
+#> 1          1 centroid       1     1        0.741     0.527         0.519
 #> # ℹ 1 more variable: mad_course <dbl>
 ```

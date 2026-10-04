@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">animetric</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9005</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9006</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,8 +69,10 @@
 </ul></div>
 <div class="section level3">
 <h3 id="added-development-version">Added<a class="anchor" aria-label="anchor" href="#added-development-version"></a></h3>
-<ul><li>
-<code><a href="../reference/add_orientation.html">add_orientation()</a></code> declares which way a body faces from where its points are (<a href="https://github.com/animovement/animetric/issues/97" class="external-link">#97</a>):
+<ul><li><p><code><a href="../reference/add_kinematics.html">add_kinematics()</a></code> and <code><a href="../reference/summarise_path.html">summarise_path()</a></code> take <code>min_step</code>, the shortest step whose direction counts (<a href="https://github.com/animovement/animetric/issues/104" class="external-link">#104</a>). A point that barely moves takes its direction from tracking noise, which swings at random from frame to frame and was all counted as turning. Below <code>min_step</code>, <code>course</code> is <code>NA</code> and the row adds nothing to <code>turning_speed</code>, <code>turning_rate</code>, <code>turning_acceleration</code>, <code>cumulative_turning</code> or <code>total_turning</code>; a turn made in the meantime is counted once, when the animal moves off. The default, <code>"auto"</code>, is three times the positional noise estimated for each trajectory, and at most half its median step. <code>min_step = 0</code> counts every direction, as <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> did. On the SLEAP sample, cleaned and smoothed as in the Get Started guides, the centre’s <code>total_turning</code> falls from about 356,000 to 243,000 degrees.</p></li>
+<li><p><code><a href="../reference/summarise_path.html">summarise_path()</a></code> and <code><a href="../reference/add_tortuosity.html">add_tortuosity()</a></code> compute <code>sinuosity</code> and <code>e_max</code> from the path rediscretised to a constant step length, as Benhamou (2004) defines sinuosity (<a href="https://github.com/animovement/animetric/issues/104" class="external-link">#104</a>). Jitter while an animal is still gives no steps, so it no longer dominates them. A window of <code><a href="../reference/add_tortuosity.html">add_tortuosity()</a></code> in which the animal moved less than a step has <code>NA</code>.</p></li>
+<li>
+<p><code><a href="../reference/add_orientation.html">add_orientation()</a></code> declares which way a body faces from where its points are (<a href="https://github.com/animovement/animetric/issues/97" class="external-link">#97</a>):</p>
 <ul><li>
 <strong>2D:</strong> <code>heading</code>, the direction from <code>from</code> to <code>to</code>.</li>
 <li>
@@ -79,34 +81,58 @@
 <strong>Across the body:</strong> <code>perpendicular = TRUE</code> handles axes that run across the body, such as right eye to left eye.</li>
 <li>
 <strong>Where it goes:</strong> <code>attach_to</code> puts the orientation on chosen members, so a head and a body orientation can share the one declared column.</li>
-</ul>
-Once declared, the orientation is a proper <code>where</code> variable, which anispace’s egocentric transform can align by. Needs anispace 0.3.0.9006 (<code>quat_from_vectors()</code>).</li>
+</ul><p>Once declared, the orientation is a proper <code>where</code> variable, which anispace’s egocentric transform can align by. Needs anispace 0.3.0.9006 (<code>quat_from_vectors()</code>).</p>
+</li>
 </ul></div>
 <div class="section level3">
 <h3 id="changed-development-version">Changed<a class="anchor" aria-label="anchor" href="#changed-development-version"></a></h3>
-<ul><li><p><code><a href="../reference/summarise_aniframe.html">summarise_aniframe()</a></code>, <code><a href="../reference/add_orientation.html">add_orientation()</a></code> and the <code>vertical</code> argument of <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> are marked experimental (animovement/.github#46). They are new designs that have not been used in anger yet, so they may still change without a deprecation cycle; anything without a badge is stable, and changes only through one. <code><a href="../reference/summarise_aniframe.html">summarise_aniframe()</a></code> has open design questions (<a href="https://github.com/animovement/animetric/issues/91" class="external-link">#91</a>, <a href="https://github.com/animovement/animetric/issues/92" class="external-link">#92</a>, <a href="https://github.com/animovement/animetric/issues/22" class="external-link">#22</a>), the first uses of <code><a href="../reference/add_orientation.html">add_orientation()</a></code> are still being designed (<a href="https://github.com/animovement/animetric/issues/25" class="external-link">#25</a>, <a href="https://github.com/animovement/animetric/issues/85" class="external-link">#85</a>), and <code>vertical</code> may come to default to a vertical declared in the frame’s metadata (animovement/anicore#172).</p></li>
+<ul><li>
+<p><code><a href="../reference/add_kinematics.html">add_kinematics()</a></code> and <code><a href="../reference/add_tortuosity.html">add_tortuosity()</a></code> replace <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> and <code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code>, with the same arguments (<a href="https://github.com/animovement/animetric/issues/103" class="external-link">#103</a>). Functions that return the frame with something added now all start with <code>add_</code>. Some columns are renamed on the way:</p>
+<table class="table"><thead><tr><th>Function</th>
+<th>Old</th>
+<th>New</th>
+</tr></thead><tbody><tr><td><code><a href="../reference/add_kinematics.html">add_kinematics()</a></code></td>
+<td><code>path_length</code></td>
+<td><code>cumulative_distance</code></td>
+</tr><tr><td><code><a href="../reference/add_tortuosity.html">add_tortuosity()</a></code></td>
+<td><code>straightness</code></td>
+<td><code>straightness_11</code></td>
+</tr><tr><td><code><a href="../reference/add_tortuosity.html">add_tortuosity()</a></code></td>
+<td><code>sinuosity</code></td>
+<td><code>sinuosity_11</code></td>
+</tr><tr><td><code><a href="../reference/add_tortuosity.html">add_tortuosity()</a></code></td>
+<td><code>emax</code></td>
+<td><code>e_max_11</code></td>
+</tr></tbody></table><ul><li>
+<code>cumulative_distance</code> is the running total of distance travelled, and pairs with <code>cumulative_turning</code>. <code>acceleration</code> keeps its name, and its documentation now says what it is: the signed rate of change of speed along the path, not the size of the acceleration vector (<code>a_x</code>, <code>a_y</code>).</li>
 <li>
-<p><strong>The summaries are reorganised into two functions, by what they summarise</strong> (<a href="https://github.com/animovement/animetric/issues/58" class="external-link">#58</a>). Sliding windows stay in the <code>calculate_*()</code> functions; both summaries cover each group’s whole time range.</p>
+<code><a href="../reference/add_tortuosity.html">add_tortuosity()</a></code> names its columns with the window width, <code>11</code> being the default, and adds only those three. <code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code> also added every kinematic column when the frame had none. The width in the name keeps the windowed measures apart from the whole-path ones of <code><a href="../reference/summarise_path.html">summarise_path()</a></code>, and lets several widths sit side by side.</li>
+<li>
+<code><a href="../reference/summarise_aniframe.html">summarise_aniframe()</a></code> summarises the windowed measures at every width present (<code>median_straightness_11</code>, …), as well as the unsuffixed columns of <code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code>.</li>
+</ul></li>
+<li><p><code><a href="../reference/summarise_aniframe.html">summarise_aniframe()</a></code>, <code><a href="../reference/add_orientation.html">add_orientation()</a></code> and the <code>vertical</code> argument of <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> are marked experimental (animovement/.github#46). They are new designs that have not been used in anger yet, so they may still change without a deprecation cycle; anything without a badge is stable, and changes only through one. <code><a href="../reference/summarise_aniframe.html">summarise_aniframe()</a></code> has open design questions (<a href="https://github.com/animovement/animetric/issues/91" class="external-link">#91</a>, <a href="https://github.com/animovement/animetric/issues/92" class="external-link">#92</a>, <a href="https://github.com/animovement/animetric/issues/22" class="external-link">#22</a>), the first uses of <code><a href="../reference/add_orientation.html">add_orientation()</a></code> are still being designed (<a href="https://github.com/animovement/animetric/issues/25" class="external-link">#25</a>, <a href="https://github.com/animovement/animetric/issues/85" class="external-link">#85</a>), and <code>vertical</code> may come to default to a vertical declared in the frame’s metadata (animovement/anicore#172).</p></li>
+<li>
+<p><strong>The summaries are reorganised into two functions, by what they summarise</strong> (<a href="https://github.com/animovement/animetric/issues/58" class="external-link">#58</a>). Sliding windows stay in <code><a href="../reference/add_tortuosity.html">add_tortuosity()</a></code>; both summaries cover each group’s whole time range.</p>
 <ul><li>
 <code><a href="../reference/summarise_aniframe.html">summarise_aniframe()</a></code> summarises the <em>distribution</em> of per-row measures, with one row per group and any grouping allowed. It is now an S3 generic:
 <ul><li>
-<strong>anipoints:</strong> speed, acceleration, the turning measures, course and elevation, the windowed <code>straightness</code>, <code>sinuosity</code> and <code>emax</code>, <code>confidence</code>, and a declared <code>yaw</code> as <code>*_heading</code>.</li>
+<strong>anipoints:</strong> speed, acceleration, the turning measures, course and elevation, the windowed measures of <code><a href="../reference/add_tortuosity.html">add_tortuosity()</a></code>, <code>confidence</code>, and a declared <code>yaw</code> as <code>*_heading</code>.</li>
 <li>
 <strong>anisegments:</strong> <code>length</code>.</li>
 <li>
 <strong>anijoints:</strong> <code>angle</code>.</li>
 </ul>
-Angles (<code>course</code>, <code>yaw</code>, joint angles) get circular statistics, reported in the frame’s <code>unit_angle</code>. <code>cols =</code> picks the measures. It no longer needs <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> to have been run: it summarises whichever measures the frame has.</li>
+Angles (<code>course</code>, <code>yaw</code>, joint angles) get circular statistics, reported in the frame’s <code>unit_angle</code>. <code>cols =</code> picks the measures. It no longer needs <code><a href="../reference/add_kinematics.html">add_kinematics()</a></code> to have been run: it summarises whichever measures the frame has.</li>
 <li>
-<code><a href="../reference/summarise_path.html">summarise_path()</a></code> measures each trajectory as a whole: <code>total_path_length</code>, <code>total_turning</code>, <code>net_displacement</code>, <code>straightness</code>, <code>sinuosity</code> and <code>emax</code>. It works on any anipoint in any coordinate system, computing what it needs from the positions, and needs one trajectory per group.</li>
-</ul><p><code>median_straightness</code> from <code><a href="../reference/summarise_aniframe.html">summarise_aniframe()</a></code> is the typical straightness over windows; <code>straightness</code> from <code><a href="../reference/summarise_path.html">summarise_path()</a></code> is how direct the whole route was.</p>
+<code><a href="../reference/summarise_path.html">summarise_path()</a></code> measures each trajectory as a whole: <code>total_distance</code>, <code>total_turning</code>, <code>net_displacement</code>, <code>straightness</code>, <code>sinuosity</code> and <code>e_max</code>. It works on any anipoint in any coordinate system, computing what it needs from the positions, and needs one trajectory per group.</li>
+</ul><p><code>median_straightness_11</code> from <code><a href="../reference/summarise_aniframe.html">summarise_aniframe()</a></code> is the typical straightness over windows; <code>straightness</code> from <code><a href="../reference/summarise_path.html">summarise_path()</a></code> is how direct the whole route was.</p>
 </li>
 <li>
 <p><strong>Deprecated:</strong></p>
 <ul><li>
 <code><a href="../reference/summarise_kinematics.html">summarise_kinematics()</a></code> → <code><a href="../reference/summarise_aniframe.html">summarise_aniframe()</a></code>.</li>
 <li>
-<code><a href="../reference/summarise_tortuosity.html">summarise_tortuosity()</a></code> → <code><a href="../reference/summarise_path.html">summarise_path()</a></code>, which returns the same columns.</li>
+<code><a href="../reference/summarise_tortuosity.html">summarise_tortuosity()</a></code> → <code><a href="../reference/summarise_path.html">summarise_path()</a></code>, which returns the same measures, with <code>total_path_length</code> and <code>emax</code> named <code>total_distance</code> and <code>e_max</code>.</li>
 <li>
 <code>summarise_aniframe(type = )</code> keeps its old combined output, with a warning.</li>
 </ul><p>Each deprecated call returns exactly what it did before. They will be removed after the next release.</p>
@@ -146,6 +172,14 @@ Angles (<code>course</code>, <code>yaw</code>, joint angles) get circular statis
 <li><p>Works with anicore’s <code>anipoint</code> class and rebuilt accessor API (animovement/anicore#154). <code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> returns a frame of class <code>c("aniframe_kin", "anipoint", "aniframe", ...)</code>.</p></li>
 <li><p>The circular summaries in <code><a href="../reference/summarise_kinematics.html">summarise_kinematics()</a></code> come from anicore, and the <code>circular</code> package is no longer needed at all (animovement/anicore#147). It was a soft dependency behind a <code>check_installed()</code> prompt, so the first call to <code><a href="../reference/summarise_kinematics.html">summarise_kinematics()</a></code> on a fresh install used to stop and ask to install a package — for two columns of the summary table.</p></li>
 <li><p><code>mean_heading</code> is reported in <code>[0, 2*pi)</code>, like <code>median_heading</code> already was. It previously came back in <code>(-pi, pi]</code>, so the two summaries of the same column disagreed about where the circle starts; near <code>+/-pi</code> that showed up as a mean of <code>-3.13</code> beside a median of <code>3.15</code>. Both now use the range <code><a href="https://animovement.dev/anicore/reference/wrap_angle.html" class="external-link">anicore::wrap_angle()</a></code> gives by default. The direction is unchanged — only how it is written down.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="deprecated-development-version">Deprecated<a class="anchor" aria-label="anchor" href="#deprecated-development-version"></a></h3>
+<ul><li><p><code><a href="../reference/calculate_kinematics.html">calculate_kinematics()</a></code> → <code><a href="../reference/add_kinematics.html">add_kinematics()</a></code> (<a href="https://github.com/animovement/animetric/issues/103" class="external-link">#103</a>).</p></li>
+<li>
+<p><code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code> → <code><a href="../reference/add_tortuosity.html">add_tortuosity()</a></code> (<a href="https://github.com/animovement/animetric/issues/103" class="external-link">#103</a>).</p>
+<p>Each returns exactly what it did, with the old column names (<code>path_length</code>, and <code>straightness</code>, <code>sinuosity</code> and <code>emax</code>), and <code><a href="../reference/calculate_tortuosity.html">calculate_tortuosity()</a></code> still adds the kinematic columns. They will be removed after the next release.</p>
+</li>
 </ul></div>
 <div class="section level3">
 <h3 id="fixed-development-version-1">Fixed<a class="anchor" aria-label="anchor" href="#fixed-development-version-1"></a></h3>

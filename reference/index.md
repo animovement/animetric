@@ -1,14 +1,25 @@
 # Package index
 
+## Add
+
+These return your aniframe with something added: columns of per-row
+measures, a declared orientation, or a derived point.
+
+- [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md)
+  : Add kinematic measures to trajectory data
+- [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
+  : Add tortuosity measures over sliding windows
+- [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
+  **\[experimental\]** : Declare orientation from the positions of
+  points
+- [`add_point()`](https://animovement.dev/animetric/reference/add_point.md)
+  : Add a derived point to an anipoint
+
 ## Calculate
 
 These functions take your aniframe as input and give you results in
 return.
 
-- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  : Calculate kinematic measures from trajectory data
-- [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  : Calculate tortuosity metrics over sliding windows
 - [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
   : Calculate distance to the n-th nearest neighbour
 
@@ -25,16 +36,11 @@ or the geometry of each whole trajectory with
 - [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
   [`summarize_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
   : Summarise each trajectory as a whole
-- [`add_point()`](https://animovement.dev/animetric/reference/add_point.md)
-  : Add a derived point to an anipoint
-- [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
-  **\[experimental\]** : Declare orientation from the positions of
-  points
 
 ## Compute
 
-These functions are cogs used in `calculate_` and `summarise_`
-functions.
+These functions are cogs used in the `add_`, `calculate_` and
+`summarise_` functions.
 
 - [`compute_gradient()`](https://animovement.dev/animetric/reference/compute_gradient.md)
   : Compute numerical derivatives on possibly uneven grids
@@ -56,6 +62,10 @@ functions.
 
 Kept for one release; see each page for its replacement.
 
+- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
+  **\[deprecated\]** : Calculate kinematic measures from trajectory data
+- [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
+  **\[deprecated\]** : Calculate tortuosity metrics over sliding windows
 - [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
   [`summarize_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
   **\[deprecated\]** : Calculate kinematic summary statistics

@@ -120,18 +120,18 @@ add_orientation(af, from = "shoulder_right", to = "head", level = "keypoint")
 #> # Keypoints:   head, neck, shoulder_right
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time        x      y heading confidence
-#>         <int> <fct>      <int> <int> <int>    <dbl>  <dbl>   <dbl>      <dbl>
-#>  1          1 head           1     1     1 -1.40    -1.18    -2.82      0.488
-#>  2          1 head           1     1     2  0.255   -0.976   -1.62      0.677
-#>  3          1 head           1     1     3 -2.44     1.07     1.87      0.663
-#>  4          1 head           1     1     4 -0.00557  0.132    2.77      0.691
-#>  5          1 head           1     1     5  0.622    0.489    3.10      0.741
-#>  6          1 neck           1     1     1 -0.554    1.32    -2.82      0.826
-#>  7          1 neck           1     1     2  0.629    0.524   -1.62      0.724
-#>  8          1 neck           1     1     3  2.07     0.607    1.87      0.762
-#>  9          1 neck           1     1     4 -1.63    -0.110    2.77      0.616
-#> 10          1 neck           1     1     5  0.512    0.172    3.10      0.705
+#>    individual keypoint session trial  time       x       y heading confidence
+#>         <int> <fct>      <int> <int> <int>   <dbl>   <dbl>   <dbl>      <dbl>
+#>  1          1 head           1     1     1 -1.30    0.424    2.67       0.754
+#>  2          1 head           1     1     2  0.738   1.06     1.19       0.710
+#>  3          1 head           1     1     3  1.89    1.05     0.501      0.708
+#>  4          1 head           1     1     4 -0.0974 -0.0381   3.00       0.590
+#>  5          1 head           1     1     5 -0.936   0.486   -3.06       0.782
+#>  6          1 neck           1     1     1  0.244  -0.387    2.67       0.896
+#>  7          1 neck           1     1     2  1.62   -0.785    1.19       0.873
+#>  8          1 neck           1     1     3  0.112  -1.06     0.501      0.687
+#>  9          1 neck           1     1     4 -0.134  -0.796    3.00       0.605
+#> 10          1 neck           1     1     5 -1.91   -1.76    -3.06       0.944
 #> # ℹ 20 more rows
 
 # Attached to the head only
@@ -146,17 +146,17 @@ add_orientation(
 #> # Keypoints:   head, neck, shoulder_right
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time        x      y heading confidence
-#>         <int> <fct>      <int> <int> <int>    <dbl>  <dbl>   <dbl>      <dbl>
-#>  1          1 head           1     1     1 -1.40    -1.18    -2.82      0.488
-#>  2          1 head           1     1     2  0.255   -0.976   -1.62      0.677
-#>  3          1 head           1     1     3 -2.44     1.07     1.87      0.663
-#>  4          1 head           1     1     4 -0.00557  0.132    2.77      0.691
-#>  5          1 head           1     1     5  0.622    0.489    3.10      0.741
-#>  6          1 neck           1     1     1 -0.554    1.32    NA         0.826
-#>  7          1 neck           1     1     2  0.629    0.524   NA         0.724
-#>  8          1 neck           1     1     3  2.07     0.607   NA         0.762
-#>  9          1 neck           1     1     4 -1.63    -0.110   NA         0.616
-#> 10          1 neck           1     1     5  0.512    0.172   NA         0.705
+#>    individual keypoint session trial  time       x       y heading confidence
+#>         <int> <fct>      <int> <int> <int>   <dbl>   <dbl>   <dbl>      <dbl>
+#>  1          1 head           1     1     1 -1.30    0.424    2.67       0.754
+#>  2          1 head           1     1     2  0.738   1.06     1.19       0.710
+#>  3          1 head           1     1     3  1.89    1.05     0.501      0.708
+#>  4          1 head           1     1     4 -0.0974 -0.0381   3.00       0.590
+#>  5          1 head           1     1     5 -0.936   0.486   -3.06       0.782
+#>  6          1 neck           1     1     1  0.244  -0.387   NA          0.896
+#>  7          1 neck           1     1     2  1.62   -0.785   NA          0.873
+#>  8          1 neck           1     1     3  0.112  -1.06    NA          0.687
+#>  9          1 neck           1     1     4 -0.134  -0.796   NA          0.605
+#> 10          1 neck           1     1     5 -1.91   -1.76    NA          0.944
 #> # ℹ 20 more rows
 ```

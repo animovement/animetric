@@ -13,7 +13,7 @@ check_vertical(vertical, call = rlang::caller_env())
 - vertical:
 
   See
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md).
+  [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md).
 
 - call:
 

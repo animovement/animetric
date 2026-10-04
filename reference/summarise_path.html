@@ -5,7 +5,7 @@ directly it got there. Each needs one trajectory per group, since the
 distance between the ends of several pooled trajectories describes
 nothing.
 Positions are all it needs: the kinematics are computed internally, so
-calculate_kinematics() need not be run first. Any coordinate system
+add_kinematics() need not be run first. Any coordinate system
 works; non-Cartesian frames are converted to Cartesian for the
 computation.
 For the distribution of per-row measures over each group, such as median
@@ -15,7 +15,7 @@ directly it got there. Each needs one trajectory per group, since the
 distance between the ends of several pooled trajectories describes
 nothing.
 Positions are all it needs: the kinematics are computed internally, so
-calculate_kinematics() need not be run first. Any coordinate system
+add_kinematics() need not be run first. Any coordinate system
 works; non-Cartesian frames are converted to Cartesian for the
 computation.
 For the distribution of per-row measures over each group, such as median
@@ -27,7 +27,7 @@ speed or the median of windowed straightness, see summarise_aniframe()."><meta p
 
     <a class="navbar-brand me-2" href="../index.html">animetric</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9005</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9006</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,7 +77,7 @@ directly it got there. Each needs one trajectory per group, since the
 distance between the ends of several pooled trajectories describes
 nothing.</p>
 <p>Positions are all it needs: the kinematics are computed internally, so
-<code><a href="calculate_kinematics.html">calculate_kinematics()</a></code> need not be run first. Any coordinate system
+<code><a href="add_kinematics.html">add_kinematics()</a></code> need not be run first. Any coordinate system
 works; non-Cartesian frames are converted to Cartesian for the
 computation.</p>
 <p>For the distribution of per-row measures over each group, such as median
@@ -86,9 +86,9 @@ speed or the median of windowed straightness, see <code><a href="summarise_anifr
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">summarise_path</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">summarise_path</span><span class="op">(</span><span class="va">data</span>, min_step <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">summarize_path</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">summarize_path</span><span class="op">(</span><span class="va">data</span>, min_step <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -99,21 +99,51 @@ speed or the median of windowed straightness, see <code><a href="summarise_anifr
 <dd><p>An anipoint, grouped one trajectory per group, as it is by its
 declared keys.</p></dd>
 
+
+<dt id="arg-min-step">min_step<a class="anchor" aria-label="anchor" href="#arg-min-step"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> The shortest step
+whose direction counts toward <code>total_turning</code>, as in <code><a href="add_kinematics.html">add_kinematics()</a></code>
+(default <code>"auto"</code>). <code>0</code> counts every direction, however short the step.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame with one row per trajectory:</p><ul><li><p><code>total_path_length</code>: distance travelled.</p></li>
+    <p>A data frame with one row per trajectory:</p><ul><li><p><code>total_distance</code>: distance travelled, the last value of
+<code><a href="add_kinematics.html">add_kinematics()</a></code>'s <code>cumulative_distance</code>.</p></li>
 <li><p><code>total_turning</code>: turning of the direction of travel, summed (2D and
-3D), in the frame's <code>unit_angle</code>.</p></li>
+3D), in the frame's <code>unit_angle</code>: the last value of
+<code><a href="add_kinematics.html">add_kinematics()</a></code>'s <code>cumulative_turning</code>, so steps shorter than
+<code>min_step</code> add none.</p></li>
 <li><p><code>net_displacement</code>: straight-line distance from start to end.</p></li>
-<li><p><code>straightness</code>: net displacement over path length, from 0 to 1.</p></li>
-<li><p><code>sinuosity</code>: corrected sinuosity index (Benhamou 2004).</p></li>
-<li><p><code>emax</code>: maximum expected displacement (dimensionless).</p></li>
-</ul></div>
+<li><p><code>straightness</code>: net displacement over distance travelled, from 0 to
+1.</p></li>
+<li><p><code>sinuosity</code>: corrected sinuosity index (Benhamou 2004), of the path
+rediscretised to a constant step length (see Details).</p></li>
+<li><p><code>e_max</code>: maximum expected displacement (dimensionless), from the same
+rediscretised path.</p></li>
+</ul><p>The windowed measures of <code><a href="add_tortuosity.html">add_tortuosity()</a></code> carry the window width in
+their names (<code>straightness_11</code>), so they never collide with these.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Sinuosity is defined for a path of constant step length (Benhamou 2004),
+so <code>sinuosity</code> and <code>e_max</code> come from the turning angles of the path
+rediscretised to one: walking along the path, a new point is placed
+wherever it first leaves a circle of that radius around the last one
+(Bovet &amp; Benhamou 1988). The step length is the trajectory's mean step
+between rows, weighted by step length: the average step over the
+distance travelled, which time spent still does not shorten. Tracking jitter that stays within the circle while an
+animal is still gives no steps and no turning, where turning angles
+between successive frames would be dominated by it. Missing positions
+break the path into stretches that are rediscretised separately.</p>
+    </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal's
 path. Journal of Theoretical Biology, 229(2), 209-220.</p>
+<p>Bovet, P., &amp; Benhamou, S. (1988). Spatial analysis of animals' movements
+using a correlated random walk model. Journal of Theoretical Biology,
+131(4), 419-433.</p>
     </div>
 
     <div class="section level2">
@@ -121,11 +151,20 @@ path. Journal of Theoretical Biology, 229(2), 209-220.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">traj</span> <span class="op">&lt;-</span> <span class="fu">anicore</span><span class="fu">::</span><span class="fu"><a href="https://animovement.dev/anicore/reference/example_anipoint.html" class="external-link">example_anipoint</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fl">20</span>, n_individuals <span class="op">=</span> <span class="fl">1</span>, n_keypoints <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">summarise_path</span><span class="op">(</span><span class="va">traj</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial total_path_length total_turning</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1              27.3          29.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial total_distance total_turning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1           27.3          20.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: net_displacement &lt;dbl&gt;, straightness &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sinuosity &lt;dbl&gt;, emax &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sinuosity &lt;dbl&gt;, e_max &lt;dbl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Count every direction toward total_turning, however short the step</span></span></span>
+<span class="r-in"><span><span class="fu">summarise_path</span><span class="op">(</span><span class="va">traj</span>, min_step <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial total_distance total_turning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1           27.3          29.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: net_displacement &lt;dbl&gt;, straightness &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sinuosity &lt;dbl&gt;, e_max &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

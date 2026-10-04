@@ -8,7 +8,7 @@ tracking would read as no turn at all.
 ## Usage
 
 ``` r
-path_rotation(velocity, time, up)
+path_rotation(velocity, time, up, min_step = 0)
 ```
 
 ## Arguments
@@ -26,6 +26,10 @@ path_rotation(velocity, time, up)
   The unit vertical, as from
   [`vertical_vector()`](https://animovement.dev/animetric/reference/vertical_vector.md),
   or `NULL` for only the measures that need none.
+
+- min_step:
+
+  The shortest step whose direction counts, a number.
 
 ## Value
 

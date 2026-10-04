@@ -111,18 +111,18 @@ data |> calculate_nnd(across = "individual")
 #> # Keypoints:   head, neck, shoulder_right
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time       x      y confidence
-#>         <int> <fct>      <int> <int> <int>   <dbl>  <dbl>      <dbl>
-#>  1          1 head           1     1     1  0.662  -1.92       0.796
-#>  2          1 head           1     1     2  0.291   0.236      0.576
-#>  3          1 head           1     1     3  0.198   0.629      0.571
-#>  4          1 head           1     1     4 -1.20    0.418      0.835
-#>  5          1 head           1     1     5 -0.0398  1.98       0.847
-#>  6          1 neck           1     1     1  0.904  -0.943      0.835
-#>  7          1 neck           1     1     2  0.0796 -0.121      0.593
-#>  8          1 neck           1     1     3 -1.26    1.34       0.774
-#>  9          1 neck           1     1     4  1.03   -0.860      0.855
-#> 10          1 neck           1     1     5 -0.731   0.667      0.914
+#>    individual keypoint session trial  time      x       y confidence
+#>         <int> <fct>      <int> <int> <int>  <dbl>   <dbl>      <dbl>
+#>  1          1 head           1     1     1  0.236 -0.584       0.712
+#>  2          1 head           1     1     2  0.629 -2.02        0.667
+#>  3          1 head           1     1     3  0.418  0.404       0.840
+#>  4          1 head           1     1     4  1.98   0.550       0.901
+#>  5          1 head           1     1     5 -0.506  0.0284      0.625
+#>  6          1 neck           1     1     1 -0.121  2.27        0.464
+#>  7          1 neck           1     1     2  1.34   0.136       0.611
+#>  8          1 neck           1     1     3 -0.860 -2.00        0.528
+#>  9          1 neck           1     1     4  0.667 -0.421       0.740
+#> 10          1 neck           1     1     5 -1.42  -0.378       0.867
 #> # ℹ 35 more rows
 #> # ℹ 3 more variables: nnd_individual <int>, nnd_keypoint <fct>,
 #> #   nnd_distance <dbl>
@@ -137,18 +137,18 @@ data |> calculate_nnd(
 #> # Keypoints:   head, neck, shoulder_right
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time       x      y confidence
-#>         <int> <fct>      <int> <int> <int>   <dbl>  <dbl>      <dbl>
-#>  1          1 head           1     1     1  0.662  -1.92       0.796
-#>  2          1 head           1     1     2  0.291   0.236      0.576
-#>  3          1 head           1     1     3  0.198   0.629      0.571
-#>  4          1 head           1     1     4 -1.20    0.418      0.835
-#>  5          1 head           1     1     5 -0.0398  1.98       0.847
-#>  6          1 neck           1     1     1  0.904  -0.943      0.835
-#>  7          1 neck           1     1     2  0.0796 -0.121      0.593
-#>  8          1 neck           1     1     3 -1.26    1.34       0.774
-#>  9          1 neck           1     1     4  1.03   -0.860      0.855
-#> 10          1 neck           1     1     5 -0.731   0.667      0.914
+#>    individual keypoint session trial  time      x       y confidence
+#>         <int> <fct>      <int> <int> <int>  <dbl>   <dbl>      <dbl>
+#>  1          1 head           1     1     1  0.236 -0.584       0.712
+#>  2          1 head           1     1     2  0.629 -2.02        0.667
+#>  3          1 head           1     1     3  0.418  0.404       0.840
+#>  4          1 head           1     1     4  1.98   0.550       0.901
+#>  5          1 head           1     1     5 -0.506  0.0284      0.625
+#>  6          1 neck           1     1     1 -0.121  2.27        0.464
+#>  7          1 neck           1     1     2  1.34   0.136       0.611
+#>  8          1 neck           1     1     3 -0.860 -2.00        0.528
+#>  9          1 neck           1     1     4  0.667 -0.421       0.740
+#> 10          1 neck           1     1     5 -1.42  -0.378       0.867
 #> # ℹ 35 more rows
 #> # ℹ 3 more variables: nnd_individual <int>, nnd_keypoint <fct>,
 #> #   nnd_distance <dbl>
@@ -159,18 +159,18 @@ data |> calculate_nnd(across = "keypoint", within = "individual")
 #> # Keypoints:   head, neck, shoulder_right
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time       x      y confidence
-#>         <int> <fct>      <int> <int> <int>   <dbl>  <dbl>      <dbl>
-#>  1          1 head           1     1     1  0.662  -1.92       0.796
-#>  2          1 head           1     1     2  0.291   0.236      0.576
-#>  3          1 head           1     1     3  0.198   0.629      0.571
-#>  4          1 head           1     1     4 -1.20    0.418      0.835
-#>  5          1 head           1     1     5 -0.0398  1.98       0.847
-#>  6          1 neck           1     1     1  0.904  -0.943      0.835
-#>  7          1 neck           1     1     2  0.0796 -0.121      0.593
-#>  8          1 neck           1     1     3 -1.26    1.34       0.774
-#>  9          1 neck           1     1     4  1.03   -0.860      0.855
-#> 10          1 neck           1     1     5 -0.731   0.667      0.914
+#>    individual keypoint session trial  time      x       y confidence
+#>         <int> <fct>      <int> <int> <int>  <dbl>   <dbl>      <dbl>
+#>  1          1 head           1     1     1  0.236 -0.584       0.712
+#>  2          1 head           1     1     2  0.629 -2.02        0.667
+#>  3          1 head           1     1     3  0.418  0.404       0.840
+#>  4          1 head           1     1     4  1.98   0.550       0.901
+#>  5          1 head           1     1     5 -0.506  0.0284      0.625
+#>  6          1 neck           1     1     1 -0.121  2.27        0.464
+#>  7          1 neck           1     1     2  1.34   0.136       0.611
+#>  8          1 neck           1     1     3 -0.860 -2.00        0.528
+#>  9          1 neck           1     1     4  0.667 -0.421       0.740
+#> 10          1 neck           1     1     5 -1.42  -0.378       0.867
 #> # ℹ 35 more rows
 #> # ℹ 2 more variables: nnd_keypoint <fct>, nnd_distance <dbl>
 
@@ -180,18 +180,18 @@ data |> calculate_nnd(across = "individual", within = "keypoint")
 #> # Keypoints:   head, neck, shoulder_right
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time       x      y confidence
-#>         <int> <fct>      <int> <int> <int>   <dbl>  <dbl>      <dbl>
-#>  1          1 head           1     1     1  0.662  -1.92       0.796
-#>  2          1 head           1     1     2  0.291   0.236      0.576
-#>  3          1 head           1     1     3  0.198   0.629      0.571
-#>  4          1 head           1     1     4 -1.20    0.418      0.835
-#>  5          1 head           1     1     5 -0.0398  1.98       0.847
-#>  6          1 neck           1     1     1  0.904  -0.943      0.835
-#>  7          1 neck           1     1     2  0.0796 -0.121      0.593
-#>  8          1 neck           1     1     3 -1.26    1.34       0.774
-#>  9          1 neck           1     1     4  1.03   -0.860      0.855
-#> 10          1 neck           1     1     5 -0.731   0.667      0.914
+#>    individual keypoint session trial  time      x       y confidence
+#>         <int> <fct>      <int> <int> <int>  <dbl>   <dbl>      <dbl>
+#>  1          1 head           1     1     1  0.236 -0.584       0.712
+#>  2          1 head           1     1     2  0.629 -2.02        0.667
+#>  3          1 head           1     1     3  0.418  0.404       0.840
+#>  4          1 head           1     1     4  1.98   0.550       0.901
+#>  5          1 head           1     1     5 -0.506  0.0284      0.625
+#>  6          1 neck           1     1     1 -0.121  2.27        0.464
+#>  7          1 neck           1     1     2  1.34   0.136       0.611
+#>  8          1 neck           1     1     3 -0.860 -2.00        0.528
+#>  9          1 neck           1     1     4  0.667 -0.421       0.740
+#> 10          1 neck           1     1     5 -1.42  -0.378       0.867
 #> # ℹ 35 more rows
 #> # ℹ 2 more variables: nnd_individual <int>, nnd_distance <dbl>
 ```
