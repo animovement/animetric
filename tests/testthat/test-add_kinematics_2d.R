@@ -1,11 +1,11 @@
 # Testing:
-# - Translational kinematics (velocity, acceleration, speed, path_length)
+# - Translational kinematics (velocity, acceleration, speed, cumulative_distance)
 # - Path direction (course, turning rate, turning speed)
 # - Edge cases (stationary, constant velocity, circular motion)
 # - Column presence and structure
 # - Consistency with differentiate() function
 
-test_that("calculate_kinematics() on 2D data adds all expected columns", {
+test_that("add_kinematics() on 2D data adds all expected columns", {
   data <- data.frame(
     time = 0:5,
     x = c(0, 1, 2, 3, 4, 5),
@@ -13,7 +13,7 @@ test_that("calculate_kinematics() on 2D data adds all expected columns", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expected_cols <- c(
     "v_x",
@@ -22,7 +22,7 @@ test_that("calculate_kinematics() on 2D data adds all expected columns", {
     "a_y",
     "speed",
     "acceleration",
-    "path_length",
+    "cumulative_distance",
     "course",
     "course_unwrapped",
     "turning_rate",
@@ -42,7 +42,7 @@ test_that("velocity components match differentiate()", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Calculate expected velocities using differentiate
   expected_v_x <- differentiate(data$x, data$time, order = 1)
@@ -60,7 +60,7 @@ test_that("acceleration components match differentiate()", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Calculate expected accelerations using differentiate
   expected_a_x <- differentiate(data$x, data$time, order = 2)
@@ -78,7 +78,7 @@ test_that("speed is calculated correctly from velocity components", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Speed should be sqrt(v_x^2 + v_y^2) = sqrt(9 + 16) = 5
   expected_speed <- sqrt(result$v_x^2 + result$v_y^2)
@@ -94,7 +94,7 @@ test_that("acceleration matches differentiate of speed", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Acceleration should match differentiate(speed)
   expected_acceleration <- differentiate(result$speed, data$time, order = 1)
@@ -102,7 +102,7 @@ test_that("acceleration matches differentiate of speed", {
   expect_equal(result$acceleration, expected_acceleration)
 })
 
-test_that("path_length accumulates distance correctly", {
+test_that("cumulative_distance accumulates distance correctly", {
   # Create a simple rectangular path
   data <- data.frame(
     time = 0:4,
@@ -111,14 +111,14 @@ test_that("path_length accumulates distance correctly", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Manual calculation: 3 + 4 + 3 + 4 = 14
   dx <- diff(data$x)
   dy <- diff(data$y)
   expected_path <- cumsum(c(0, sqrt(dx^2 + dy^2)))
 
-  expect_equal(result$path_length, expected_path)
+  expect_equal(result$cumulative_distance, expected_path)
 })
 
 test_that("course is calculated correctly from velocity", {
@@ -129,7 +129,7 @@ test_that("course is calculated correctly from velocity", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # For 45-degree motion, course should be pi/4
   expected_course <- atan2(result$v_y, result$v_x)
@@ -145,7 +145,7 @@ test_that("course along -x is pi, not 0", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expect_equal(result$course, rep(pi, 6))
   expect_equal(result$turning_rate, rep(0, 6))
@@ -161,7 +161,7 @@ test_that("course is NA where the animal is stationary", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   stationary <- result$speed == 0
   expect_true(any(stationary))
@@ -182,10 +182,10 @@ test_that("turning_rate is the signed rate of change of the course", {
   clockwise <- data.frame(time = t, x = cos(t), y = -sin(t)) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(anticlockwise)
+  result <- add_kinematics(anticlockwise)
   expect_equal(result$turning_rate[interior], rep(1, 196), tolerance = 1e-3)
   expect_equal(
-    calculate_kinematics(clockwise)$turning_rate[interior],
+    add_kinematics(clockwise)$turning_rate[interior],
     rep(-1, 196),
     tolerance = 1e-3
   )
@@ -204,7 +204,7 @@ test_that("turning_rate scales with curvature and speed", {
   data <- data.frame(time = t, x = 2 * cos(2 * t), y = 2 * sin(2 * t)) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expect_equal(result$turning_rate[3:198], rep(2, 196), tolerance = 1e-3)
   expect_equal(result$speed[3:198], rep(4, 196), tolerance = 1e-3)
@@ -219,7 +219,7 @@ test_that("turning_speed is absolute value of turning_rate", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expect_equal(result$turning_speed, abs(result$turning_rate))
 })
@@ -233,7 +233,7 @@ test_that("turning_acceleration is the derivative of the turning rate", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expect_equal(
     result$turning_acceleration,
@@ -249,11 +249,11 @@ test_that("stationary object has zero kinematics", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # All velocities and speed should be zero (except potentially first point)
   expect_true(all(result$speed[2:6] == 0))
-  expect_equal(result$path_length[6], 0)
+  expect_equal(result$cumulative_distance[6], 0)
 })
 
 test_that("constant velocity has zero acceleration", {
@@ -264,7 +264,7 @@ test_that("constant velocity has zero acceleration", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   # Acceleration should be approximately zero for constant velocity
   # (excluding edge effects from differentiate)
@@ -281,7 +281,7 @@ test_that("cumulative_turning starts at 0 when the first course is negative", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expect_equal(result$course, rep(-1, 6))
   expect_equal(result$cumulative_turning, rep(0, 6))
@@ -296,7 +296,7 @@ test_that("cumulative_turning accumulates absolute turning", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expect_equal(result$cumulative_turning[1], 0)
   expect_equal(
@@ -314,7 +314,7 @@ test_that("cumulative_turning counts turning across a pause", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expect_true(any(is.na(result$course)))
   expect_false(anyNA(result$cumulative_turning))
@@ -330,7 +330,7 @@ test_that("cumulative_turning is 0 for a stationary track", {
   ) |>
     anicore::as_anipoint()
 
-  result <- calculate_kinematics(data)
+  result <- add_kinematics(data)
 
   expect_equal(result$cumulative_turning, rep(0, 6))
 })
@@ -343,8 +343,8 @@ test_that("angular measures are returned in the frame's unit_angle", {
   rad <- anicore::as_anipoint(d)
   deg <- anicore::set_metadata(rad, unit_angle = "deg")
 
-  in_rad <- calculate_kinematics(rad)
-  in_deg <- calculate_kinematics(deg)
+  in_rad <- add_kinematics(rad)
+  in_deg <- add_kinematics(deg)
 
   angular_cols <- c(
     "course",
@@ -365,8 +365,8 @@ test_that("angular measures are returned in the frame's unit_angle", {
 test_that("course summaries are in the frame's unit_angle", {
   t <- seq(0, 2 * pi, length.out = 40)
   d <- data.frame(time = t, x = cos(t) + t / 4, y = sin(t))
-  rad <- calculate_kinematics(anicore::as_anipoint(d))
-  deg <- calculate_kinematics(
+  rad <- add_kinematics(anicore::as_anipoint(d))
+  deg <- add_kinematics(
     anicore::set_metadata(anicore::as_anipoint(d), unit_angle = "deg")
   )
 
@@ -407,8 +407,8 @@ test_that("signed angles follow the frame's own axes", {
   expect_equal(anicore::get_angle_direction(up), "counter_clockwise")
   expect_equal(anicore::get_angle_direction(down), "clockwise")
   expect_equal(
-    calculate_kinematics(down)$course,
-    calculate_kinematics(up)$course
+    add_kinematics(down)$course,
+    add_kinematics(up)$course
   )
-  expect_equal(dplyr::last(calculate_kinematics(up)$course), pi / 2)
+  expect_equal(dplyr::last(add_kinematics(up)$course), pi / 2)
 })

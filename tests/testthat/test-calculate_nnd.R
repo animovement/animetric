@@ -421,7 +421,7 @@ test_that("errors when the frame declares no temporal context", {
 
 test_that("Maintains incoming classes", {
   data <- anicore::example_anipoint() |>
-    calculate_kinematics() |>
+    add_kinematics() |>
     calculate_nnd(across = "individual")
 
   expect_s3_class(data, "anipoint")

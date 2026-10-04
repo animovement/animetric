@@ -16,14 +16,19 @@ declared keys.}
 \value{
 A data frame with one row per trajectory:
 \itemize{
-\item \code{total_path_length}: distance travelled.
+\item \code{total_distance}: distance travelled, the last value of
+\code{\link[=add_kinematics]{add_kinematics()}}'s \code{cumulative_distance}.
 \item \code{total_turning}: turning of the direction of travel, summed (2D and
 3D), in the frame's \code{unit_angle}.
 \item \code{net_displacement}: straight-line distance from start to end.
-\item \code{straightness}: net displacement over path length, from 0 to 1.
+\item \code{straightness}: net displacement over distance travelled, from 0 to
+1.
 \item \code{sinuosity}: corrected sinuosity index (Benhamou 2004).
-\item \code{emax}: maximum expected displacement (dimensionless).
+\item \code{e_max}: maximum expected displacement (dimensionless).
 }
+
+The windowed measures of \code{\link[=add_tortuosity]{add_tortuosity()}} carry the window width in
+their names (\code{straightness_11}), so they never collide with these.
 }
 \description{
 Measures of a path that are not a statistic of any per-row column: how
@@ -33,7 +38,7 @@ distance between the ends of several pooled trajectories describes
 nothing.
 
 Positions are all it needs: the kinematics are computed internally, so
-\code{\link[=calculate_kinematics]{calculate_kinematics()}} need not be run first. Any coordinate system
+\code{\link[=add_kinematics]{add_kinematics()}} need not be run first. Any coordinate system
 works; non-Cartesian frames are converted to Cartesian for the
 computation.
 

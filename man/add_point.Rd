@@ -63,7 +63,7 @@ A level that did not actually vary keeps its value rather than taking the
 new member's name — an individual's strain is still its strain, since
 nothing was derived over it.
 
-The new member is an ordinary member of its level: \code{\link[=calculate_kinematics]{calculate_kinematics()}}
+The new member is an ordinary member of its level: \code{\link[=add_kinematics]{add_kinematics()}}
 gives it kinematics, and \code{\link[=summarise_aniframe]{summarise_aniframe()}} summarises it alongside the
 tracked points.
 }

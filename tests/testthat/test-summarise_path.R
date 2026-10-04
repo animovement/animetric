@@ -5,10 +5,10 @@
 # - summarise_path includes total_turning for 2D and 3D
 # - summarise_path preserves grouping structure
 # - summarise_path validates input
-# - summarise_path_2d computes total_path_length correctly
+# - summarise_path_2d computes total_distance correctly
 # - summarise_path_2d computes net_displacement correctly
 # - summarise_path_2d computes straightness correctly
-# - summarise_path_3d computes total_path_length correctly
+# - summarise_path_3d computes total_distance correctly
 # - summarise_path_3d computes net_displacement correctly
 # - straightness is 1 for straight path
 # - straightness is less than 1 for non-straight path
@@ -18,7 +18,7 @@
 # - summarise_path works with grouped plain aniframe
 
 # Helper to create mock 2D kinematics aniframe
-mock_kin_2d <- function(n = 10, grouped = FALSE, calculate_kinematics = TRUE) {
+mock_kin_2d <- function(n = 10, grouped = FALSE, add_kinematics = TRUE) {
   data <- data.frame(
     time = seq_len(n),
     x = cumsum(rnorm(n)),
@@ -33,14 +33,14 @@ mock_kin_2d <- function(n = 10, grouped = FALSE, calculate_kinematics = TRUE) {
   }
 
   data <- anicore::as_anipoint(data)
-  if (calculate_kinematics == TRUE) {
-    data <- calculate_kinematics(data)
+  if (add_kinematics == TRUE) {
+    data <- add_kinematics(data)
   }
   data
 }
 
 # Helper to create mock 3D kinematics aniframe
-mock_kin_3d <- function(n = 10, grouped = FALSE, calculate_kinematics = TRUE) {
+mock_kin_3d <- function(n = 10, grouped = FALSE, add_kinematics = TRUE) {
   data <- data.frame(
     time = seq_len(n),
     x = cumsum(rnorm(n)),
@@ -56,14 +56,14 @@ mock_kin_3d <- function(n = 10, grouped = FALSE, calculate_kinematics = TRUE) {
   }
 
   data <- anicore::as_anipoint(data)
-  if (calculate_kinematics == TRUE) {
-    data <- calculate_kinematics(data)
+  if (add_kinematics == TRUE) {
+    data <- add_kinematics(data)
   }
   data
 }
 
 # Helper to create a straight-line path
-mock_straight_path_2d <- function(n = 10, calculate_kinematics = TRUE) {
+mock_straight_path_2d <- function(n = 10, add_kinematics = TRUE) {
   x <- seq(0, 10, length.out = n)
   y <- seq(0, 10, length.out = n)
 
@@ -74,8 +74,8 @@ mock_straight_path_2d <- function(n = 10, calculate_kinematics = TRUE) {
   )
 
   data <- anicore::as_anipoint(data)
-  if (calculate_kinematics == TRUE) {
-    data <- calculate_kinematics(data)
+  if (add_kinematics == TRUE) {
+    data <- add_kinematics(data)
   }
   data
 }
@@ -88,12 +88,12 @@ test_that("summarise_path returns correct columns for 2D data", {
   result <- summarise_path(data)
 
   expected_cols <- c(
-    "total_path_length",
+    "total_distance",
     "total_turning",
     "net_displacement",
     "straightness",
     "sinuosity",
-    "emax"
+    "e_max"
   )
 
   expect_true(all(expected_cols %in% names(result)))
@@ -108,11 +108,11 @@ test_that("summarise_path returns correct columns for 3D data", {
   result <- summarise_path(data)
 
   expected_cols <- c(
-    "total_path_length",
+    "total_distance",
     "net_displacement",
     "straightness",
     "sinuosity",
-    "emax",
+    "e_max",
     "total_turning"
   )
 
@@ -142,12 +142,13 @@ test_that("summarise_path preserves grouping structure for 3D", {
 
 # summarise_path: computation correctness --------------------------
 
-test_that("summarise_path() on 2D data computes total_path_length correctly", {
+test_that("summarise_path() on 2D data computes total_distance correctly", {
   data <- mock_kin_2d()
   result <- summarise_path(data)
 
-  expected <- dplyr::last(data$path_length) - dplyr::first(data$path_length)
-  expect_equal(result$total_path_length, expected)
+  expected <- dplyr::last(data$cumulative_distance) -
+    dplyr::first(data$cumulative_distance)
+  expect_equal(result$total_distance, expected)
 })
 
 test_that("summarise_path() on 2D data computes net_displacement correctly", {
@@ -161,12 +162,13 @@ test_that("summarise_path() on 2D data computes net_displacement correctly", {
   expect_equal(result$net_displacement, expected)
 })
 
-test_that("summarise_path() on 3D data computes total_path_length correctly", {
+test_that("summarise_path() on 3D data computes total_distance correctly", {
   data <- mock_kin_3d()
   result <- summarise_path(data)
 
-  expected <- dplyr::last(data$path_length) - dplyr::first(data$path_length)
-  expect_equal(result$total_path_length, expected)
+  expected <- dplyr::last(data$cumulative_distance) -
+    dplyr::first(data$cumulative_distance)
+  expect_equal(result$total_distance, expected)
 })
 
 test_that("summarise_path() on 3D data computes net_displacement correctly", {
@@ -200,24 +202,24 @@ test_that("straightness is between 0 and 1 for non-straight paths", {
 })
 
 
-# summarise_path: sinuosity and emax -------------------------------
+# summarise_path: sinuosity and e_max -------------------------------
 
-test_that("sinuosity and emax are numeric and finite", {
+test_that("sinuosity and e_max are numeric and finite", {
   data <- mock_kin_2d()
   result <- summarise_path(data)
 
   expect_true(is.numeric(result$sinuosity))
-  expect_true(is.numeric(result$emax))
+  expect_true(is.numeric(result$e_max))
   expect_true(is.finite(result$sinuosity))
-  expect_true(is.finite(result$emax))
+  expect_true(is.finite(result$e_max))
 })
 
-test_that("sinuosity and emax work for 3D data", {
+test_that("sinuosity and e_max work for 3D data", {
   data <- mock_kin_3d()
   result <- summarise_path(data)
 
   expect_true(is.numeric(result$sinuosity))
-  expect_true(is.numeric(result$emax))
+  expect_true(is.numeric(result$e_max))
 })
 
 
@@ -262,16 +264,16 @@ test_that("summarise_path() on 3D data removes internal columns", {
 # summarise_path: auto-calculation ---------------------------------
 
 test_that("summarise_path calculates kinematics when given plain aniframe", {
-  data <- mock_kin_2d(calculate_kinematics = FALSE)
+  data <- mock_kin_2d(add_kinematics = FALSE)
   result <- summarise_path(data)
 
   expected_cols <- c(
-    "total_path_length",
+    "total_distance",
     "total_turning",
     "net_displacement",
     "straightness",
     "sinuosity",
-    "emax"
+    "e_max"
   )
 
   expect_true(all(expected_cols %in% names(result)))
@@ -280,31 +282,31 @@ test_that("summarise_path calculates kinematics when given plain aniframe", {
 
 test_that("summarise_path produces same result for plain vs pre-calculated input", {
   set.seed(123)
-  data_plain <- mock_kin_2d(calculate_kinematics = FALSE)
+  data_plain <- mock_kin_2d(add_kinematics = FALSE)
 
   set.seed(123)
-  data_kin <- mock_kin_2d(calculate_kinematics = FALSE) |>
-    calculate_kinematics() |>
-    calculate_tortuosity()
+  data_kin <- mock_kin_2d(add_kinematics = FALSE) |>
+    add_kinematics() |>
+    add_tortuosity()
 
   result_plain <- summarise_path(data_plain)
   result_kin <- summarise_path(data_kin)
 
-  expect_equal(result_plain$total_path_length, result_kin$total_path_length)
+  expect_equal(result_plain$total_distance, result_kin$total_distance)
   expect_equal(result_plain$net_displacement, result_kin$net_displacement)
   expect_equal(result_plain$straightness, result_kin$straightness)
 })
 
 test_that("summarise_path works with plain 3D aniframe", {
-  data <- mock_kin_3d(calculate_kinematics = FALSE)
+  data <- mock_kin_3d(add_kinematics = FALSE)
   result <- summarise_path(data)
 
   expected_cols <- c(
-    "total_path_length",
+    "total_distance",
     "net_displacement",
     "straightness",
     "sinuosity",
-    "emax"
+    "e_max"
   )
 
   expect_true(all(expected_cols %in% names(result)))
@@ -313,16 +315,16 @@ test_that("summarise_path works with plain 3D aniframe", {
 })
 
 test_that("summarise_path works with grouped plain aniframe", {
-  data <- mock_kin_2d(grouped = TRUE, calculate_kinematics = FALSE)
+  data <- mock_kin_2d(grouped = TRUE, add_kinematics = FALSE)
   result <- summarise_path(data)
 
   expect_equal(nrow(result), 2L)
   expect_true("individual" %in% names(result))
-  expect_true("total_path_length" %in% names(result))
+  expect_true("total_distance" %in% names(result))
 })
 
 test_that("summarise_path works with grouped plain 3D aniframe", {
-  data <- mock_kin_3d(grouped = TRUE, calculate_kinematics = FALSE)
+  data <- mock_kin_3d(grouped = TRUE, add_kinematics = FALSE)
   result <- summarise_path(data)
 
   expect_equal(nrow(result), 2L)
@@ -340,5 +342,5 @@ test_that("summarise_path() works on polar frames, with or without kinematics", 
 
   expected <- summarise_path(cartesian)
   expect_equal(summarise_path(polar), expected)
-  expect_equal(summarise_path(calculate_kinematics(polar)), expected)
+  expect_equal(summarise_path(add_kinematics(polar)), expected)
 })

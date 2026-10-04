@@ -11,11 +11,19 @@ template:
     primary: "#004F63"
 
 reference:
+- title: "Add"
+  desc: >
+    These return your aniframe with something added: columns of per-row
+    measures, a declared orientation, or a derived point.
+  contents:
+  - add_kinematics
+  - add_tortuosity
+  - add_orientation
+  - add_point
+
 - title: "Calculate"
   desc: These functions take your aniframe as input and give you results in return.
   contents:
-  - calculate_kinematics
-  - calculate_tortuosity
   - calculate_nnd
 
 - title: "Summarise"
@@ -26,11 +34,9 @@ reference:
   contents:
   - summarise_aniframe
   - summarise_path
-  - add_point
-  - add_orientation
 
 - title: "Compute"
-  desc: These functions are cogs used in `calculate_` and `summarise_` functions.
+  desc: These functions are cogs used in the `add_`, `calculate_` and `summarise_` functions.
   contents:
   - compute_gradient
   - differentiate
@@ -43,6 +49,8 @@ reference:
 - title: "Deprecated"
   desc: Kept for one release; see each page for its replacement.
   contents:
+  - calculate_kinematics
+  - calculate_tortuosity
   - summarise_kinematics
   - summarise_tortuosity
   - add_centroid

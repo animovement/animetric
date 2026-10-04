@@ -26,38 +26,38 @@ pooled <- function(af) {
 
 
 test_that("the declared grouping gives the true speed", {
-  k <- calculate_kinematics(spread_keypoints())
+  k <- add_kinematics(spread_keypoints())
 
   expect_equal(mean(k$speed, na.rm = TRUE), 1)
 })
 
 test_that("pooling trajectories is refused rather than answered wrongly", {
   expect_error(
-    calculate_kinematics(pooled(spread_keypoints())),
+    add_kinematics(pooled(spread_keypoints())),
     "one trajectory per group"
   )
 })
 
-test_that("calculate_tortuosity() refuses it too", {
-  k <- calculate_kinematics(spread_keypoints())
+test_that("add_tortuosity() refuses it too", {
+  k <- add_kinematics(spread_keypoints())
 
   expect_error(
-    calculate_tortuosity(pooled(k)),
+    add_tortuosity(pooled(k)),
     "one trajectory per group"
   )
 })
 
 test_that("summarise_path() refuses it, since it subtracts along a path", {
   k <- spread_keypoints() |>
-    calculate_kinematics() |>
-    calculate_tortuosity()
+    add_kinematics() |>
+    add_tortuosity()
 
   expect_error(summarise_path(pooled(k)), "one trajectory per group")
 })
 
 test_that("the error says how to summarise more coarsely", {
   err <- tryCatch(
-    calculate_kinematics(pooled(spread_keypoints())),
+    add_kinematics(pooled(spread_keypoints())),
     error = function(e) e
   )
 
@@ -70,7 +70,7 @@ test_that("the error says how to summarise more coarsely", {
 test_that("summarise at the declared grouping, then combine those results", {
   # Each keypoint's speed is computed on its own trajectory, and the
   # per-animal figure is built from those -- not from a pooled sweep.
-  k <- calculate_kinematics(spread_keypoints())
+  k <- add_kinematics(spread_keypoints())
 
   per_keypoint <- summarise_aniframe(k, measures = "mean_sd")
   per_animal <- dplyr::summarise(
@@ -87,7 +87,7 @@ test_that("summarise at the declared grouping, then combine those results", {
 test_that("summarise_aniframe() pools freely, having correct values to pool", {
   # No guard here: speed was derived per trajectory, so pooling those values
   # is a choice of statistic rather than a change of computation.
-  k <- calculate_kinematics(spread_keypoints())
+  k <- add_kinematics(spread_keypoints())
 
   expect_no_error(summarise_aniframe(pooled(k)))
   expect_equal(nrow(summarise_aniframe(pooled(k))), 1)
