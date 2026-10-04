@@ -5,13 +5,17 @@
 \alias{summarize_path}
 \title{Summarise each trajectory as a whole}
 \usage{
-summarise_path(data)
+summarise_path(data, min_step = "auto")
 
-summarize_path(data)
+summarize_path(data, min_step = "auto")
 }
 \arguments{
 \item{data}{An anipoint, grouped one trajectory per group, as it is by its
 declared keys.}
+
+\item{min_step}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The shortest step
+whose direction counts toward \code{total_turning}, as in \code{\link[=add_kinematics]{add_kinematics()}}
+(default \code{"auto"}). \code{0} counts every direction, however short the step.}
 }
 \value{
 A data frame with one row per trajectory:
@@ -19,12 +23,16 @@ A data frame with one row per trajectory:
 \item \code{total_distance}: distance travelled, the last value of
 \code{\link[=add_kinematics]{add_kinematics()}}'s \code{cumulative_distance}.
 \item \code{total_turning}: turning of the direction of travel, summed (2D and
-3D), in the frame's \code{unit_angle}.
+3D), in the frame's \code{unit_angle}: the last value of
+\code{\link[=add_kinematics]{add_kinematics()}}'s \code{cumulative_turning}, so steps shorter than
+\code{min_step} add none.
 \item \code{net_displacement}: straight-line distance from start to end.
 \item \code{straightness}: net displacement over distance travelled, from 0 to
 1.
-\item \code{sinuosity}: corrected sinuosity index (Benhamou 2004).
-\item \code{e_max}: maximum expected displacement (dimensionless).
+\item \code{sinuosity}: corrected sinuosity index (Benhamou 2004), of the path
+rediscretised to a constant step length (see Details).
+\item \code{e_max}: maximum expected displacement (dimensionless), from the same
+rediscretised path.
 }
 
 The windowed measures of \code{\link[=add_tortuosity]{add_tortuosity()}} carry the window width in
@@ -45,11 +53,30 @@ computation.
 For the distribution of per-row measures over each group, such as median
 speed or the median of windowed straightness, see \code{\link[=summarise_aniframe]{summarise_aniframe()}}.
 }
+\details{
+Sinuosity is defined for a path of constant step length (Benhamou 2004),
+so \code{sinuosity} and \code{e_max} come from the turning angles of the path
+rediscretised to one: walking along the path, a new point is placed
+wherever it first leaves a circle of that radius around the last one
+(Bovet & Benhamou 1988). The step length is the trajectory's mean step
+between rows, weighted by step length: the average step over the
+distance travelled, which time spent still does not shorten. Tracking jitter that stays within the circle while an
+animal is still gives no steps and no turning, where turning angles
+between successive frames would be dominated by it. Missing positions
+break the path into stretches that are rediscretised separately.
+}
 \examples{
 traj <- anicore::example_anipoint(n_obs = 20, n_individuals = 1, n_keypoints = 1)
 summarise_path(traj)
+
+# Count every direction toward total_turning, however short the step
+summarise_path(traj, min_step = 0)
 }
 \references{
 Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal's
 path. Journal of Theoretical Biology, 229(2), 209-220.
+
+Bovet, P., & Benhamou, S. (1988). Spatial analysis of animals' movements
+using a correlated random walk model. Journal of Theoretical Biology,
+131(4), 419-433.
 }

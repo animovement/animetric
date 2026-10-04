@@ -22,6 +22,10 @@
 
 ## Added
 
+* `add_kinematics()` and `summarise_path()` take `min_step`, the shortest step whose direction counts (#104). A point that barely moves takes its direction from tracking noise, which swings at random from frame to frame and was all counted as turning. Below `min_step`, `course` is `NA` and the row adds nothing to `turning_speed`, `turning_rate`, `turning_acceleration`, `cumulative_turning` or `total_turning`; a turn made in the meantime is counted once, when the animal moves off. The default, `"auto"`, is three times the positional noise estimated for each trajectory, and at most half its median step. `min_step = 0` counts every direction, as `calculate_kinematics()` did. On the SLEAP sample, cleaned and smoothed as in the Get Started guides, the centre's `total_turning` falls from about 356,000 to 243,000 degrees.
+
+* `summarise_path()` and `add_tortuosity()` compute `sinuosity` and `e_max` from the path rediscretised to a constant step length, as Benhamou (2004) defines sinuosity (#104). Jitter while an animal is still gives no steps, so it no longer dominates them. A window of `add_tortuosity()` in which the animal moved less than a step has `NA`.
+
 * `add_orientation()` declares which way a body faces from where its points are (#97):
   - **2D:** `heading`, the direction from `from` to `to`.
   - **3D:** a unit quaternion (`qw`, `qx`, `qy`, `qz`), with a third point, `plane`, to fix the roll. Any point off the `from`-`to` line will do.

@@ -2,9 +2,8 @@
 #'
 #' Computes how winding the path is (straightness, sinuosity and E_max) over
 #' a window centred on each row, and returns the frame with a column for
-#' each. Everything they need, such as the velocities the turning angles come
-#' from, is computed internally and not added, so only the three measures
-#' appear.
+#' each. Everything they need is computed internally and not added, so only
+#' the three measures appear.
 #'
 #' @param data A Cartesian anipoint.
 #' @param window_width Size of the sliding window, in observations (default
@@ -26,16 +25,37 @@
 #' sinuosity and E_max are appropriate for random search paths.
 #'
 #' Works on 1D, 2D and 3D Cartesian data, reading the axes from the frame's
-#' declared variables. Turning angles are the angles between consecutive
-#' velocity vectors ([anicore::angle_between()]), which gives smoother
-#' estimates than raw position differences.
+#' declared variables.
 #'
 #' The window is centered on each timepoint. Near the ends of a trajectory,
 #' where the window would run past the first or last observation, the metrics
 #' are `NA`.
 #'
+#' **Straightness** is the distance between the positions at the ends of the
+#' window over the distance travelled between them.
+#'
+#' **Sinuosity and E_max** come from the turning angles of the path
+#' rediscretised to a constant step length, as Benhamou (2004) defines
+#' sinuosity: walking along the path, a new point is placed wherever it
+#' first leaves a circle of that radius around the last one (Bovet &
+#' Benhamou 1988). The step length is the trajectory's mean step between
+#' rows, weighted by step length: the average step over the distance
+#' travelled, which time spent still does not shorten. Tracking
+#' jitter that stays within the circle while an animal is still gives no
+#' steps and no turning, where turning angles between successive frames
+#' would be dominated by it. Each window takes the turning at the
+#' rediscretised points the path reaches within it, and is `NA` when there
+#' are none: where the animal moved less than a step, its path has no
+#' sinuosity to measure. The path is rediscretised once per trajectory, and
+#' missing positions break it into stretches that are rediscretised
+#' separately.
+#'
 #' @references
 #' Batschelet, E. (1981). Circular statistics in biology. Academic Press.
+#'
+#' Bovet, P., & Benhamou, S. (1988). Spatial analysis of animals' movements
+#' using a correlated random walk model. Journal of Theoretical Biology,
+#' 131(4), 419-433.
 #'
 #' Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal’s
 #' path: straightness, sinuosity, or fractal dimension?.
@@ -65,24 +85,53 @@ add_tortuosity <- function(data, window_width = 11L) {
   ensure_trajectory_grouping(data)
   window_width <- check_tortuosity_input(data, window_width)
 
-  axes <- cartesian_axes(data)
+  original_class <- class(data)
+  position_cols <- unname(cartesian_axes(data))
   index <- anicore::get_index(data)
-  v_cols <- paste0(".v_", names(axes))
-  velocity <- rlang::set_names(
-    purrr::map(
-      unname(axes),
-      \(col) rlang::quo(differentiate(.data[[!!col]], .data[[!!index]]))
-    ),
-    v_cols
-  )
+  names <- paste0(tortuosity_measures, "_", window_width)
 
-  data |>
-    dplyr::mutate(!!!velocity) |>
-    windowed_tortuosity(
-      window_width = window_width,
-      v_cols = v_cols,
-      names = paste0(tortuosity_measures, "_", window_width)
+  result <- data |>
+    dplyr::mutate(
+      !!names[[1]] := window_straightness(
+        dplyr::pick(dplyr::all_of(position_cols)),
+        window_width
+      ),
+      rlang::set_names(
+        as.data.frame(window_sinuosity(
+          dplyr::pick(dplyr::all_of(position_cols)),
+          .data[[index]],
+          window_width
+        )),
+        names[2:3]
+      )
     )
+
+  class(result) <- original_class
+  result
+}
+
+#' Straightness over sliding windows
+#'
+#' @param position A data frame of positions, one column per axis.
+#' @param window_width The window width, in rows.
+#' @return Numeric vector: the distance between the positions at the ends of
+#'   each row's window, over the distance travelled between them.
+#' @keywords internal
+window_straightness <- function(position, window_width) {
+  half_w <- window_width %/% 2L
+  other_half <- window_width - half_w - 1L
+  travelled <- data.table::frollsum(
+    step_length(position),
+    n = window_width - 1L,
+    algo = "fast",
+    align = "center",
+    na.rm = TRUE
+  )
+  displacement <- vector_norm(lapply(
+    position,
+    \(x) dplyr::lead(x, n = other_half) - dplyr::lag(x, n = half_w)
+  ))
+  compute_straightness(displacement, travelled)
 }
 
 # The measures add_tortuosity() adds, without their window width
@@ -126,88 +175,4 @@ check_tortuosity_input <- function(
     cli::cli_abort("{.arg window_width} must be at least 3.", call = call)
   }
   window_width
-}
-
-#' Straightness, sinuosity and E_max over sliding windows
-#'
-#' @param data A Cartesian anipoint with velocity columns.
-#' @param window_width The window width, an integer of at least 3.
-#' @param v_cols The velocity columns, one per axis. Columns whose names
-#'   start with `.` are dropped from the result.
-#' @param names The names to give straightness, sinuosity and E_max.
-#' @return The anipoint with the three measures added.
-#' @keywords internal
-windowed_tortuosity <- function(data, window_width, v_cols, names) {
-  # Store original class for restoration
-  original_class <- class(data)
-
-  position_cols <- unname(cartesian_axes(data))
-  half_w <- window_width %/% 2L
-  other_half <- window_width - half_w - 1L
-
-  result <- data |>
-    dplyr::mutate(
-      # Step length between consecutive points
-      .step_length = step_length(dplyr::pick(dplyr::all_of(position_cols))),
-
-      # Turning angle between consecutive velocity vectors
-      .cos_turning = cos_turning(dplyr::pick(dplyr::all_of(v_cols))),
-
-      # Rolling sums using data.table (fast algorithm, centered window)
-      .roll_sum_step = data.table::frollsum(
-        .data$.step_length,
-        n = window_width - 1L,
-        algo = "fast",
-        align = "center",
-        na.rm = TRUE
-      ),
-      .roll_count_step = data.table::frollsum(
-        as.numeric(!is.na(.data$.step_length)),
-        n = window_width - 1L,
-        algo = "fast",
-        align = "center"
-      ),
-
-      .roll_sum_cos = data.table::frollsum(
-        .data$.cos_turning,
-        n = window_width - 1L,
-        algo = "fast",
-        align = "center",
-        na.rm = TRUE
-      ),
-      .roll_count_cos = data.table::frollsum(
-        as.numeric(!is.na(.data$.cos_turning)),
-        n = window_width - 1L,
-        algo = "fast",
-        align = "center"
-      ),
-
-      # Displacement between the window's start and end positions
-      .window_displacement = vector_norm(lapply(
-        dplyr::pick(dplyr::all_of(position_cols)),
-        \(x) dplyr::lead(x, n = other_half) - dplyr::lag(x, n = half_w)
-      )),
-
-      # Compute means
-      .window_path_length = .data$.roll_sum_step,
-      .mean_step = .data$.roll_sum_step / .data$.roll_count_step,
-      .mean_cos = .data$.roll_sum_cos / .data$.roll_count_cos
-    ) |>
-    dplyr::mutate(
-      !!names[[1]] := compute_straightness(
-        .data$.window_displacement,
-        .data$.window_path_length
-      ),
-      !!names[[2]] := compute_sinuosity(
-        .data$.mean_step,
-        .data$.mean_cos,
-        method = "corrected"
-      ),
-      !!names[[3]] := compute_emax(.data$.mean_cos)
-    ) |>
-    dplyr::select(-dplyr::starts_with("."))
-
-  # Restore original class
-  class(result) <- original_class
-  result
 }

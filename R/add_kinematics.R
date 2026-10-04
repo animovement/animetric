@@ -21,6 +21,23 @@
 #'   measured in the plane of the data. Experimental until that proposal is
 #'   settled: the argument may come to default to the declared vertical, and
 #'   to mean something for 2D side views.
+#' @param min_step `r lifecycle::badge("experimental")` The shortest step,
+#'   in the frame's spatial unit, whose direction counts. Where a point moves
+#'   less than this per sample, its direction of travel is set by tracking
+#'   noise rather than by where the animal is going, so the direction is
+#'   treated as undefined: `course` is `NA` there, and the row adds no
+#'   turning. One of:
+#'   \describe{
+#'     \item{`"auto"` (the default)}{Three times the tracking noise,
+#'       estimated separately for each trajectory, and at most half its
+#'       median step. See Details.}
+#'     \item{a number}{A threshold of your own, such as the tracking
+#'       precision in the frame's spatial unit.}
+#'     \item{`0`}{Every direction counts, however short the step, as
+#'       [calculate_kinematics()] did.}
+#'   }
+#'   It affects only the direction measures (`course` and the turning
+#'   measures), not `speed` or `cumulative_distance`.
 #'
 #' @return An anipoint in the same coordinate system as the input, with added
 #'   kinematic measures. Translational measures are computed for 1D, 2D and
@@ -51,14 +68,17 @@
 #'       them.}
 #'     \item{`cumulative_turning`}{Turning accumulated since the first row:
 #'       the angle between successive velocities, summed. A turn made while
-#'       stationary is counted when the animal moves off.}
+#'       stationary, or while moving less than `min_step`, is counted when
+#'       the animal moves off, as the angle between the directions before
+#'       and after.}
 #'   }
 #'   In 2D, and in 3D when `vertical` is given, the measures that need a
 #'   direction to count from:
 #'   \describe{
 #'     \item{`course`}{Direction of travel in the horizontal plane (in 2D, the
 #'       plane of the data): `atan2(v_y, v_x)` in 2D. It is `NA` where there is
-#'       no horizontal movement, since the direction is then undefined.
+#'       no horizontal movement, or less than `min_step` per sample, since
+#'       the direction is then undefined.
 #'       `course_unwrapped` is the same, without jumps at +/-pi.}
 #'     \item{`course_elevation`}{3D only: the angle of travel above the
 #'       horizontal plane, from -pi/2 (straight down) to pi/2 (straight up).}
@@ -99,6 +119,52 @@
 #' speed in 3D needs no angle to unwrap, and has no singularity when travel
 #' is vertical.
 #'
+#' ## The minimum step
+#'
+#' When a point barely moves, the direction between successive positions is
+#' set by sub-pixel tracking noise, and swings at random from frame to
+#' frame. Every swing is turning to the measures above, so a resting animal
+#' accumulates turning as fast as a running one. `min_step` sets the step
+#' below which the direction is not trusted.
+#'
+#' The step of a row is the distance its velocity implies moving per sample:
+#' `speed` times the sampling interval, which for the central differences
+#' used here is half the distance between the positions either side. Course
+#' is measured against the horizontal part of the step alone.
+#'
+#' With `min_step = "auto"`, the threshold is three times the positional
+#' noise, \eqn{\sigma}, estimated for each trajectory from its second
+#' differences \eqn{p_{i+1} - 2 p_i + p_{i-1}}. For white noise of standard
+#' deviation \eqn{\sigma} on each axis these have standard deviation
+#' \eqn{\sqrt{6}\sigma}. Only their component along the direction of travel
+#' is used, which a path turning at constant speed leaves at zero, and their
+#' spread is measured with [stats::mad()], which a minority of large values
+#' barely moves. A point standing still under white noise makes steps longer
+#' than \eqn{3\sigma} with a probability of about 0.01% (0.04% in 3D), so
+#' the threshold removes the directions of a stationary point while keeping
+#' those of real movement.
+#'
+#' The threshold is also at most half the trajectory's median step (among
+#' steps that have a direction), so most steps always keep theirs. This
+#' matters when the sampling is coarse for the movement: a random walk
+#' recorded step by step has second differences as large as its steps, and
+#' the estimate would take the movement itself for noise.
+#'
+#' The estimate assumes the sampling is fast compared with changes in speed,
+#' as it is for video tracking. Two cases call for setting `min_step`
+#' yourself:
+#' \itemize{
+#'   \item **Smoothed positions.** Smoothing turns noise into slow wander,
+#'     which second differences see less of, so the estimate is smaller than
+#'     the jitter left in the data, and the threshold removes only part of it.
+#'   \item **Coarse sampling**, such as GPS fixes minutes apart, where speed
+#'     changes a lot between samples. The estimate then includes real
+#'     movement, so the threshold may be too large; use the positional
+#'     precision instead, or `0`.
+#' }
+#' The threshold is not stored in the result. To know it exactly, give it as
+#' a number.
+#'
 #' @seealso [add_tortuosity()] for windowed measures of how winding the path
 #'   is, and [summarise_path()] for measures of each whole trajectory.
 #'
@@ -123,10 +189,15 @@
 #' ) |>
 #'   anicore::as_anipoint()
 #' kinematics_3d <- add_kinematics(traj_3d, vertical = "z")
-add_kinematics <- function(data, vertical = NULL) {
+#'
+#' # A threshold of your own, in the frame's spatial unit, or 0 to count
+#' # every direction however short the step
+#' kinematics_2d <- add_kinematics(traj_2d, min_step = 0.1)
+add_kinematics <- function(data, vertical = NULL, min_step = "auto") {
   ensure_trajectory_grouping(data)
   anicore::ensure_is_anipoint(data)
   check_vertical(vertical)
+  check_min_step(min_step)
 
   # Convert to Cartesian if needed
   original_system <- anicore::get_metadata(data, "coordinate_system")
@@ -134,7 +205,7 @@ add_kinematics <- function(data, vertical = NULL) {
     data <- anispace::map_to_cartesian(data)
   }
 
-  data <- kinematics_cartesian(data, vertical = vertical)
+  data <- kinematics_cartesian(data, vertical = vertical, min_step = min_step)
 
   # Convert back if needed
   if (as.character(original_system) == "polar") {
@@ -151,13 +222,13 @@ add_kinematics <- function(data, vertical = NULL) {
 #' Add translational, and where defined rotational, kinematics
 #'
 #' @param data A Cartesian anipoint.
-#' @param vertical See [add_kinematics()].
+#' @param vertical,min_step See [add_kinematics()].
 #' @return The anipoint with added kinematic columns.
 #' @keywords internal
-kinematics_cartesian <- function(data, vertical = NULL) {
+kinematics_cartesian <- function(data, vertical = NULL, min_step = 0) {
   data <- calculate_translation(data)
   if (length(cartesian_axes(data)) >= 2L) {
-    data <- calculate_rotation(data, vertical = vertical)
+    data <- calculate_rotation(data, vertical = vertical, min_step = min_step)
   }
   data
 }
@@ -213,10 +284,10 @@ calculate_translation <- function(data) {
 #'
 #' @param data A 2D or 3D Cartesian anipoint with velocity (`v_*`) columns,
 #'   and an index.
-#' @param vertical See [add_kinematics()].
+#' @param vertical,min_step See [add_kinematics()].
 #' @return The anipoint with added rotational kinematic columns.
 #' @keywords internal
-calculate_rotation <- function(data, vertical = NULL) {
+calculate_rotation <- function(data, vertical = NULL, min_step = 0) {
   axes <- cartesian_axes(data)
   roles <- names(axes)
   index <- anicore::get_index(data)
@@ -227,7 +298,13 @@ calculate_rotation <- function(data, vertical = NULL) {
     dplyr::mutate(path_rotation(
       velocity = dplyr::pick(dplyr::all_of(paste0("v_", roles))),
       time = .data[[index]],
-      up = up
+      up = up,
+      min_step = resolve_min_step(
+        min_step,
+        position = dplyr::pick(dplyr::all_of(unname(axes))),
+        velocity = dplyr::pick(dplyr::all_of(paste0("v_", roles))),
+        time = .data[[index]]
+      )
     )) |>
     dplyr::mutate(dplyr::across(
       dplyr::any_of(c(
@@ -254,12 +331,15 @@ calculate_rotation <- function(data, vertical = NULL) {
 #' @param time The index.
 #' @param up The unit vertical, as from [vertical_vector()], or `NULL` for
 #'   only the measures that need none.
+#' @param min_step The shortest step whose direction counts, a number.
 #' @return A data frame of turning measures, in radians.
 #' @keywords internal
-path_rotation <- function(velocity, time, up) {
+path_rotation <- function(velocity, time, up, min_step = 0) {
   v <- as_3d(velocity)
-  speed_sq <- rowSums(v^2)
-  moving <- !is.na(speed_sq) & speed_sq > 0
+  interval <- sampling_interval(time)
+  moving <- has_direction(sqrt(rowSums(v^2)) * interval, min_step)
+  # A direction too short to trust counts as no direction at all
+  v[!moving, ] <- NA_real_
 
   out <- list()
   if (!is.null(up)) {
@@ -268,9 +348,10 @@ path_rotation <- function(velocity, time, up) {
     across <- drop(v %*% basis$second)
     horizontal_sq <- along^2 + across^2
 
-    # Course is undefined where there is no horizontal movement
+    # Course is undefined where there is no horizontal movement, or too
+    # little to give a direction
     course <- ifelse(
-      !is.na(horizontal_sq) & horizontal_sq > 0,
+      has_direction(sqrt(horizontal_sq) * interval, min_step),
       atan2(across, along),
       NA_real_
     )
@@ -381,4 +462,102 @@ horizontal_basis <- function(up) {
   first <- as.numeric(seq_len(3L) == axis %% 3L + 1L)
   second <- drop(cross_rows(rbind(up), rbind(first)))
   list(first = first, second = second)
+}
+
+#' The time each row's velocity spans, per sample
+#'
+#' Velocity is a central difference, so the distance it implies moving per
+#' sample is speed times half the time between the rows either side: half
+#' the distance between those two positions. The ends use one-sided
+#' differences, as [differentiate()] does.
+#'
+#' @param time The index.
+#' @return Numeric vector, in units of the index.
+#' @keywords internal
+sampling_interval <- function(time) {
+  differentiate(time)
+}
+
+#' Is a step long enough to give a direction?
+#'
+#' @param step Distance moved per sample.
+#' @param min_step The shortest step that gives a direction.
+#' @return Logical vector: `FALSE` where `step` is missing, zero, or shorter
+#'   than `min_step`.
+#' @keywords internal
+has_direction <- function(step, min_step) {
+  !is.na(step) & step > 0 & step >= min_step
+}
+
+#' Check a `min_step` argument
+#'
+#' @param min_step See [add_kinematics()].
+#' @param call The calling environment, for error messages.
+#' @return `TRUE`, invisibly.
+#' @keywords internal
+check_min_step <- function(min_step, call = rlang::caller_env()) {
+  valid <- identical(min_step, "auto") ||
+    (is.numeric(min_step) &&
+      length(min_step) == 1L &&
+      !is.na(min_step) &&
+      min_step >= 0)
+  if (!valid) {
+    cli::cli_abort(
+      "{.arg min_step} must be {.val auto} or a single number of at least 0.",
+      call = call
+    )
+  }
+  invisible(TRUE)
+}
+
+#' The minimum step of one trajectory
+#'
+#' @param min_step See [add_kinematics()], already checked.
+#' @param position A data frame of positions, one column per axis.
+#' @param velocity A data frame of velocities, one column per axis.
+#' @param time The index.
+#' @return A number: `min_step` itself, or for `"auto"` three times the
+#'   noise from [positional_noise()], at most half the median step.
+#' @keywords internal
+resolve_min_step <- function(min_step, position, velocity, time) {
+  if (!identical(min_step, "auto")) {
+    return(min_step)
+  }
+  v <- as.matrix(as.data.frame(velocity))
+  step <- sqrt(rowSums(v^2)) * sampling_interval(time)
+  cap <- stats::median(step[!is.na(step) & step > 0]) / 2
+  min(3 * positional_noise(position, velocity), cap, na.rm = TRUE)
+}
+
+#' Positional noise of a trajectory
+#'
+#' The robust standard deviation of the second differences of position along
+#' the direction of travel, over `sqrt(6)`: for white noise of standard
+#' deviation `sigma` on each axis, a second difference has standard deviation
+#' `sqrt(6) * sigma` in any direction. Along the direction of travel, a path
+#' turning at constant speed contributes nothing.
+#'
+#' @param position A data frame of positions, one column per axis.
+#' @param velocity A data frame of velocities, one column per axis.
+#' @return A number, in the unit of the positions. `0` when there are too
+#'   few rows, or too little movement, to estimate it.
+#' @keywords internal
+positional_noise <- function(position, velocity) {
+  p <- as.matrix(as.data.frame(position))
+  v <- as.matrix(as.data.frame(velocity))
+  n <- nrow(p)
+  if (n < 3L) {
+    return(0)
+  }
+  middle <- 2:(n - 1L)
+  second <- p[middle + 1L, , drop = FALSE] -
+    2 * p[middle, , drop = FALSE] +
+    p[middle - 1L, , drop = FALSE]
+  heading <- v[middle, , drop = FALSE]
+  along <- rowSums(second * heading) / sqrt(rowSums(heading^2))
+  along <- along[is.finite(along)]
+  if (length(along) == 0L) {
+    return(0)
+  }
+  stats::mad(along) / sqrt(6)
 }

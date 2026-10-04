@@ -4,12 +4,12 @@
 \alias{kinematics_cartesian}
 \title{Add translational, and where defined rotational, kinematics}
 \usage{
-kinematics_cartesian(data, vertical = NULL)
+kinematics_cartesian(data, vertical = NULL, min_step = 0)
 }
 \arguments{
 \item{data}{A Cartesian anipoint.}
 
-\item{vertical}{See \code{\link[=add_kinematics]{add_kinematics()}}.}
+\item{vertical, min_step}{See \code{\link[=add_kinematics]{add_kinematics()}}.}
 }
 \value{
 The anipoint with added kinematic columns.

@@ -14,6 +14,7 @@ As \code{\link[=summarise_path]{summarise_path()}}, with \code{total_path_length
 \code{total_distance} and \code{emax} in place of \code{e_max}.
 }
 \description{
-What \code{summarise_tortuosity()} returned
+Every direction counts toward \code{total_turning}, and sinuosity and E_max
+come from the turning between successive frames.
 }
 \keyword{internal}

@@ -27,22 +27,38 @@ and lets several window widths sit side by side.
 \description{
 Computes how winding the path is (straightness, sinuosity and E_max) over
 a window centred on each row, and returns the frame with a column for
-each. Everything they need, such as the velocities the turning angles come
-from, is computed internally and not added, so only the three measures
-appear.
+each. Everything they need is computed internally and not added, so only
+the three measures appear.
 }
 \details{
 Straightness is appropriate for directed/goal-oriented movement, while
 sinuosity and E_max are appropriate for random search paths.
 
 Works on 1D, 2D and 3D Cartesian data, reading the axes from the frame's
-declared variables. Turning angles are the angles between consecutive
-velocity vectors (\code{\link[anicore:angle_between]{anicore::angle_between()}}), which gives smoother
-estimates than raw position differences.
+declared variables.
 
 The window is centered on each timepoint. Near the ends of a trajectory,
 where the window would run past the first or last observation, the metrics
 are \code{NA}.
+
+\strong{Straightness} is the distance between the positions at the ends of the
+window over the distance travelled between them.
+
+\strong{Sinuosity and E_max} come from the turning angles of the path
+rediscretised to a constant step length, as Benhamou (2004) defines
+sinuosity: walking along the path, a new point is placed wherever it
+first leaves a circle of that radius around the last one (Bovet &
+Benhamou 1988). The step length is the trajectory's mean step between
+rows, weighted by step length: the average step over the distance
+travelled, which time spent still does not shorten. Tracking
+jitter that stays within the circle while an animal is still gives no
+steps and no turning, where turning angles between successive frames
+would be dominated by it. Each window takes the turning at the
+rediscretised points the path reaches within it, and is \code{NA} when there
+are none: where the animal moved less than a step, its path has no
+sinuosity to measure. The path is rediscretised once per trajectory, and
+missing positions break it into stretches that are rediscretised
+separately.
 }
 \examples{
 data <- anicore::example_anipoint(n_obs = 30, n_individuals = 1, n_keypoints = 1)
@@ -57,6 +73,10 @@ data |>
 }
 \references{
 Batschelet, E. (1981). Circular statistics in biology. Academic Press.
+
+Bovet, P., & Benhamou, S. (1988). Spatial analysis of animals' movements
+using a correlated random walk model. Journal of Theoretical Biology,
+131(4), 419-433.
 
 Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal’s
 path: straightness, sinuosity, or fractal dimension?.
