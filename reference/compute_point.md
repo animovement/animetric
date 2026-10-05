@@ -85,18 +85,18 @@ compute_point(af, across = "keypoint")
 #> # Keypoints:   centroid
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time       x       y confidence
-#>         <int> <fct>      <int> <int> <int>   <dbl>   <dbl>      <dbl>
-#>  1          1 centroid       1     1     1  0.542  -0.309          NA
-#>  2          1 centroid       1     1     2  0.0862 -0.518          NA
-#>  3          1 centroid       1     1     3  0.239   0.0110         NA
-#>  4          1 centroid       1     1     4  0.234  -0.0932         NA
-#>  5          1 centroid       1     1     5 -0.487  -0.637          NA
-#>  6          1 centroid       1     1     6 -0.0600 -0.0888         NA
-#>  7          1 centroid       1     1     7  0.570  -1.03           NA
-#>  8          1 centroid       1     1     8 -0.912  -0.538          NA
-#>  9          1 centroid       1     1     9 -0.456   0.260          NA
-#> 10          1 centroid       1     1    10  0.517   0.118          NA
+#>    individual keypoint session trial  time       x        y confidence
+#>         <int> <fct>      <int> <int> <int>   <dbl>    <dbl>      <dbl>
+#>  1          1 centroid       1     1     1 -0.669   0.229           NA
+#>  2          1 centroid       1     1     2  1.24    0.725           NA
+#>  3          1 centroid       1     1     3 -0.536   0.277           NA
+#>  4          1 centroid       1     1     4 -0.164   0.762           NA
+#>  5          1 centroid       1     1     5 -0.285   0.0518          NA
+#>  6          1 centroid       1     1     6 -0.405   0.0274          NA
+#>  7          1 centroid       1     1     7  0.277  -0.287           NA
+#>  8          1 centroid       1     1     8  0.0476  0.121           NA
+#>  9          1 centroid       1     1     9 -0.940   0.236           NA
+#> 10          1 centroid       1     1    10 -0.121  -0.00687         NA
 #> # ℹ 30 more rows
 
 # Their median
@@ -105,17 +105,17 @@ compute_point(af, across = "keypoint", method = "median")
 #> # Keypoints:   median
 #> # Sessions:    1
 #> # Trials:      1
-#>    individual keypoint session trial  time      x       y confidence
-#>         <int> <fct>      <int> <int> <int>  <dbl>   <dbl>      <dbl>
-#>  1          1 median         1     1     1 -0.530 -0.242          NA
-#>  2          1 median         1     1     2 -0.452 -0.834          NA
-#>  3          1 median         1     1     3 -0.202  0.398          NA
-#>  4          1 median         1     1     4 -0.365  0.470          NA
-#>  5          1 median         1     1     5 -0.869 -0.395          NA
-#>  6          1 median         1     1     6 -0.156 -0.0704         NA
-#>  7          1 median         1     1     7  0.542 -0.613          NA
-#>  8          1 median         1     1     8 -0.954 -0.337          NA
-#>  9          1 median         1     1     9  0.310  0.420          NA
-#> 10          1 median         1     1    10  0.114 -0.0629         NA
+#>    individual keypoint session trial  time       x      y confidence
+#>         <int> <fct>      <int> <int> <int>   <dbl>  <dbl>      <dbl>
+#>  1          1 median         1     1     1 -0.731   0.598         NA
+#>  2          1 median         1     1     2  0.575   0.480         NA
+#>  3          1 median         1     1     3 -0.206   0.157         NA
+#>  4          1 median         1     1     4 -0.0801  0.959         NA
+#>  5          1 median         1     1     5 -0.0323  0.153         NA
+#>  6          1 median         1     1     6 -0.719   0.326         NA
+#>  7          1 median         1     1     7  0.372  -0.796         NA
+#>  8          1 median         1     1     8  0.355   0.245         NA
+#>  9          1 median         1     1     9 -0.984   0.470         NA
+#> 10          1 median         1     1    10 -0.150   0.535         NA
 #> # ℹ 30 more rows
 ```

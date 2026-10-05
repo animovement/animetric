@@ -5,7 +5,13 @@ The measures of each whole trajectory
 ## Usage
 
 ``` r
-path_summary(data, min_step, rediscretise, call = rlang::caller_env())
+path_summary(
+  data,
+  min_step,
+  rediscretise,
+  step_length = "auto",
+  call = rlang::caller_env()
+)
 ```
 
 ## Arguments
@@ -25,6 +31,12 @@ path_summary(data, min_step, rediscretise, call = rlang::caller_env())
   constant step length, or, as
   [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
   computed them, from the turning between successive frames.
+
+- step_length:
+
+  The step to rediscretise at, see
+  [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md).
+  Ignored when `rediscretise` is `FALSE`.
 
 - call:
 

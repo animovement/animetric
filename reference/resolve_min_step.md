@@ -30,6 +30,5 @@ resolve_min_step(min_step, position, velocity, time)
 
 ## Value
 
-A number: `min_step` itself, or for `"auto"` three times the noise from
-[`positional_noise()`](https://animovement.dev/animetric/reference/positional_noise.md),
-at most half the median step.
+A number: `min_step` itself, or for `"auto"` the threshold from
+[`auto_min_step()`](https://animovement.dev/animetric/reference/auto_min_step.md).

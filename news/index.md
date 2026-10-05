@@ -26,6 +26,16 @@
 
 ### Fixed
 
+- The windowed straightness of
+  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
+  is `NA` for a window that holds a missing position
+  ([\#108](https://github.com/animovement/animetric/issues/108)). The
+  distance travelled left out the steps to and from the missing position
+  while the displacement still spanned the gap, so the straightness
+  could exceed 1.
+  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md),
+  which is deprecated, keeps its old output.
+
 - [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
   gives correct results for polar, cylindrical and spherical input
   stored in degrees. It converts such input to Cartesian with anispace’s
@@ -120,6 +130,17 @@
   guides, the centre’s `total_turning` falls from about 356,000 to
   243,000 degrees.
 
+- [`compute_min_step()`](https://animovement.dev/animetric/reference/compute_min_step.md)
+  returns the threshold that `min_step = "auto"` chooses for each
+  trajectory, with the positional noise it is estimated from, in the
+  frame’s spatial unit
+  ([\#111](https://github.com/animovement/animetric/issues/111)). It is
+  computed by the same code as in
+  [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md),
+  so it can be reported, compared with a known tracking precision, or
+  passed back as `min_step`, for example to use one threshold for every
+  trajectory. It is experimental, like `min_step`.
+
 - [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
   and
   [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
@@ -130,6 +151,16 @@
   them. A window of
   [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
   in which the animal moved less than a step has `NA`.
+
+- [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
+  and
+  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
+  take `step_length`, the step the path is rediscretised at for
+  `sinuosity` and `e_max`, in the frame’s spatial unit
+  ([\#114](https://github.com/animovement/animetric/issues/114)). The
+  default, `"auto"`, is each trajectory’s own step as before; a number
+  rediscretises every trajectory at that step, so that their sinuosity
+  can be compared at one scale. It is experimental.
 
 - [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
   declares which way a body faces from where its points are
@@ -150,6 +181,31 @@
   0.3.0.9006 (`quat_from_vectors()`).
 
 ### Changed
+
+- [`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md)
+  replaces
+  [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
+  ([\#109](https://github.com/animovement/animetric/issues/109)). It
+  returns the frame with nearest-neighbour columns added, so it joins
+  the `add_*()` family.
+  [`compute_nnd()`](https://animovement.dev/animetric/reference/compute_nnd.md)
+  keeps its name, as it returns values. On the way:
+
+  | [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md) | [`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md) |
+  |----|----|
+  | `nnd_<across>` (e.g. `nnd_individual`) | `nnd_<n>_<across>` (e.g. `nnd_1_individual`) |
+  | `nnd_<variable>` (e.g. `nnd_keypoint`) | `nnd_<n>_<variable>` (e.g. `nnd_1_keypoint`) |
+  | `nnd_distance` | `nnd_<n>_distance` |
+
+  - Every column carries the neighbour rank `n`, `1` included, so the
+    nearest and second-nearest neighbours sit side by side:
+    `add_nnd(n = 1) |> add_nnd(n = 2)`. It used to stop with “Names must
+    be unique”. The names split unambiguously with `^nnd_(\d+)_(.+)$`,
+    even when the column after the rank has underscores in it. Calling
+    it again with the same `n` says which columns are already there.
+  - `n` must be a single whole number of 1 or more.
+  - The deprecated `keypoint_neighbour` argument is not carried over;
+    use `neighbour = list(keypoint = ...)`.
 
 - [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md)
   and
@@ -386,10 +442,18 @@
   [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
   ([\#103](https://github.com/animovement/animetric/issues/103)).
 
+- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
+  →
+  [`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md)
+  ([\#109](https://github.com/animovement/animetric/issues/109)).
+
   Each returns exactly what it did, with the old column names
-  (`path_length`, and `straightness`, `sinuosity` and `emax`), and
+  (`path_length`; `straightness`, `sinuosity` and `emax`; `nnd_<across>`
+  and `nnd_distance`),
   [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  still adds the kinematic columns. They will be removed after the next
+  still adds the kinematic columns, and
+  [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
+  still takes `keypoint_neighbour`. They will be removed after the next
   release.
 
 ### Fixed

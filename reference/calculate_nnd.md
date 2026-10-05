@@ -1,15 +1,16 @@
 # Calculate distance to the n-th nearest neighbour
 
-Computes, for each point, the distance to the nearest point belonging to
-a *different* entity — typically a different individual at the same
-moment.
+**\[deprecated\]**
 
-Which columns carry time and position is read from the anipoint's
-declared variables (see
-[`anicore::get_variables()`](https://animovement.dev/anicore/reference/variables.html)).
-The identity columns are assigned roles by you, explicitly, because
-"another animal" and "another point on this animal" are different
-questions and the data cannot tell which one you mean.
+Renamed to
+[`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md),
+which takes the same arguments apart from `keypoint_neighbour`:
+functions that return the frame with columns added now start with
+`add_`. This returns exactly what it did, with the columns named without
+the neighbour rank that
+[`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md)
+puts in them: `nnd_<across>` and `nnd_distance` rather than
+`nnd_<n>_<across>` and `nnd_<n>_distance`.
 
 ## Usage
 
@@ -27,33 +28,10 @@ calculate_nnd(
 
 ## Arguments
 
-- data:
+- data, across, n, within, focal, neighbour:
 
-  An anipoint.
-
-- across:
-
-  Column whose value must differ between a point and its neighbour.
-
-- n:
-
-  Which neighbour to return (1 = nearest, 2 = second nearest). Ranked by
-  entity, not by point: with `n = 2`, the result is the closest point on
-  the second-nearest entity.
-
-- within:
-
-  Identity columns that must match, added to the temporal context.
-
-- focal:
-
-  Named list restricting which points are measured from, e.g.
-  `list(keypoint = "nose")`. `NULL` measures from every point.
-
-- neighbour:
-
-  Named list restricting which points may be returned as a neighbour,
-  e.g. `list(keypoint = "tail")`.
+  See
+  [`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md).
 
 - keypoint_neighbour:
 
@@ -61,137 +39,7 @@ calculate_nnd(
 
 ## Value
 
-The input anipoint with added columns:
-
-- `nnd_distance` — distance to the n-th nearest neighbour
-
-- `nnd_<across>` — which entity that neighbour belongs to
-
-- `nnd_<variable>` — the neighbour's value for each unconstrained
-  identity variable (e.g. `nnd_keypoint`)
-
-## Details
-
-Every identity variable has one of three roles:
-
-- **`across`** — its value must *differ* between a point and its
-  neighbour. This is what "another" means: `"individual"` for the
-  nearest other animal, `"keypoint"` for the nearest other point on the
-  same animal.
-
-- **`within`** — its value must *match*. Added to the temporal context,
-  which always applies: points are never compared across timepoints,
-  observations, sessions or trials.
-
-- unnamed — unconstrained. Any value may match any other, which is what
-  makes the default any-keypoint-to-any-keypoint.
-
-`focal` and `neighbour` then restrict which points are measured *from*
-and which are eligible to be measured *to*. Both are named lists of
-column to permitted values, and they are independent, so asymmetric
-questions like nose-to-tail are expressible.
-
-## See also
-
-[`compute_nnd()`](https://animovement.dev/animetric/reference/compute_nnd.md)
-for the vector-level function.
-
-## Examples
-
-``` r
-data <- anicore::example_anipoint(
-  n_obs = 5,
-  n_individuals = 3,
-  n_keypoints = 3
-)
-
-# Nearest other individual, any keypoint to any keypoint
-data |> calculate_nnd(across = "individual")
-#> # Individuals: 1, 2, 3
-#> # Keypoints:   head, neck, shoulder_right
-#> # Sessions:    1
-#> # Trials:      1
-#>    individual keypoint session trial  time      x       y confidence
-#>         <int> <fct>      <int> <int> <int>  <dbl>   <dbl>      <dbl>
-#>  1          1 head           1     1     1  0.236 -0.584       0.712
-#>  2          1 head           1     1     2  0.629 -2.02        0.667
-#>  3          1 head           1     1     3  0.418  0.404       0.840
-#>  4          1 head           1     1     4  1.98   0.550       0.901
-#>  5          1 head           1     1     5 -0.506  0.0284      0.625
-#>  6          1 neck           1     1     1 -0.121  2.27        0.464
-#>  7          1 neck           1     1     2  1.34   0.136       0.611
-#>  8          1 neck           1     1     3 -0.860 -2.00        0.528
-#>  9          1 neck           1     1     4  0.667 -0.421       0.740
-#> 10          1 neck           1     1     5 -1.42  -0.378       0.867
-#> # ℹ 35 more rows
-#> # ℹ 3 more variables: nnd_individual <int>, nnd_keypoint <fct>,
-#> #   nnd_distance <dbl>
-
-# Whose neck is my head nearest to?
-data |> calculate_nnd(
-  across = "individual",
-  focal = list(keypoint = "head"),
-  neighbour = list(keypoint = "neck")
-)
-#> # Individuals: 1, 2, 3
-#> # Keypoints:   head, neck, shoulder_right
-#> # Sessions:    1
-#> # Trials:      1
-#>    individual keypoint session trial  time      x       y confidence
-#>         <int> <fct>      <int> <int> <int>  <dbl>   <dbl>      <dbl>
-#>  1          1 head           1     1     1  0.236 -0.584       0.712
-#>  2          1 head           1     1     2  0.629 -2.02        0.667
-#>  3          1 head           1     1     3  0.418  0.404       0.840
-#>  4          1 head           1     1     4  1.98   0.550       0.901
-#>  5          1 head           1     1     5 -0.506  0.0284      0.625
-#>  6          1 neck           1     1     1 -0.121  2.27        0.464
-#>  7          1 neck           1     1     2  1.34   0.136       0.611
-#>  8          1 neck           1     1     3 -0.860 -2.00        0.528
-#>  9          1 neck           1     1     4  0.667 -0.421       0.740
-#> 10          1 neck           1     1     5 -1.42  -0.378       0.867
-#> # ℹ 35 more rows
-#> # ℹ 3 more variables: nnd_individual <int>, nnd_keypoint <fct>,
-#> #   nnd_distance <dbl>
-
-# Nearest keypoint within each individual
-data |> calculate_nnd(across = "keypoint", within = "individual")
-#> # Individuals: 1, 2, 3
-#> # Keypoints:   head, neck, shoulder_right
-#> # Sessions:    1
-#> # Trials:      1
-#>    individual keypoint session trial  time      x       y confidence
-#>         <int> <fct>      <int> <int> <int>  <dbl>   <dbl>      <dbl>
-#>  1          1 head           1     1     1  0.236 -0.584       0.712
-#>  2          1 head           1     1     2  0.629 -2.02        0.667
-#>  3          1 head           1     1     3  0.418  0.404       0.840
-#>  4          1 head           1     1     4  1.98   0.550       0.901
-#>  5          1 head           1     1     5 -0.506  0.0284      0.625
-#>  6          1 neck           1     1     1 -0.121  2.27        0.464
-#>  7          1 neck           1     1     2  1.34   0.136       0.611
-#>  8          1 neck           1     1     3 -0.860 -2.00        0.528
-#>  9          1 neck           1     1     4  0.667 -0.421       0.740
-#> 10          1 neck           1     1     5 -1.42  -0.378       0.867
-#> # ℹ 35 more rows
-#> # ℹ 2 more variables: nnd_keypoint <fct>, nnd_distance <dbl>
-
-# Each keypoint to the same keypoint on the nearest other individual
-data |> calculate_nnd(across = "individual", within = "keypoint")
-#> # Individuals: 1, 2, 3
-#> # Keypoints:   head, neck, shoulder_right
-#> # Sessions:    1
-#> # Trials:      1
-#>    individual keypoint session trial  time      x       y confidence
-#>         <int> <fct>      <int> <int> <int>  <dbl>   <dbl>      <dbl>
-#>  1          1 head           1     1     1  0.236 -0.584       0.712
-#>  2          1 head           1     1     2  0.629 -2.02        0.667
-#>  3          1 head           1     1     3  0.418  0.404       0.840
-#>  4          1 head           1     1     4  1.98   0.550       0.901
-#>  5          1 head           1     1     5 -0.506  0.0284      0.625
-#>  6          1 neck           1     1     1 -0.121  2.27        0.464
-#>  7          1 neck           1     1     2  1.34   0.136       0.611
-#>  8          1 neck           1     1     3 -0.860 -2.00        0.528
-#>  9          1 neck           1     1     4  0.667 -0.421       0.740
-#> 10          1 neck           1     1     5 -1.42  -0.378       0.867
-#> # ℹ 35 more rows
-#> # ℹ 2 more variables: nnd_individual <int>, nnd_distance <dbl>
-```
+As
+[`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md),
+with the columns it adds named `nnd_distance`, `nnd_<across>` and
+`nnd_<variable>`.

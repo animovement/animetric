@@ -86,9 +86,9 @@ speed or the median of windowed straightness, see <code><a href="summarise_anifr
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">summarise_path</span><span class="op">(</span><span class="va">data</span>, min_step <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">summarise_path</span><span class="op">(</span><span class="va">data</span>, min_step <span class="op">=</span> <span class="st">"auto"</span>, step_length <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">summarize_path</span><span class="op">(</span><span class="va">data</span>, min_step <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">summarize_path</span><span class="op">(</span><span class="va">data</span>, min_step <span class="op">=</span> <span class="st">"auto"</span>, step_length <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -104,6 +104,15 @@ declared keys.</p></dd>
 <dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> The shortest step
 whose direction counts toward <code>total_turning</code>, as in <code><a href="add_kinematics.html">add_kinematics()</a></code>
 (default <code>"auto"</code>). <code>0</code> counts every direction, however short the step.</p></dd>
+
+
+<dt id="arg-step-length">step_length<a class="anchor" aria-label="anchor" href="#arg-step-length"></a></dt>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> The step length
+the path is rediscretised at for <code>sinuosity</code> and <code>e_max</code>, in the frame's
+spatial unit (default <code>"auto"</code>). <code>"auto"</code> takes each trajectory's mean
+step, weighted by step length (see Details). A positive number
+rediscretises every trajectory at that step, so that their sinuosity
+can be compared at one scale.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -130,10 +139,14 @@ their names (<code>straightness_11</code>), so they never collide with these.</p
 so <code>sinuosity</code> and <code>e_max</code> come from the turning angles of the path
 rediscretised to one: walking along the path, a new point is placed
 wherever it first leaves a circle of that radius around the last one
-(Bovet &amp; Benhamou 1988). The step length is the trajectory's mean step
-between rows, weighted by step length: the average step over the
-distance travelled, which time spent still does not shorten. Tracking jitter that stays within the circle while an
-animal is still gives no steps and no turning, where turning angles
+(Bovet &amp; Benhamou 1988). By default (<code>step_length = "auto"</code>) the step
+length is the trajectory's mean step between rows, weighted by step
+length: the average step over the distance travelled, which time spent
+still does not shorten. Sinuosity and E_max describe the path at the
+scale of that step, and the automatic step differs between trajectories:
+a faster animal gets a longer one. To compare trajectories, give them all
+the same <code>step_length</code>. Tracking jitter that stays within the circle
+while an animal is still gives no steps and no turning, where turning angles
 between successive frames would be dominated by it. Missing positions
 break the path into stretches that are rediscretised separately.</p>
     </div>
@@ -153,7 +166,7 @@ using a correlated random walk model. Journal of Theoretical Biology,
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial total_distance total_turning</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1           27.3          20.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1           24.3          26.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: net_displacement &lt;dbl&gt;, straightness &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sinuosity &lt;dbl&gt;, e_max &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
@@ -162,7 +175,17 @@ using a correlated random walk model. Journal of Theoretical Biology,
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial total_distance total_turning</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1           27.3          29.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1           24.3          26.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: net_displacement &lt;dbl&gt;, straightness &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sinuosity &lt;dbl&gt;, e_max &lt;dbl&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Sinuosity at a step of your own, in the frame's spatial unit, the same</span></span></span>
+<span class="r-in"><span><span class="co"># for every trajectory</span></span></span>
+<span class="r-in"><span><span class="fu">summarise_path</span><span class="op">(</span><span class="va">traj</span>, step_length <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   individual keypoint session trial total_distance total_turning</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>          1 centroid       1     1           24.3          26.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: net_displacement &lt;dbl&gt;, straightness &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sinuosity &lt;dbl&gt;, e_max &lt;dbl&gt;</span></span>
 </code></pre></div>

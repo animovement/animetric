@@ -46,7 +46,9 @@ add_kinematics(data, vertical = NULL, min_step = "auto")
   `"auto"` (the default)
 
   :   Three times the tracking noise, estimated separately for each
-      trajectory, and at most half its median step. See Details.
+      trajectory, and at most half its median step. See Details, and
+      [`compute_min_step()`](https://animovement.dev/animetric/reference/compute_min_step.md)
+      for the value it chooses.
 
   a number
 
@@ -221,8 +223,10 @@ speed, as it is for video tracking. Two cases call for setting
   movement, so the threshold may be too large; use the positional
   precision instead, or `0`.
 
-The threshold is not stored in the result. To know it exactly, give it
-as a number.
+The threshold is not stored in the result.
+[`compute_min_step()`](https://animovement.dev/animetric/reference/compute_min_step.md)
+returns the one `"auto"` chooses for each trajectory, with the noise
+estimate, and a number given as `min_step` is used as it is.
 
 ## See also
 

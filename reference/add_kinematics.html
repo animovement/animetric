@@ -103,7 +103,8 @@ treated as undefined: <code>course</code> is <code>NA</code> there, and the row 
 turning. One of:</p><dl><dt><code>"auto"</code> (the default)</dt>
 <dd><p>Three times the tracking noise,
 estimated separately for each trajectory, and at most half its
-median step. See Details.</p></dd>
+median step. See Details, and <code><a href="compute_min_step.html">compute_min_step()</a></code> for the value
+it chooses.</p></dd>
 
 <dt>a number</dt>
 <dd><p>A threshold of your own, such as the tracking
@@ -248,8 +249,9 @@ the jitter left in the data, and the threshold removes only part of it.</p></li>
 changes a lot between samples. The estimate then includes real
 movement, so the threshold may be too large; use the positional
 precision instead, or <code>0</code>.</p></li>
-</ul><p>The threshold is not stored in the result. To know it exactly, give it as
-a number.</p>
+</ul><p>The threshold is not stored in the result. <code><a href="compute_min_step.html">compute_min_step()</a></code> returns
+the one <code>"auto"</code> chooses for each trajectory, with the noise estimate,
+and a number given as <code>min_step</code> is used as it is.</p>
 </div>
 
     </div>

@@ -1,7 +1,7 @@
 # Compute nearest neighbour distances within one group
 
 Low-level function behind
-[`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md),
+[`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md),
 operating on plain vectors for one group of comparable points (typically
 one timepoint).
 
@@ -70,7 +70,7 @@ nearest point.
 
 ## See also
 
-[`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
+[`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md)
 for the anipoint-level function.
 
 ## Examples

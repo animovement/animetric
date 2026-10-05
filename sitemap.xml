@@ -8,12 +8,14 @@
 <url><loc>https://animovement.dev/animetric/news/index.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_centroid.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_kinematics.html</loc></url>
+<url><loc>https://animovement.dev/animetric/reference/add_nnd.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_orientation.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_point.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_tortuosity.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/animetric-package.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/append_point.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/as_3d.html</loc></url>
+<url><loc>https://animovement.dev/animetric/reference/auto_min_step.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/calculate_kinematics.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/calculate_nnd.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/calculate_rotation.html</loc></url>
@@ -23,12 +25,14 @@
 <url><loc>https://animovement.dev/animetric/reference/check_members.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_min_step.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_single_level.html</loc></url>
+<url><loc>https://animovement.dev/animetric/reference/check_step_length.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_summary_cols.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_tortuosity_input.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_vertical.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_centroid.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_emax.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_gradient.html</loc></url>
+<url><loc>https://animovement.dev/animetric/reference/compute_min_step.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_nnd.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_point.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_sinuosity.html</loc></url>
@@ -55,6 +59,7 @@
 <url><loc>https://animovement.dev/animetric/reference/nnd_context.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/nnd_coords.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/nnd_mask.html</loc></url>
+<url><loc>https://animovement.dev/animetric/reference/nnd_names.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/nnd_variables.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/orientation_summaries.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/path_rotation.html</loc></url>
@@ -70,6 +75,7 @@
 <url><loc>https://animovement.dev/animetric/reference/resolve_min_step.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/resolve_orientation_name.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/resolve_point_method.html</loc></url>
+<url><loc>https://animovement.dev/animetric/reference/resolve_step_length.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/retained_grouping.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/sampling_interval.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/step_length.html</loc></url>

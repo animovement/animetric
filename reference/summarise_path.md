@@ -18,9 +18,9 @@ speed or the median of windowed straightness, see
 ## Usage
 
 ``` r
-summarise_path(data, min_step = "auto")
+summarise_path(data, min_step = "auto", step_length = "auto")
 
-summarize_path(data, min_step = "auto")
+summarize_path(data, min_step = "auto", step_length = "auto")
 ```
 
 ## Arguments
@@ -37,6 +37,15 @@ summarize_path(data, min_step = "auto")
   [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md)
   (default `"auto"`). `0` counts every direction, however short the
   step.
+
+- step_length:
+
+  **\[experimental\]** The step length the path is rediscretised at for
+  `sinuosity` and `e_max`, in the frame's spatial unit (default
+  `"auto"`). `"auto"` takes each trajectory's mean step, weighted by
+  step length (see Details). A positive number rediscretises every
+  trajectory at that step, so that their sinuosity can be compared at
+  one scale.
 
 ## Value
 
@@ -72,13 +81,17 @@ Sinuosity is defined for a path of constant step length (Benhamou 2004),
 so `sinuosity` and `e_max` come from the turning angles of the path
 rediscretised to one: walking along the path, a new point is placed
 wherever it first leaves a circle of that radius around the last one
-(Bovet & Benhamou 1988). The step length is the trajectory's mean step
-between rows, weighted by step length: the average step over the
-distance travelled, which time spent still does not shorten. Tracking
-jitter that stays within the circle while an animal is still gives no
-steps and no turning, where turning angles between successive frames
-would be dominated by it. Missing positions break the path into
-stretches that are rediscretised separately.
+(Bovet & Benhamou 1988). By default (`step_length = "auto"`) the step
+length is the trajectory's mean step between rows, weighted by step
+length: the average step over the distance travelled, which time spent
+still does not shorten. Sinuosity and E_max describe the path at the
+scale of that step, and the automatic step differs between trajectories:
+a faster animal gets a longer one. To compare trajectories, give them
+all the same `step_length`. Tracking jitter that stays within the circle
+while an animal is still gives no steps and no turning, where turning
+angles between successive frames would be dominated by it. Missing
+positions break the path into stretches that are rediscretised
+separately.
 
 ## References
 
@@ -97,7 +110,7 @@ summarise_path(traj)
 #> # A tibble: 1 × 10
 #>   individual keypoint session trial total_distance total_turning
 #>        <int> <fct>      <int> <int>          <dbl>         <dbl>
-#> 1          1 centroid       1     1           27.3          20.6
+#> 1          1 centroid       1     1           24.3          26.6
 #> # ℹ 4 more variables: net_displacement <dbl>, straightness <dbl>,
 #> #   sinuosity <dbl>, e_max <dbl>
 
@@ -106,7 +119,17 @@ summarise_path(traj, min_step = 0)
 #> # A tibble: 1 × 10
 #>   individual keypoint session trial total_distance total_turning
 #>        <int> <fct>      <int> <int>          <dbl>         <dbl>
-#> 1          1 centroid       1     1           27.3          29.2
+#> 1          1 centroid       1     1           24.3          26.6
+#> # ℹ 4 more variables: net_displacement <dbl>, straightness <dbl>,
+#> #   sinuosity <dbl>, e_max <dbl>
+
+# Sinuosity at a step of your own, in the frame's spatial unit, the same
+# for every trajectory
+summarise_path(traj, step_length = 0.5)
+#> # A tibble: 1 × 10
+#>   individual keypoint session trial total_distance total_turning
+#>        <int> <fct>      <int> <int>          <dbl>         <dbl>
+#> 1          1 centroid       1     1           24.3          26.6
 #> # ℹ 4 more variables: net_displacement <dbl>, straightness <dbl>,
 #> #   sinuosity <dbl>, e_max <dbl>
 ```
