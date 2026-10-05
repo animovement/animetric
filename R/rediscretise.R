@@ -140,14 +140,51 @@ mean_step_length <- function(position) {
   sum(step^2, na.rm = TRUE) / sum(step, na.rm = TRUE)
 }
 
+#' The step length to rediscretise a trajectory at, as asked for
+#'
+#' @param step_length See [summarise_path()], already checked.
+#' @param position A data frame of positions, one column per axis.
+#' @return A number: `step_length` itself, or for `"auto"` the trajectory's
+#'   [mean_step_length()].
+#' @keywords internal
+resolve_step_length <- function(step_length, position) {
+  if (identical(step_length, "auto")) {
+    return(mean_step_length(position))
+  }
+  step_length
+}
+
+#' Check a `step_length` argument
+#'
+#' @param step_length See [summarise_path()].
+#' @param call The calling environment, for error messages.
+#' @return `TRUE`, invisibly.
+#' @keywords internal
+check_step_length <- function(step_length, call = rlang::caller_env()) {
+  valid <- identical(step_length, "auto") ||
+    (is.numeric(step_length) &&
+      length(step_length) == 1L &&
+      is.finite(step_length) &&
+      step_length > 0)
+  if (!valid) {
+    cli::cli_abort(
+      "{.arg step_length} must be {.val auto} or a single positive number.",
+      call = call
+    )
+  }
+  invisible(TRUE)
+}
+
 #' Sinuosity and E_max of a rediscretised path
 #'
 #' @param position A data frame of positions, one column per axis.
 #' @param time The index.
+#' @param step_length The step to rediscretise at, as for
+#'   [resolve_step_length()].
 #' @return A list of `sinuosity` and `e_max`, each a number.
 #' @keywords internal
-path_sinuosity <- function(position, time) {
-  step <- mean_step_length(position)
+path_sinuosity <- function(position, time, step_length = "auto") {
+  step <- resolve_step_length(step_length, position)
   turning <- rediscretised_turning(rediscretise_path(position, time, step))
   mean_cos <- mean(turning$cos_turning)
   list(
@@ -158,7 +195,8 @@ path_sinuosity <- function(position, time) {
 
 #' Sinuosity and E_max of a rediscretised path, over sliding windows
 #'
-#' The path is rediscretised once, at the trajectory's step length from
+#' The path is rediscretised once, at the step from
+#' [resolve_step_length()]: by default the trajectory's step length from
 #' [mean_step_length()].
 #' Each row's window spans the same rows as its straightness, and takes the
 #' turning at the rediscretised points the path reaches within it.
@@ -166,14 +204,21 @@ path_sinuosity <- function(position, time) {
 #' @param position A data frame of positions, one column per axis.
 #' @param time The index.
 #' @param window_width The window width, in rows.
+#' @param step_length The step to rediscretise at, as for
+#'   [resolve_step_length()].
 #' @return A list of two numeric vectors, `sinuosity` and `e_max`. `NA`
 #'   where the window runs past either end, or holds no turning.
 #' @keywords internal
-window_sinuosity <- function(position, time, window_width) {
+window_sinuosity <- function(
+  position,
+  time,
+  window_width,
+  step_length = "auto"
+) {
   n <- length(time)
   half_w <- window_width %/% 2L
   other_half <- window_width - half_w - 1L
-  step <- mean_step_length(position)
+  step <- resolve_step_length(step_length, position)
   turning <- rediscretised_turning(rediscretise_path(position, time, step))
 
   from <- dplyr::lag(time, n = half_w)

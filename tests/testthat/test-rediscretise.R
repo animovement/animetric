@@ -159,3 +159,101 @@ test_that("a window where the animal moved less than a step has no sinuosity", {
   expect_true(all(is.na(result$e_max_5[25:35])))
   expect_false(anyNA(result$sinuosity_5[5:10]))
 })
+
+# A step length of your own (#114)
+
+test_that("summarise_path() rediscretises at a step_length given", {
+  data <- circle()
+
+  given <- summarise_path(data, step_length = 0.3)
+  expect_equal(given$sinuosity, circle_sinuosity(0.3), tolerance = 1e-3)
+  expect_equal(
+    given$e_max,
+    compute_emax(cos(2 * asin(0.3 / 2))),
+    tolerance = 1e-3
+  )
+  # Nothing else depends on it
+  auto <- summarise_path(data)
+  expect_equal(
+    dplyr::select(given, -"sinuosity", -"e_max"),
+    dplyr::select(auto, -"sinuosity", -"e_max")
+  )
+})
+
+test_that("\"auto\" is the trajectory's mean step, and the default", {
+  data <- circle()
+  step <- mean_step_length(data[c("x", "y")])
+
+  expect_equal(summarise_path(data, step_length = "auto"), summarise_path(data))
+  expect_equal(summarise_path(data, step_length = step), summarise_path(data))
+  expect_equal(
+    add_tortuosity(data, step_length = step),
+    add_tortuosity(data)
+  )
+})
+
+test_that("add_tortuosity() rediscretises at a step_length given", {
+  data <- circle()
+  result <- add_tortuosity(data, window_width = 11L, step_length = 0.3)
+
+  # A window holds only a step or two, so each value is within the error
+  # of cutting the recorded chords rather than the circle itself
+  middle <- 20:380
+  expect_equal(
+    result$sinuosity_11[middle],
+    rep(circle_sinuosity(0.3), length(middle)),
+    tolerance = 0.01
+  )
+  # Straightness does not use it
+  expect_equal(result$straightness_11, add_tortuosity(data)$straightness_11)
+})
+
+test_that("one step_length makes trajectories sampled differently comparable", {
+  # The same circle, one traced in four times as many frames: its automatic
+  # step is a quarter as long
+  dense <- as.data.frame(circle(n = 400))[c("time", "x", "y")]
+  sparse <- as.data.frame(circle(n = 100))[c("time", "x", "y")]
+  data <- dplyr::bind_rows(
+    dplyr::mutate(dense, individual = "dense"),
+    dplyr::mutate(sparse, individual = "sparse")
+  ) |>
+    anicore::as_anipoint()
+
+  auto <- summarise_path(data)
+  common <- summarise_path(data, step_length = 0.3)
+
+  expect_gt(abs(auto$sinuosity[1] - auto$sinuosity[2]), 0.1)
+  expect_equal(common$sinuosity[1], common$sinuosity[2], tolerance = 0.01)
+})
+
+test_that("a column called step_length does not stand in for the argument", {
+  data <- circle()
+  with_column <- dplyr::mutate(data, step_length = 5)
+
+  expect_equal(
+    summarise_path(with_column, step_length = 0.3)$sinuosity,
+    summarise_path(data, step_length = 0.3)$sinuosity
+  )
+  expect_equal(
+    add_tortuosity(with_column, step_length = 0.3)$sinuosity_11,
+    add_tortuosity(data, step_length = 0.3)$sinuosity_11
+  )
+})
+
+test_that("step_length must be \"auto\" or a single positive number", {
+  data <- circle(n = 20)
+  bad <- list(0, -1, NA_real_, Inf, c(1, 2), "fixed", TRUE, NULL)
+  for (value in bad) {
+    expect_error(
+      summarise_path(data, step_length = value),
+      "must be \"auto\" or a single positive number",
+      fixed = TRUE
+    )
+    expect_error(
+      add_tortuosity(data, step_length = value),
+      "must be \"auto\" or a single positive number",
+      fixed = TRUE
+    )
+  }
+  expect_no_error(summarise_path(data, step_length = 1L))
+})

@@ -8,6 +8,12 @@
 #' @param data A Cartesian anipoint.
 #' @param window_width Size of the sliding window, in observations (default
 #'   `11L`). Should be an odd number >= 3 for symmetric centering.
+#' @param step_length `r lifecycle::badge("experimental")` The step length
+#'   the path is rediscretised at for sinuosity and E_max, in the frame's
+#'   spatial unit (default `"auto"`). `"auto"` takes each trajectory's mean
+#'   step, weighted by step length (see Details). A positive number
+#'   rediscretises every trajectory at that step, so that their sinuosity
+#'   can be compared at one scale. Straightness does not use it.
 #'
 #' @return The input anipoint with three columns added, named with the
 #'   window width, so that `window_width = 11` gives:
@@ -41,9 +47,12 @@
 #' rediscretised to a constant step length, as Benhamou (2004) defines
 #' sinuosity: walking along the path, a new point is placed wherever it
 #' first leaves a circle of that radius around the last one (Bovet &
-#' Benhamou 1988). The step length is the trajectory's mean step between
-#' rows, weighted by step length: the average step over the distance
-#' travelled, which time spent still does not shorten. Tracking
+#' Benhamou 1988). By default (`step_length = "auto"`) the step length is
+#' the trajectory's mean step between rows, weighted by step length: the
+#' average step over the distance travelled, which time spent still does not
+#' shorten. Sinuosity and E_max describe the path at the scale of that step,
+#' and the automatic step differs between trajectories, so to compare
+#' trajectories, give them all the same `step_length`. Tracking
 #' jitter that stays within the circle while an animal is still gives no
 #' steps and no turning, where turning angles between successive frames
 #' would be dominated by it. Each window takes the turning at the
@@ -84,9 +93,14 @@
 #' data |>
 #'   add_tortuosity(window_width = 5) |>
 #'   add_tortuosity(window_width = 11)
-add_tortuosity <- function(data, window_width = 11L) {
+#'
+#' # Sinuosity of every trajectory at one scale, in the frame's spatial unit
+#' data |>
+#'   add_tortuosity(window_width = 11, step_length = 0.5)
+add_tortuosity <- function(data, window_width = 11L, step_length = "auto") {
   ensure_trajectory_grouping(data)
   window_width <- check_tortuosity_input(data, window_width)
+  check_step_length(step_length)
 
   original_class <- class(data)
   position_cols <- unname(cartesian_axes(data))
@@ -103,7 +117,8 @@ add_tortuosity <- function(data, window_width = 11L) {
         as.data.frame(window_sinuosity(
           dplyr::pick(dplyr::all_of(position_cols)),
           .data[[index]],
-          window_width
+          window_width,
+          step_length = !!step_length
         )),
         names[2:3]
       )

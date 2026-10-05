@@ -5,9 +5,9 @@
 \alias{summarize_path}
 \title{Summarise each trajectory as a whole}
 \usage{
-summarise_path(data, min_step = "auto")
+summarise_path(data, min_step = "auto", step_length = "auto")
 
-summarize_path(data, min_step = "auto")
+summarize_path(data, min_step = "auto", step_length = "auto")
 }
 \arguments{
 \item{data}{An anipoint, grouped one trajectory per group, as it is by its
@@ -16,6 +16,13 @@ declared keys.}
 \item{min_step}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The shortest step
 whose direction counts toward \code{total_turning}, as in \code{\link[=add_kinematics]{add_kinematics()}}
 (default \code{"auto"}). \code{0} counts every direction, however short the step.}
+
+\item{step_length}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The step length
+the path is rediscretised at for \code{sinuosity} and \code{e_max}, in the frame's
+spatial unit (default \code{"auto"}). \code{"auto"} takes each trajectory's mean
+step, weighted by step length (see Details). A positive number
+rediscretises every trajectory at that step, so that their sinuosity
+can be compared at one scale.}
 }
 \value{
 A data frame with one row per trajectory:
@@ -58,10 +65,14 @@ Sinuosity is defined for a path of constant step length (Benhamou 2004),
 so \code{sinuosity} and \code{e_max} come from the turning angles of the path
 rediscretised to one: walking along the path, a new point is placed
 wherever it first leaves a circle of that radius around the last one
-(Bovet & Benhamou 1988). The step length is the trajectory's mean step
-between rows, weighted by step length: the average step over the
-distance travelled, which time spent still does not shorten. Tracking jitter that stays within the circle while an
-animal is still gives no steps and no turning, where turning angles
+(Bovet & Benhamou 1988). By default (\code{step_length = "auto"}) the step
+length is the trajectory's mean step between rows, weighted by step
+length: the average step over the distance travelled, which time spent
+still does not shorten. Sinuosity and E_max describe the path at the
+scale of that step, and the automatic step differs between trajectories:
+a faster animal gets a longer one. To compare trajectories, give them all
+the same \code{step_length}. Tracking jitter that stays within the circle
+while an animal is still gives no steps and no turning, where turning angles
 between successive frames would be dominated by it. Missing positions
 break the path into stretches that are rediscretised separately.
 }
@@ -71,6 +82,10 @@ summarise_path(traj)
 
 # Count every direction toward total_turning, however short the step
 summarise_path(traj, min_step = 0)
+
+# Sinuosity at a step of your own, in the frame's spatial unit, the same
+# for every trajectory
+summarise_path(traj, step_length = 0.5)
 }
 \references{
 Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal's
