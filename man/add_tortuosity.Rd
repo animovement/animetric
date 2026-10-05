@@ -4,13 +4,20 @@
 \alias{add_tortuosity}
 \title{Add tortuosity measures over sliding windows}
 \usage{
-add_tortuosity(data, window_width = 11L)
+add_tortuosity(data, window_width = 11L, step_length = "auto")
 }
 \arguments{
 \item{data}{A Cartesian anipoint.}
 
 \item{window_width}{Size of the sliding window, in observations (default
 \code{11L}). Should be an odd number >= 3 for symmetric centering.}
+
+\item{step_length}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The step length
+the path is rediscretised at for sinuosity and E_max, in the frame's
+spatial unit (default \code{"auto"}). \code{"auto"} takes each trajectory's mean
+step, weighted by step length (see Details). A positive number
+rediscretises every trajectory at that step, so that their sinuosity
+can be compared at one scale. Straightness does not use it.}
 }
 \value{
 The input anipoint with three columns added, named with the
@@ -51,9 +58,12 @@ not known, so neither is the distance travelled.
 rediscretised to a constant step length, as Benhamou (2004) defines
 sinuosity: walking along the path, a new point is placed wherever it
 first leaves a circle of that radius around the last one (Bovet &
-Benhamou 1988). The step length is the trajectory's mean step between
-rows, weighted by step length: the average step over the distance
-travelled, which time spent still does not shorten. Tracking
+Benhamou 1988). By default (\code{step_length = "auto"}) the step length is
+the trajectory's mean step between rows, weighted by step length: the
+average step over the distance travelled, which time spent still does not
+shorten. Sinuosity and E_max describe the path at the scale of that step,
+and the automatic step differs between trajectories, so to compare
+trajectories, give them all the same \code{step_length}. Tracking
 jitter that stays within the circle while an animal is still gives no
 steps and no turning, where turning angles between successive frames
 would be dominated by it. Each window takes the turning at the
@@ -73,6 +83,10 @@ data |>
 data |>
   add_tortuosity(window_width = 5) |>
   add_tortuosity(window_width = 11)
+
+# Sinuosity of every trajectory at one scale, in the frame's spatial unit
+data |>
+  add_tortuosity(window_width = 11, step_length = 0.5)
 }
 \references{
 Batschelet, E. (1981). Circular statistics in biology. Academic Press.

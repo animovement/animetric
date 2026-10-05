@@ -20,6 +20,12 @@
 #' @param min_step `r lifecycle::badge("experimental")` The shortest step
 #'   whose direction counts toward `total_turning`, as in [add_kinematics()]
 #'   (default `"auto"`). `0` counts every direction, however short the step.
+#' @param step_length `r lifecycle::badge("experimental")` The step length
+#'   the path is rediscretised at for `sinuosity` and `e_max`, in the frame's
+#'   spatial unit (default `"auto"`). `"auto"` takes each trajectory's mean
+#'   step, weighted by step length (see Details). A positive number
+#'   rediscretises every trajectory at that step, so that their sinuosity
+#'   can be compared at one scale.
 #'
 #' @return A data frame with one row per trajectory:
 #'   - `total_distance`: distance travelled, the last value of
@@ -44,10 +50,14 @@
 #' so `sinuosity` and `e_max` come from the turning angles of the path
 #' rediscretised to one: walking along the path, a new point is placed
 #' wherever it first leaves a circle of that radius around the last one
-#' (Bovet & Benhamou 1988). The step length is the trajectory's mean step
-#' between rows, weighted by step length: the average step over the
-#' distance travelled, which time spent still does not shorten. Tracking jitter that stays within the circle while an
-#' animal is still gives no steps and no turning, where turning angles
+#' (Bovet & Benhamou 1988). By default (`step_length = "auto"`) the step
+#' length is the trajectory's mean step between rows, weighted by step
+#' length: the average step over the distance travelled, which time spent
+#' still does not shorten. Sinuosity and E_max describe the path at the
+#' scale of that step, and the automatic step differs between trajectories:
+#' a faster animal gets a longer one. To compare trajectories, give them all
+#' the same `step_length`. Tracking jitter that stays within the circle
+#' while an animal is still gives no steps and no turning, where turning angles
 #' between successive frames would be dominated by it. Missing positions
 #' break the path into stretches that are rediscretised separately.
 #'
@@ -65,11 +75,21 @@
 #'
 #' # Count every direction toward total_turning, however short the step
 #' summarise_path(traj, min_step = 0)
+#'
+#' # Sinuosity at a step of your own, in the frame's spatial unit, the same
+#' # for every trajectory
+#' summarise_path(traj, step_length = 0.5)
 #' @export
 #' @aliases summarize_path
-summarise_path <- function(data, min_step = "auto") {
+summarise_path <- function(data, min_step = "auto", step_length = "auto") {
   check_min_step(min_step)
-  path_summary(data, min_step = min_step, rediscretise = TRUE)
+  check_step_length(step_length)
+  path_summary(
+    data,
+    min_step = min_step,
+    rediscretise = TRUE,
+    step_length = step_length
+  )
 }
 
 #' @rdname summarise_path
@@ -100,6 +120,8 @@ summarise_path_legacy <- function(data) {
 #' @param rediscretise Whether sinuosity and E_max come from the path
 #'   rediscretised to a constant step length, or, as `summarise_tortuosity()`
 #'   computed them, from the turning between successive frames.
+#' @param step_length The step to rediscretise at, see [summarise_path()].
+#'   Ignored when `rediscretise` is `FALSE`.
 #' @param call The calling environment, for error messages.
 #' @return A data frame with one row per trajectory.
 #' @keywords internal
@@ -107,6 +129,7 @@ path_summary <- function(
   data,
   min_step,
   rediscretise,
+  step_length = "auto",
   call = rlang::caller_env()
 ) {
   anicore::ensure_is_anipoint(data)
@@ -149,7 +172,8 @@ path_summary <- function(
         if (rediscretise) {
           path_sinuosity(
             dplyr::pick(dplyr::all_of(position_cols)),
-            .data[[index]]
+            .data[[index]],
+            step_length = !!step_length
           )
         }
       ),

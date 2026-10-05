@@ -4,7 +4,7 @@
 \alias{window_sinuosity}
 \title{Sinuosity and E_max of a rediscretised path, over sliding windows}
 \usage{
-window_sinuosity(position, time, window_width)
+window_sinuosity(position, time, window_width, step_length = "auto")
 }
 \arguments{
 \item{position}{A data frame of positions, one column per axis.}
@@ -12,13 +12,17 @@ window_sinuosity(position, time, window_width)
 \item{time}{The index.}
 
 \item{window_width}{The window width, in rows.}
+
+\item{step_length}{The step to rediscretise at, as for
+\code{\link[=resolve_step_length]{resolve_step_length()}}.}
 }
 \value{
 A list of two numeric vectors, \code{sinuosity} and \code{e_max}. \code{NA}
 where the window runs past either end, or holds no turning.
 }
 \description{
-The path is rediscretised once, at the trajectory's step length from
+The path is rediscretised once, at the step from
+\code{\link[=resolve_step_length]{resolve_step_length()}}: by default the trajectory's step length from
 \code{\link[=mean_step_length]{mean_step_length()}}.
 Each row's window spans the same rows as its straightness, and takes the
 turning at the rediscretised points the path reaches within it.

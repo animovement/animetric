@@ -4,7 +4,13 @@
 \alias{path_summary}
 \title{The measures of each whole trajectory}
 \usage{
-path_summary(data, min_step, rediscretise, call = rlang::caller_env())
+path_summary(
+  data,
+  min_step,
+  rediscretise,
+  step_length = "auto",
+  call = rlang::caller_env()
+)
 }
 \arguments{
 \item{data}{An anipoint.}
@@ -14,6 +20,9 @@ path_summary(data, min_step, rediscretise, call = rlang::caller_env())
 \item{rediscretise}{Whether sinuosity and E_max come from the path
 rediscretised to a constant step length, or, as \code{summarise_tortuosity()}
 computed them, from the turning between successive frames.}
+
+\item{step_length}{The step to rediscretise at, see \code{\link[=summarise_path]{summarise_path()}}.
+Ignored when \code{rediscretise} is \code{FALSE}.}
 
 \item{call}{The calling environment, for error messages.}
 }

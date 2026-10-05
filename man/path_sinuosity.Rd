@@ -4,12 +4,15 @@
 \alias{path_sinuosity}
 \title{Sinuosity and E_max of a rediscretised path}
 \usage{
-path_sinuosity(position, time)
+path_sinuosity(position, time, step_length = "auto")
 }
 \arguments{
 \item{position}{A data frame of positions, one column per axis.}
 
 \item{time}{The index.}
+
+\item{step_length}{The step to rediscretise at, as for
+\code{\link[=resolve_step_length]{resolve_step_length()}}.}
 }
 \value{
 A list of \code{sinuosity} and \code{e_max}, each a number.

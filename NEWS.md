@@ -30,6 +30,8 @@
 
 * `summarise_path()` and `add_tortuosity()` compute `sinuosity` and `e_max` from the path rediscretised to a constant step length, as Benhamou (2004) defines sinuosity (#104). Jitter while an animal is still gives no steps, so it no longer dominates them. A window of `add_tortuosity()` in which the animal moved less than a step has `NA`.
 
+* `summarise_path()` and `add_tortuosity()` take `step_length`, the step the path is rediscretised at for `sinuosity` and `e_max`, in the frame's spatial unit (#114). The default, `"auto"`, is each trajectory's own step as before; a number rediscretises every trajectory at that step, so that their sinuosity can be compared at one scale. It is experimental.
+
 * `add_orientation()` declares which way a body faces from where its points are (#97):
   - **2D:** `heading`, the direction from `from` to `to`.
   - **3D:** a unit quaternion (`qw`, `qx`, `qy`, `qz`), with a third point, `plane`, to fix the roll. Any point off the `from`-`to` line will do.
