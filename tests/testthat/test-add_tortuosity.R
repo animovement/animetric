@@ -19,6 +19,8 @@
 #   - Straightness < 1 for curved path
 #   - Window width affects smoothness of results
 #   - Handles NA values in input
+#   - Straightness is NA for a window holding a missing position, and never
+#     exceeds 1 (#108)
 #   - Removes internal columns (those starting with ".")
 #
 # add_tortuosity() on 3D data:
@@ -250,6 +252,50 @@ test_that("add_tortuosity() on 2D data handles NA values in input", {
   expect_s3_class(result, "aniframe")
   # Should have NAs propagate near the missing value
   expect_true(any(is.na(result$straightness_5)))
+})
+
+test_that("straightness is NA for every window holding a missing position (#108)", {
+  # A straight line, one unit per row: every complete window has
+  # straightness 1. The windows of width 5 that hold row 6 are those
+  # centred on rows 4 to 8.
+  data <- data.frame(time = 0:12, x = c(0:4, NA, 6:12), y = 0) |>
+    anicore::as_anipoint()
+
+  straightness <- add_tortuosity(data, window_width = 5L)$straightness_5
+
+  expect_equal(which(is.na(straightness)), c(1:2, 4:8, 12:13))
+  expect_equal(straightness[c(3, 9:11)], rep(1, 4))
+})
+
+test_that("straightness stays within 0 and 1 with missing positions (#108)", {
+  set.seed(108)
+  n <- 200
+  data <- data.frame(
+    time = seq_len(n),
+    x = cumsum(rnorm(n)),
+    y = cumsum(rnorm(n)),
+    z = cumsum(rnorm(n))
+  )
+  gaps <- sample(n, 20)
+  data[gaps, c("x", "y", "z")] <- NA
+  data <- anicore::as_anipoint(data)
+
+  for (width in c(3L, 4L, 11L)) {
+    result <- add_tortuosity(data, window_width = width)
+    straightness <- result[[paste0("straightness_", width)]]
+    expect_true(all(straightness >= 0 & straightness <= 1, na.rm = TRUE))
+    # Every window clear of the gaps still has a value
+    half <- width %/% 2L
+    other <- width - half - 1L
+    clear <- vapply(
+      seq_len(n),
+      \(i) {
+        i > half && i + other <= n && !any((i - half):(i + other) %in% gaps)
+      },
+      logical(1)
+    )
+    expect_equal(!is.na(straightness), clear)
+  }
 })
 
 # =============================================================================

@@ -13,7 +13,9 @@ window_straightness(position, window_width)
 }
 \value{
 Numeric vector: the distance between the positions at the ends of
-each row's window, over the distance travelled between them.
+each row's window, over the distance travelled between them. \code{NA} where
+the window holds a missing position, whose steps either side are \code{NA},
+so that the displacement and the distance always cover the same rows.
 }
 \description{
 Straightness over sliding windows

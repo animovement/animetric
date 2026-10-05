@@ -8,6 +8,8 @@
 
 ## Fixed
 
+* The windowed straightness of `add_tortuosity()` is `NA` for a window that holds a missing position (#108). The distance travelled left out the steps to and from the missing position while the displacement still spanned the gap, so the straightness could exceed 1. `calculate_tortuosity()`, which is deprecated, keeps its old output.
+
 * `calculate_kinematics()` gives correct results for polar, cylindrical and spherical input stored in degrees. It converts such input to Cartesian with anispace's `map_to_*()`, which read every angle as radians until animovement/anispace#47, so `phi = 90` was taken as 90 radians. animetric now requires anispace 0.3.0.9005, which has the fix.
 
 * `heading` from `calculate_kinematics()` is `pi` for movement along `-x`, where it used to be rewritten to `0` — the opposite direction (#69). The rewrite fired whenever `v_y` was exactly zero, which integer-pixel tracking produces routinely, so a trajectory along `-x` picked up 180-degree jumps that showed as spikes in `angular_velocity` and `angular_acceleration` and as turning in `angular_path_length` that never happened. `heading` is now `NA` where speed is zero, since a stationary animal has no direction of travel; before, it read as `0`, or as `pi` when the velocity was a negative zero.

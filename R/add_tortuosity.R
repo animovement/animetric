@@ -12,7 +12,8 @@
 #' @return The input anipoint with three columns added, named with the
 #'   window width, so that `window_width = 11` gives:
 #'   \describe{
-#'     \item{`straightness_11`}{Straightness index (D/L), from 0 to 1.}
+#'     \item{`straightness_11`}{Straightness index (D/L), from 0 to 1. `NA`
+#'       where a position in the window is missing.}
 #'     \item{`sinuosity_11`}{Corrected sinuosity index (Benhamou 2004).}
 #'     \item{`e_max_11`}{Maximum expected displacement (dimensionless).}
 #'   }
@@ -32,7 +33,9 @@
 #' are `NA`.
 #'
 #' **Straightness** is the distance between the positions at the ends of the
-#' window over the distance travelled between them.
+#' window over the distance travelled between them. It is `NA` for a window
+#' that holds a missing position: how far the animal moved across the gap is
+#' not known, so neither is the distance travelled.
 #'
 #' **Sinuosity and E_max** come from the turning angles of the path
 #' rediscretised to a constant step length, as Benhamou (2004) defines
@@ -115,7 +118,9 @@ add_tortuosity <- function(data, window_width = 11L) {
 #' @param position A data frame of positions, one column per axis.
 #' @param window_width The window width, in rows.
 #' @return Numeric vector: the distance between the positions at the ends of
-#'   each row's window, over the distance travelled between them.
+#'   each row's window, over the distance travelled between them. `NA` where
+#'   the window holds a missing position, whose steps either side are `NA`,
+#'   so that the displacement and the distance always cover the same rows.
 #' @keywords internal
 window_straightness <- function(position, window_width) {
   half_w <- window_width %/% 2L
@@ -125,7 +130,7 @@ window_straightness <- function(position, window_width) {
     n = window_width - 1L,
     algo = "fast",
     align = "center",
-    na.rm = TRUE
+    na.rm = FALSE
   )
   displacement <- vector_norm(lapply(
     position,

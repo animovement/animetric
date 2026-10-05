@@ -16,7 +16,8 @@ add_tortuosity(data, window_width = 11L)
 The input anipoint with three columns added, named with the
 window width, so that \code{window_width = 11} gives:
 \describe{
-\item{\code{straightness_11}}{Straightness index (D/L), from 0 to 1.}
+\item{\code{straightness_11}}{Straightness index (D/L), from 0 to 1. \code{NA}
+where a position in the window is missing.}
 \item{\code{sinuosity_11}}{Corrected sinuosity index (Benhamou 2004).}
 \item{\code{e_max_11}}{Maximum expected displacement (dimensionless).}
 }
@@ -42,7 +43,9 @@ where the window would run past the first or last observation, the metrics
 are \code{NA}.
 
 \strong{Straightness} is the distance between the positions at the ends of the
-window over the distance travelled between them.
+window over the distance travelled between them. It is \code{NA} for a window
+that holds a missing position: how far the animal moved across the gap is
+not known, so neither is the distance travelled.
 
 \strong{Sinuosity and E_max} come from the turning angles of the path
 rediscretised to a constant step length, as Benhamou (2004) defines
