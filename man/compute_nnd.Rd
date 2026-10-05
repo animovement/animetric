@@ -40,7 +40,7 @@ matched neighbour), one \verb{nnd_<name>} column per entry of \code{labels},
 and \code{nnd_distance}.
 }
 \description{
-Low-level function behind \code{\link[=calculate_nnd]{calculate_nnd()}}, operating on plain vectors
+Low-level function behind \code{\link[=add_nnd]{add_nnd()}}, operating on plain vectors
 for one group of comparable points (typically one timepoint).
 }
 \details{
@@ -68,5 +68,5 @@ compute_nnd(
 )
 }
 \seealso{
-\code{\link[=calculate_nnd]{calculate_nnd()}} for the anipoint-level function.
+\code{\link[=add_nnd]{add_nnd()}} for the anipoint-level function.
 }

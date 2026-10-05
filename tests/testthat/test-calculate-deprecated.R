@@ -1,6 +1,6 @@
-# calculate_kinematics() and calculate_tortuosity() are deprecated in favour
-# of add_kinematics() and add_tortuosity() (#103), and return exactly what
-# they did.
+# calculate_kinematics(), calculate_tortuosity() and calculate_nnd() are
+# deprecated in favour of add_kinematics(), add_tortuosity() (#103) and
+# add_nnd(), and return exactly what they did.
 
 zigzag <- function(n = 20) {
   data.frame(
@@ -132,5 +132,97 @@ test_that("calculate_tortuosity() checks its input as before", {
   expect_error(
     calculate_tortuosity(zigzag(), window_width = 2L),
     "window_width"
+  )
+})
+
+# What calculate_nnd() returned on main before the rename, for the cases
+# below: the columns added without the rank, as `nnd_<across>`,
+# `nnd_<variable>` and `nnd_distance`
+nnd_frame <- function() {
+  anicore::example_anipoint(n_obs = 5, n_individuals = 3, n_keypoints = 3)
+}
+
+test_that("calculate_nnd() warns and keeps its old column names", {
+  data <- nnd_frame()
+
+  expect_warning(
+    old <- calculate_nnd(data, across = "individual"),
+    class = "lifecycle_warning_deprecated"
+  )
+  new <- add_nnd(data, across = "individual")
+
+  expect_equal(
+    setdiff(names(old), names(data)),
+    c("nnd_individual", "nnd_keypoint", "nnd_distance")
+  )
+  expect_equal(names(old), sub("^nnd_1_", "nnd_", names(new)))
+  expect_equal(
+    dplyr::rename_with(new, function(nm) sub("^nnd_1_", "nnd_", nm)),
+    old
+  )
+})
+
+test_that("calculate_nnd() passes every argument on", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+  data <- nnd_frame()
+  unrank <- function(x) {
+    dplyr::rename_with(x, function(nm) sub("^nnd_\\d+_", "nnd_", nm))
+  }
+
+  expect_equal(
+    calculate_nnd(
+      data,
+      across = "individual",
+      n = 2L,
+      focal = list(keypoint = "head"),
+      neighbour = list(keypoint = "neck")
+    ),
+    unrank(add_nnd(
+      data,
+      across = "individual",
+      n = 2L,
+      focal = list(keypoint = "head"),
+      neighbour = list(keypoint = "neck")
+    ))
+  )
+  expect_equal(
+    calculate_nnd(data, across = "keypoint", within = "individual"),
+    unrank(add_nnd(data, across = "keypoint", within = "individual"))
+  )
+})
+
+test_that("calculate_nnd() still takes keypoint_neighbour, with a warning", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+  data <- nnd_frame()
+
+  expect_warning(
+    old <- calculate_nnd(
+      data,
+      across = "individual",
+      keypoint_neighbour = "neck"
+    ),
+    "keypoint_neighbour.*deprecated"
+  )
+  expect_true(all(as.character(old$nnd_keypoint) == "neck"))
+  expect_equal(
+    old,
+    suppressWarnings(
+      calculate_nnd(
+        data,
+        across = "individual",
+        neighbour = list(keypoint = "neck")
+      )
+    )
+  )
+})
+
+test_that("calculate_nnd() checks its input before warning about arguments", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+  expect_error(
+    calculate_nnd(
+      data.frame(x = 1),
+      across = "individual",
+      keypoint_neighbour = "a"
+    )
   )
 })

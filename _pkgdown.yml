@@ -18,13 +18,9 @@ reference:
   contents:
   - add_kinematics
   - add_tortuosity
+  - add_nnd
   - add_orientation
   - add_point
-
-- title: "Calculate"
-  desc: These functions take your aniframe as input and give you results in return.
-  contents:
-  - calculate_nnd
 
 - title: "Summarise"
   desc: >
@@ -36,7 +32,7 @@ reference:
   - summarise_path
 
 - title: "Compute"
-  desc: These functions are cogs used in the `add_`, `calculate_` and `summarise_` functions.
+  desc: These functions are cogs used in the `add_` and `summarise_` functions.
   contents:
   - compute_gradient
   - differentiate
@@ -52,6 +48,7 @@ reference:
   contents:
   - calculate_kinematics
   - calculate_tortuosity
+  - calculate_nnd
   - summarise_kinematics
   - summarise_tortuosity
   - add_centroid
