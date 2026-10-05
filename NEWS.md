@@ -42,6 +42,18 @@
 
 ## Changed
 
+* `add_nnd()` replaces `calculate_nnd()` (#109). It returns the frame with nearest-neighbour columns added, so it joins the `add_*()` family. `compute_nnd()` keeps its name, as it returns values. On the way:
+
+  | `calculate_nnd()` | `add_nnd()` |
+  |---|---|
+  | `nnd_<across>` (e.g. `nnd_individual`) | `nnd_<n>_<across>` (e.g. `nnd_1_individual`) |
+  | `nnd_<variable>` (e.g. `nnd_keypoint`) | `nnd_<n>_<variable>` (e.g. `nnd_1_keypoint`) |
+  | `nnd_distance` | `nnd_<n>_distance` |
+
+  - Every column carries the neighbour rank `n`, `1` included, so the nearest and second-nearest neighbours sit side by side: `add_nnd(n = 1) |> add_nnd(n = 2)`. It used to stop with "Names must be unique". The names split unambiguously with `^nnd_(\d+)_(.+)$`, even when the column after the rank has underscores in it. Calling it again with the same `n` says which columns are already there.
+  - `n` must be a single whole number of 1 or more.
+  - The deprecated `keypoint_neighbour` argument is not carried over; use `neighbour = list(keypoint = ...)`.
+
 * `add_kinematics()` and `add_tortuosity()` replace `calculate_kinematics()` and `calculate_tortuosity()`, with the same arguments (#103). Functions that return the frame with something added now all start with `add_`. Some columns are renamed on the way:
 
   | Function | Old | New |
@@ -113,8 +125,9 @@
 
 * `calculate_kinematics()` → `add_kinematics()` (#103).
 * `calculate_tortuosity()` → `add_tortuosity()` (#103).
+* `calculate_nnd()` → `add_nnd()` (#109).
 
-  Each returns exactly what it did, with the old column names (`path_length`, and `straightness`, `sinuosity` and `emax`), and `calculate_tortuosity()` still adds the kinematic columns. They will be removed after the next release.
+  Each returns exactly what it did, with the old column names (`path_length`; `straightness`, `sinuosity` and `emax`; `nnd_<across>` and `nnd_distance`), `calculate_tortuosity()` still adds the kinematic columns, and `calculate_nnd()` still takes `keypoint_neighbour`. They will be removed after the next release.
 
 ## Fixed
 

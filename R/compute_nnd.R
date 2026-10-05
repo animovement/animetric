@@ -1,6 +1,6 @@
 #' Compute nearest neighbour distances within one group
 #'
-#' Low-level function behind [calculate_nnd()], operating on plain vectors
+#' Low-level function behind [add_nnd()], operating on plain vectors
 #' for one group of comparable points (typically one timepoint).
 #'
 #' For each focal point, candidates are ranked by the value of `across`:
@@ -25,7 +25,7 @@
 #'   matched neighbour), one `nnd_<name>` column per entry of `labels`,
 #'   and `nnd_distance`.
 #'
-#' @seealso [calculate_nnd()] for the anipoint-level function.
+#' @seealso [add_nnd()] for the anipoint-level function.
 #'
 #' @examples
 #' # Nearest point belonging to a different individual

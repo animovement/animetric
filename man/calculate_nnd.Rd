@@ -15,90 +15,23 @@ calculate_nnd(
 )
 }
 \arguments{
-\item{data}{An anipoint.}
-
-\item{across}{Column whose value must differ between a point and its
-neighbour.}
-
-\item{n}{Which neighbour to return (1 = nearest, 2 = second nearest).
-Ranked by entity, not by point: with \code{n = 2}, the result is the
-closest point on the second-nearest entity.}
-
-\item{within}{Identity columns that must match, added to the temporal
-context.}
-
-\item{focal}{Named list restricting which points are measured from, e.g.
-\code{list(keypoint = "nose")}. \code{NULL} measures from every point.}
-
-\item{neighbour}{Named list restricting which points may be returned as
-a neighbour, e.g. \code{list(keypoint = "tail")}.}
+\item{data, across, n, within, focal, neighbour}{See \code{\link[=add_nnd]{add_nnd()}}.}
 
 \item{keypoint_neighbour}{Deprecated. Use
 \code{neighbour = list(keypoint = ...)}.}
 }
 \value{
-The input anipoint with added columns:
-\itemize{
-\item \code{nnd_distance} — distance to the n-th nearest neighbour
-\item \verb{nnd_<across>} — which entity that neighbour belongs to
-\item \verb{nnd_<variable>} — the neighbour's value for each unconstrained
-identity variable (e.g. \code{nnd_keypoint})
-}
+As \code{\link[=add_nnd]{add_nnd()}}, with the columns it adds named \code{nnd_distance},
+\verb{nnd_<across>} and \verb{nnd_<variable>}.
 }
 \description{
-Computes, for each point, the distance to the nearest point belonging to
-a \emph{different} entity — typically a different individual at the same
-moment.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-Which columns carry time and position is read from the anipoint's
-declared variables (see \code{\link[anicore:get_variables]{anicore::get_variables()}}). The identity columns
-are assigned roles by you, explicitly, because "another animal" and
-"another point on this animal" are different questions and the data
-cannot tell which one you mean.
+Renamed to \code{\link[=add_nnd]{add_nnd()}}, which takes the same arguments apart from
+\code{keypoint_neighbour}: functions that return the frame with columns added
+now start with \code{add_}. This returns exactly what it did, with the
+columns named without the neighbour rank that \code{\link[=add_nnd]{add_nnd()}} puts in them:
+\verb{nnd_<across>} and \code{nnd_distance} rather than \verb{nnd_<n>_<across>} and
+\verb{nnd_<n>_distance}.
 }
-\details{
-Every identity variable has one of three roles:
-\itemize{
-\item \strong{\code{across}} — its value must \emph{differ} between a point and its
-neighbour. This is what "another" means: \code{"individual"} for the
-nearest other animal, \code{"keypoint"} for the nearest other point on the
-same animal.
-\item \strong{\code{within}} — its value must \emph{match}. Added to the temporal context,
-which always applies: points are never compared across timepoints,
-observations, sessions or trials.
-\item unnamed — unconstrained. Any value may match any other, which is what
-makes the default any-keypoint-to-any-keypoint.
-}
-
-\code{focal} and \code{neighbour} then restrict which points are measured \emph{from}
-and which are eligible to be measured \emph{to}. Both are named lists of
-column to permitted values, and they are independent, so asymmetric
-questions like nose-to-tail are expressible.
-}
-\examples{
-data <- anicore::example_anipoint(
-  n_obs = 5,
-  n_individuals = 3,
-  n_keypoints = 3
-)
-
-# Nearest other individual, any keypoint to any keypoint
-data |> calculate_nnd(across = "individual")
-
-# Whose neck is my head nearest to?
-data |> calculate_nnd(
-  across = "individual",
-  focal = list(keypoint = "head"),
-  neighbour = list(keypoint = "neck")
-)
-
-# Nearest keypoint within each individual
-data |> calculate_nnd(across = "keypoint", within = "individual")
-
-# Each keypoint to the same keypoint on the nearest other individual
-data |> calculate_nnd(across = "individual", within = "keypoint")
-
-}
-\seealso{
-\code{\link[=compute_nnd]{compute_nnd()}} for the vector-level function.
-}
+\keyword{internal}

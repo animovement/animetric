@@ -1,21 +1,21 @@
-# test-calculate_nnd.R
+# test-add_nnd.R
 # Tests:
 # - Returns aniframe with correct new columns (2D)
 # - Returns aniframe with correct new columns (3D)
 # - Calculates correct nearest neighbour distances
 # - Identifies correct nearest neighbour individual
-# - Filters neighbours by keypoint_neighbour parameter
-# - Returns nnd_keypoint column when keypoint values are non-NA
+# - Filters neighbours by the neighbour argument
+# - Returns nnd_1_keypoint column when keypoint values are non-NA
 # - Handles n > 1 for second nearest individual
 # - Returns NA when no neighbours available (all same individual)
 # - Returns NA when all individuals are NA
 # - Returns NA when not enough individuals for n
 # - Errors when all individuals are NA
-# - Errors when keypoint_neighbour specified but all keypoints are NA
+# - Errors when neighbour names a keypoint column that is absent
 # - Errors when no requested keypoints are present in data
 # - Warns when some requested keypoints are not present in data
 # - Groups correctly by session/trial/time
-# - Handles vector of keypoint_neighbour values
+# - Handles several neighbour keypoints
 # - Maintains incoming classes and columns
 
 test_that("returns aniframe with correct new columns (2D)", {
@@ -26,11 +26,11 @@ test_that("returns aniframe with correct new columns (2D)", {
     y = c(0, 0, 0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual")
+  result <- add_nnd(data, across = "individual")
 
   expect_s3_class(result, "aniframe")
-  expect_true("nnd_distance" %in% names(result))
-  expect_true("nnd_individual" %in% names(result))
+  expect_true("nnd_1_distance" %in% names(result))
+  expect_true("nnd_1_individual" %in% names(result))
   expect_equal(nrow(result), nrow(data))
 })
 
@@ -43,11 +43,11 @@ test_that("returns aniframe with correct new columns (3D)", {
     z = c(0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual")
+  result <- add_nnd(data, across = "individual")
 
   expect_s3_class(result, "aniframe")
-  expect_true("nnd_distance" %in% names(result))
-  expect_true("nnd_individual" %in% names(result))
+  expect_true("nnd_1_distance" %in% names(result))
+  expect_true("nnd_1_individual" %in% names(result))
 })
 
 test_that("calculates correct nearest neighbour distances (2D)", {
@@ -58,14 +58,14 @@ test_that("calculates correct nearest neighbour distances (2D)", {
     y = c(0, 0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual")
+  result <- add_nnd(data, across = "individual")
 
   # Individual 1 -> nearest is 2 at distance 10
   # Individual 2 -> nearest is 1 at distance 10
   # Individual 3 -> nearest is 2 at distance 15
-  expect_equal(result$nnd_distance[result$individual == "1"], 10)
-  expect_equal(result$nnd_distance[result$individual == "2"], 10)
-  expect_equal(result$nnd_distance[result$individual == "3"], 15)
+  expect_equal(result$nnd_1_distance[result$individual == "1"], 10)
+  expect_equal(result$nnd_1_distance[result$individual == "2"], 10)
+  expect_equal(result$nnd_1_distance[result$individual == "3"], 15)
 })
 
 test_that("calculates correct nearest neighbour distances (3D)", {
@@ -77,9 +77,9 @@ test_that("calculates correct nearest neighbour distances (3D)", {
     z = c(0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual")
+  result <- add_nnd(data, across = "individual")
 
-  expect_equal(result$nnd_distance, c(5, 5))
+  expect_equal(result$nnd_1_distance, c(5, 5))
 })
 
 test_that("identifies correct nearest neighbour individual", {
@@ -90,23 +90,23 @@ test_that("identifies correct nearest neighbour individual", {
     y = c(0, 0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual")
+  result <- add_nnd(data, across = "individual")
 
   expect_equal(
-    as.character(result$nnd_individual[result$individual == "1"]),
+    as.character(result$nnd_1_individual[result$individual == "1"]),
     "2"
   )
   expect_equal(
-    as.character(result$nnd_individual[result$individual == "2"]),
+    as.character(result$nnd_1_individual[result$individual == "2"]),
     "1"
   )
   expect_equal(
-    as.character(result$nnd_individual[result$individual == "3"]),
+    as.character(result$nnd_1_individual[result$individual == "3"]),
     "2"
   )
 })
 
-test_that("filters neighbours by keypoint_neighbour parameter", {
+test_that("filters neighbours by the neighbour argument", {
   data <- anicore::anipoint(
     time = c(1, 1, 1, 1),
     individual = c(1, 1, 2, 2),
@@ -115,7 +115,7 @@ test_that("filters neighbours by keypoint_neighbour parameter", {
     y = c(0, 0, 0, 0)
   )
 
-  result <- calculate_nnd(
+  result <- add_nnd(
     data,
     across = "individual",
     neighbour = list(keypoint = "nose")
@@ -124,22 +124,22 @@ test_that("filters neighbours by keypoint_neighbour parameter", {
   # Individual 1's nose (x=0) -> nearest nose is individual 2's nose (x=10), distance 10
   # Individual 1's tail (x=5) -> nearest nose is individual 2's nose (x=10), distance 5
   expect_equal(
-    result$nnd_distance[result$individual == "1" & result$keypoint == "nose"],
+    result$nnd_1_distance[result$individual == "1" & result$keypoint == "nose"],
     10
   )
   expect_equal(
-    result$nnd_distance[result$individual == "1" & result$keypoint == "tail"],
+    result$nnd_1_distance[result$individual == "1" & result$keypoint == "tail"],
     5
   )
   expect_equal(
-    as.character(result$nnd_keypoint[
+    as.character(result$nnd_1_keypoint[
       result$individual == "1" & result$keypoint == "nose"
     ]),
     "nose"
   )
 })
 
-test_that("returns nnd_keypoint column when keypoint values are non-NA", {
+test_that("returns nnd_1_keypoint column when keypoint values are non-NA", {
   data <- anicore::anipoint(
     time = c(1, 1, 1, 1),
     individual = c(1, 1, 2, 2),
@@ -148,12 +148,12 @@ test_that("returns nnd_keypoint column when keypoint values are non-NA", {
     y = c(0, 0, 0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual")
+  result <- add_nnd(data, across = "individual")
 
-  expect_true("nnd_keypoint" %in% names(result))
+  expect_true("nnd_1_keypoint" %in% names(result))
   # Individual 1's nose (x=0) is closest to individual 2's nose (x=3)
   expect_equal(
-    as.character(result$nnd_keypoint[
+    as.character(result$nnd_1_keypoint[
       result$individual == "1" & result$keypoint == "nose"
     ]),
     "nose"
@@ -168,25 +168,25 @@ test_that("handles n > 1 for second nearest individual", {
     y = c(0, 0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual", n = 2L)
+  result <- add_nnd(data, across = "individual", n = 2L)
 
   # Individual 1 -> 2nd nearest individual is 3 at distance 25
   # Individual 2 -> 2nd nearest individual is 3 at distance 15
   # Individual 3 -> 2nd nearest individual is 1 at distance 25
-  expect_equal(result$nnd_distance[result$individual == "1"], 25)
-  expect_equal(result$nnd_distance[result$individual == "2"], 15)
-  expect_equal(result$nnd_distance[result$individual == "3"], 25)
+  expect_equal(result$nnd_2_distance[result$individual == "1"], 25)
+  expect_equal(result$nnd_2_distance[result$individual == "2"], 15)
+  expect_equal(result$nnd_2_distance[result$individual == "3"], 25)
 
   expect_equal(
-    as.character(result$nnd_individual[result$individual == "1"]),
+    as.character(result$nnd_2_individual[result$individual == "1"]),
     "3"
   )
   expect_equal(
-    as.character(result$nnd_individual[result$individual == "2"]),
+    as.character(result$nnd_2_individual[result$individual == "2"]),
     "3"
   )
   expect_equal(
-    as.character(result$nnd_individual[result$individual == "3"]),
+    as.character(result$nnd_2_individual[result$individual == "3"]),
     "1"
   )
 })
@@ -202,12 +202,12 @@ test_that("n = 2 finds second nearest individual, not second nearest point", {
     y = c(0, 0, 0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual", n = 2L)
+  result <- add_nnd(data, across = "individual", n = 2L)
 
   # Individual 1's nose: nearest ind is 2 (dist 5), 2nd nearest is 3 (dist 100)
   ind1_row <- result$individual == "1" & result$keypoint == "nose"
-  expect_equal(as.character(result$nnd_individual[ind1_row]), "3")
-  expect_equal(result$nnd_distance[ind1_row], 100)
+  expect_equal(as.character(result$nnd_2_individual[ind1_row]), "3")
+  expect_equal(result$nnd_2_distance[ind1_row], 100)
 })
 
 test_that("returns NA when no neighbours available (all same individual)", {
@@ -218,10 +218,10 @@ test_that("returns NA when no neighbours available (all same individual)", {
     y = c(0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual")
+  result <- add_nnd(data, across = "individual")
 
-  expect_true(all(is.na(result$nnd_distance)))
-  expect_true(all(is.na(result$nnd_individual)))
+  expect_true(all(is.na(result$nnd_1_distance)))
+  expect_true(all(is.na(result$nnd_1_individual)))
 })
 
 test_that("returns NA when not enough individuals for n", {
@@ -232,9 +232,9 @@ test_that("returns NA when not enough individuals for n", {
     y = c(0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual", n = 2L)
+  result <- add_nnd(data, across = "individual", n = 2L)
 
-  expect_true(all(is.na(result$nnd_distance)))
+  expect_true(all(is.na(result$nnd_2_distance)))
 })
 
 test_that("errors when the column named by `across` is absent", {
@@ -245,12 +245,12 @@ test_that("errors when the column named by `across` is absent", {
   )
 
   expect_error(
-    calculate_nnd(data, across = "individual"),
+    add_nnd(data, across = "individual"),
     "must name a single column present in the data"
   )
   # Reading an absent column would warn on the way to the error.
   expect_no_warning(try(
-    calculate_nnd(data, across = "individual"),
+    add_nnd(data, across = "individual"),
     silent = TRUE
   ))
 })
@@ -263,10 +263,10 @@ test_that("errors when all individuals are NA", {
     y = c(0, 0)
   )
 
-  expect_error(calculate_nnd(data, across = "individual"), "only .*NA.* values")
+  expect_error(add_nnd(data, across = "individual"), "only .*NA.* values")
 })
 
-test_that("errors when keypoint_neighbour is given but the column is absent", {
+test_that("errors when neighbour names a column that is absent", {
   data <- anicore::anipoint(
     time = c(1, 1),
     individual = c(1, 2),
@@ -275,7 +275,7 @@ test_that("errors when keypoint_neighbour is given but the column is absent", {
   )
 
   expect_error(
-    calculate_nnd(
+    add_nnd(
       data,
       across = "individual",
       neighbour = list(keypoint = "nose")
@@ -284,7 +284,7 @@ test_that("errors when keypoint_neighbour is given but the column is absent", {
   )
   expect_no_warning(
     try(
-      calculate_nnd(
+      add_nnd(
         data,
         across = "individual",
         neighbour = list(keypoint = "nose")
@@ -304,8 +304,8 @@ test_that("a frame without keypoints computes distances without warning", {
     y = c(0, 0, 0, 0)
   )
 
-  expect_no_warning(result <- calculate_nnd(data, across = "individual"))
-  expect_true("nnd_distance" %in% names(result))
+  expect_no_warning(result <- add_nnd(data, across = "individual"))
+  expect_true("nnd_1_distance" %in% names(result))
 })
 
 test_that("errors when no requested keypoints are present in data", {
@@ -318,7 +318,7 @@ test_that("errors when no requested keypoints are present in data", {
   )
 
   expect_error(
-    calculate_nnd(
+    add_nnd(
       data,
       across = "individual",
       neighbour = list(keypoint = "left_ear")
@@ -336,7 +336,7 @@ test_that("warns when some requested keypoints are not present in data", {
   )
 
   expect_warning(
-    calculate_nnd(
+    add_nnd(
       data,
       across = "individual",
       neighbour = list(keypoint = c("nose", "left_ear"))
@@ -355,21 +355,21 @@ test_that("groups correctly by session/trial/time", {
     y = c(0, 0, 0, 0)
   )
 
-  result <- calculate_nnd(data, across = "individual")
+  result <- add_nnd(data, across = "individual")
 
   # Session 1: distance is 10
   # Session 2: distance is 100
   expect_equal(
-    result$nnd_distance[result$session == "1" & result$individual == "1"],
+    result$nnd_1_distance[result$session == "1" & result$individual == "1"],
     10
   )
   expect_equal(
-    result$nnd_distance[result$session == "2" & result$individual == "1"],
+    result$nnd_1_distance[result$session == "2" & result$individual == "1"],
     100
   )
 })
 
-test_that("handles vector of keypoint_neighbour values", {
+test_that("handles several neighbour keypoints", {
   data <- anicore::anipoint(
     time = c(1, 1, 1, 1, 1, 1),
     individual = c(1, 1, 1, 2, 2, 2),
@@ -385,7 +385,7 @@ test_that("handles vector of keypoint_neighbour values", {
     y = c(0, 0, 0, 0, 0, 0)
   )
 
-  result <- calculate_nnd(
+  result <- add_nnd(
     data,
     across = "individual",
     neighbour = list(keypoint = c("left_ear", "right_ear"))
@@ -393,11 +393,11 @@ test_that("handles vector of keypoint_neighbour values", {
 
   # Individual 1's nose (x=0) -> nearest ear of ind 2 is right_ear (x=8), distance 8
   expect_equal(
-    result$nnd_distance[result$individual == "1" & result$keypoint == "nose"],
+    result$nnd_1_distance[result$individual == "1" & result$keypoint == "nose"],
     8
   )
   expect_equal(
-    as.character(result$nnd_keypoint[
+    as.character(result$nnd_1_keypoint[
       result$individual == "1" & result$keypoint == "nose"
     ]),
     "right_ear"
@@ -416,13 +416,13 @@ test_that("errors when the frame declares no temporal context", {
     anicore::set_variables(when = character(0))
   data <- drop_column_unchecked(data, "time")
 
-  expect_error(calculate_nnd(data, across = "individual"), "context")
+  expect_error(add_nnd(data, across = "individual"), "context")
 })
 
 test_that("Maintains incoming classes", {
   data <- anicore::example_anipoint() |>
     add_kinematics() |>
-    calculate_nnd(across = "individual")
+    add_nnd(across = "individual")
 
   expect_s3_class(data, "anipoint")
   expect_true("speed" %in% names(data))
@@ -453,14 +453,14 @@ test_that("neighbours are not matched across observations", {
     y = rep(0, 4)
   )
 
-  result <- calculate_nnd(af, across = "individual")
+  result <- add_nnd(af, across = "individual")
   clip_a <- result[result$observation == "clip_a", ]
 
-  expect_equal(sort(clip_a$nnd_distance), c(100, 100))
+  expect_equal(sort(clip_a$nnd_1_distance), c(100, 100))
 })
 
 test_that("focal and neighbour can name different keypoints", {
-  result <- calculate_nnd(
+  result <- add_nnd(
     pair_af(),
     across = "individual",
     focal = list(keypoint = "nose"),
@@ -468,34 +468,34 @@ test_that("focal and neighbour can name different keypoints", {
   )
 
   noses <- result[result$keypoint == "nose", ]
-  expect_equal(noses$nnd_distance[noses$individual == "A"], 12)
-  expect_equal(noses$nnd_distance[noses$individual == "B"], 20)
-  expect_true(all(as.character(noses$nnd_keypoint) == "tail"))
+  expect_equal(noses$nnd_1_distance[noses$individual == "A"], 12)
+  expect_equal(noses$nnd_1_distance[noses$individual == "B"], 20)
+  expect_true(all(as.character(noses$nnd_1_keypoint) == "tail"))
 
   # Points outside `focal` are not measured from.
-  expect_true(all(is.na(result$nnd_distance[result$keypoint == "tail"])))
+  expect_true(all(is.na(result$nnd_1_distance[result$keypoint == "tail"])))
 })
 
 test_that("across = keypoint measures between points, and within keeps it inside the animal", {
-  free <- calculate_nnd(pair_af(), across = "keypoint")
-  inside <- calculate_nnd(pair_af(), across = "keypoint", within = "individual")
+  free <- add_nnd(pair_af(), across = "keypoint")
+  inside <- add_nnd(pair_af(), across = "keypoint", within = "individual")
 
   # Unconstrained, B's tail finds A's nose (12) rather than its own (18).
   b_tail <- free$individual == "B" & free$keypoint == "tail"
-  expect_equal(free$nnd_distance[b_tail], 12)
-  expect_equal(as.character(free$nnd_individual[b_tail]), "A")
+  expect_equal(free$nnd_1_distance[b_tail], 12)
+  expect_equal(as.character(free$nnd_1_individual[b_tail]), "A")
 
   b_tail <- inside$individual == "B" & inside$keypoint == "tail"
-  expect_equal(inside$nnd_distance[b_tail], 18)
+  expect_equal(inside$nnd_1_distance[b_tail], 18)
 })
 
 test_that("within pairs like with like", {
-  result <- calculate_nnd(pair_af(), across = "individual", within = "keypoint")
+  result <- add_nnd(pair_af(), across = "individual", within = "keypoint")
 
   noses <- result[result$keypoint == "nose", ]
   tails <- result[result$keypoint == "tail", ]
-  expect_true(all(noses$nnd_distance == 30))
-  expect_true(all(tails$nnd_distance == 2))
+  expect_true(all(noses$nnd_1_distance == 30))
+  expect_true(all(tails$nnd_1_distance == 2))
 })
 
 test_that("a frame identified by track works", {
@@ -506,9 +506,9 @@ test_that("a frame identified by track works", {
     y = c(0, 0)
   )
 
-  result <- calculate_nnd(af, across = "track")
-  expect_true("nnd_track" %in% names(result))
-  expect_equal(result$nnd_distance, c(5, 5))
+  result <- add_nnd(af, across = "track")
+  expect_true("nnd_1_track" %in% names(result))
+  expect_equal(result$nnd_1_distance, c(5, 5))
 })
 
 test_that("non-Cartesian coordinates error with a pointer to the conversion", {
@@ -519,33 +519,27 @@ test_that("non-Cartesian coordinates error with a pointer to the conversion", {
     phi = c(0, pi)
   )
 
-  expect_error(calculate_nnd(af, across = "individual"), "Cartesian")
-  expect_error(calculate_nnd(af, across = "individual"), "map_to_cartesian")
+  expect_error(add_nnd(af, across = "individual"), "Cartesian")
+  expect_error(add_nnd(af, across = "individual"), "map_to_cartesian")
 })
 
-test_that("keypoint_neighbour is deprecated but still works", {
-  expect_warning(
-    result <- calculate_nnd(
-      pair_af(),
-      across = "individual",
-      keypoint_neighbour = "tail"
-    ),
-    "deprecated"
+test_that("keypoint_neighbour is gone from add_nnd()", {
+  expect_error(
+    add_nnd(pair_af(), across = "individual", keypoint_neighbour = "tail"),
+    "unused argument"
   )
-
-  expect_true(all(as.character(result$nnd_keypoint) == "tail"))
 })
 
 test_that("focal and neighbour must be named lists", {
   expect_error(
-    calculate_nnd(pair_af(), across = "individual", focal = "nose"),
+    add_nnd(pair_af(), across = "individual", focal = "nose"),
     "named list"
   )
 })
 
 test_that("within must name existing columns", {
   expect_error(
-    calculate_nnd(pair_af(), across = "individual", within = "nope"),
+    add_nnd(pair_af(), across = "individual", within = "nope"),
     "must name a single column"
   )
 })
@@ -558,7 +552,7 @@ test_that("one-dimensional data errors rather than measuring in a line", {
   )
 
   expect_error(
-    calculate_nnd(af, across = "individual"),
+    add_nnd(af, across = "individual"),
     "two spatial variables"
   )
 })
@@ -576,7 +570,7 @@ test_that("a neighbour restriction matching no rows errors", {
   )
 
   expect_error(
-    calculate_nnd(
+    add_nnd(
       data,
       across = "individual",
       neighbour = list(keypoint = "nose")
@@ -585,20 +579,20 @@ test_that("a neighbour restriction matching no rows errors", {
   )
 })
 
-test_that("calculate_nnd() keeps the input's metadata and declaration", {
+test_that("add_nnd() keeps the input's metadata and declaration", {
   af <- anicore::example_anipoint(
     n_obs = 5,
     n_individuals = 3,
     n_keypoints = 1
   ) |>
     anicore::set_metadata(sampling_rate = 30, source = "test")
-  out <- calculate_nnd(af, across = "individual")
+  out <- add_nnd(af, across = "individual")
   expect_equal(anicore::get_metadata(out, "sampling_rate"), 30)
   expect_equal(anicore::get_metadata(out, "source"), "test")
   expect_equal(anicore::get_keys(out), anicore::get_keys(af))
 })
 
-test_that("calculate_nnd() works with renamed axis columns", {
+test_that("add_nnd() works with renamed axis columns", {
   af <- anicore::example_anipoint(
     n_obs = 5,
     n_individuals = 3,
@@ -606,7 +600,92 @@ test_that("calculate_nnd() works with renamed axis columns", {
   ) |>
     dplyr::rename(u = x, v = y) |>
     anicore::set_variables(where = c(x = "u", y = "v"))
-  out <- calculate_nnd(af, across = "individual")
+  out <- add_nnd(af, across = "individual")
   expect_equal(anicore::get_axes(out), c(x = "u", y = "v"))
-  expect_true("nnd_individual" %in% names(out))
+  expect_true("nnd_1_individual" %in% names(out))
+})
+
+test_that("every added column carries the neighbour rank", {
+  data <- pair_af()
+  out <- add_nnd(data, across = "individual")
+
+  expect_equal(
+    setdiff(names(out), names(data)),
+    c("nnd_1_individual", "nnd_1_keypoint", "nnd_1_distance")
+  )
+})
+
+test_that("calls with different n sit side by side", {
+  data <- anicore::anipoint(
+    time = c(1, 1, 1),
+    individual = c(1, 2, 3),
+    x = c(0, 10, 25),
+    y = c(0, 0, 0)
+  )
+
+  both <- data |>
+    add_nnd(across = "individual", n = 1) |>
+    add_nnd(across = "individual", n = 2)
+
+  expect_equal(
+    setdiff(names(both), names(data)),
+    c(
+      "nnd_1_individual",
+      "nnd_1_distance",
+      "nnd_2_individual",
+      "nnd_2_distance"
+    )
+  )
+  expect_equal(both$nnd_1_distance, c(10, 10, 15))
+  expect_equal(both$nnd_2_distance, c(25, 15, 25))
+  expect_equal(
+    both$nnd_1_distance,
+    add_nnd(data, across = "individual", n = 1)$nnd_1_distance
+  )
+  expect_s3_class(both, "anipoint")
+})
+
+test_that("the names split on the rank, underscores and all", {
+  af <- anicore::anipoint(
+    track_id = c("a", "b"),
+    time = c(1, 1),
+    x = c(0, 5),
+    y = c(0, 0)
+  )
+
+  added <- setdiff(names(add_nnd(af, across = "track_id", n = 12)), names(af))
+  # anipoint() adds a `keypoint` column, which is left unconstrained
+  expect_equal(
+    added,
+    c("nnd_12_track_id", "nnd_12_keypoint", "nnd_12_distance")
+  )
+
+  pattern <- "^nnd_(\\d+)_(.+)$"
+  expect_true(all(grepl(pattern, added)))
+  expect_equal(sub(pattern, "\\1", added), rep("12", 3))
+  expect_equal(
+    sub(pattern, "\\2", added),
+    c("track_id", "keypoint", "distance")
+  )
+  # And back again
+  expect_equal(
+    paste0("nnd_", sub(pattern, "\\1", added), "_", sub(pattern, "\\2", added)),
+    added
+  )
+})
+
+test_that("a repeated call with the same n errors helpfully", {
+  data <- add_nnd(pair_af(), across = "individual")
+
+  expect_error(
+    add_nnd(data, across = "individual"),
+    "already has.*nnd_1_individual"
+  )
+  expect_no_error(add_nnd(data, across = "individual", n = 2))
+})
+
+test_that("n must be a single whole number of 1 or more", {
+  for (bad in list(0, 1.5, -1, c(1, 2), NA_integer_, "1")) {
+    expect_error(add_nnd(pair_af(), across = "individual", n = bad), "`n`")
+  }
 })
