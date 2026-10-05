@@ -30,7 +30,8 @@
 #'   \describe{
 #'     \item{`"auto"` (the default)}{Three times the tracking noise,
 #'       estimated separately for each trajectory, and at most half its
-#'       median step. See Details.}
+#'       median step. See Details, and [compute_min_step()] for the value
+#'       it chooses.}
 #'     \item{a number}{A threshold of your own, such as the tracking
 #'       precision in the frame's spatial unit.}
 #'     \item{`0`}{Every direction counts, however short the step, as
@@ -162,8 +163,9 @@
 #'     movement, so the threshold may be too large; use the positional
 #'     precision instead, or `0`.
 #' }
-#' The threshold is not stored in the result. To know it exactly, give it as
-#' a number.
+#' The threshold is not stored in the result. [compute_min_step()] returns
+#' the one `"auto"` chooses for each trajectory, with the noise estimate,
+#' and a number given as `min_step` is used as it is.
 #'
 #' @seealso [add_tortuosity()] for windowed measures of how winding the path
 #'   is, and [summarise_path()] for measures of each whole trajectory.
@@ -516,17 +518,37 @@ check_min_step <- function(min_step, call = rlang::caller_env()) {
 #' @param position A data frame of positions, one column per axis.
 #' @param velocity A data frame of velocities, one column per axis.
 #' @param time The index.
-#' @return A number: `min_step` itself, or for `"auto"` three times the
-#'   noise from [positional_noise()], at most half the median step.
+#' @return A number: `min_step` itself, or for `"auto"` the threshold from
+#'   [auto_min_step()].
 #' @keywords internal
 resolve_min_step <- function(min_step, position, velocity, time) {
   if (!identical(min_step, "auto")) {
     return(min_step)
   }
+  auto_min_step(position, velocity, time)$min_step
+}
+
+#' The minimum step `"auto"` chooses for one trajectory
+#'
+#' The one place the automatic threshold is computed, for both
+#' [add_kinematics()] and [compute_min_step()].
+#'
+#' @param position A data frame of positions, one column per axis.
+#' @param velocity A data frame of velocities, one column per axis.
+#' @param time The index.
+#' @return A one-row data frame: `positional_noise`, from
+#'   [positional_noise()], and `min_step`, three times that noise, at most
+#'   half the median step.
+#' @keywords internal
+auto_min_step <- function(position, velocity, time) {
   v <- as.matrix(as.data.frame(velocity))
   step <- sqrt(rowSums(v^2)) * sampling_interval(time)
   cap <- stats::median(step[!is.na(step) & step > 0]) / 2
-  min(3 * positional_noise(position, velocity), cap, na.rm = TRUE)
+  noise <- positional_noise(position, velocity)
+  data.frame(
+    positional_noise = noise,
+    min_step = min(3 * noise, cap, na.rm = TRUE)
+  )
 }
 
 #' Positional noise of a trajectory

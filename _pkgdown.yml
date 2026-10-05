@@ -43,6 +43,7 @@ reference:
   - compute_straightness
   - compute_sinuosity
   - compute_emax
+  - compute_min_step
   - compute_point
   - compute_nnd
 

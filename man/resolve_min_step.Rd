@@ -16,8 +16,8 @@ resolve_min_step(min_step, position, velocity, time)
 \item{time}{The index.}
 }
 \value{
-A number: \code{min_step} itself, or for \code{"auto"} three times the
-noise from \code{\link[=positional_noise]{positional_noise()}}, at most half the median step.
+A number: \code{min_step} itself, or for \code{"auto"} the threshold from
+\code{\link[=auto_min_step]{auto_min_step()}}.
 }
 \description{
 The minimum step of one trajectory
