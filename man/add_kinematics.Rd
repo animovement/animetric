@@ -34,7 +34,8 @@ turning. One of:
 \describe{
 \item{\code{"auto"} (the default)}{Three times the tracking noise,
 estimated separately for each trajectory, and at most half its
-median step. See Details.}
+median step. See Details, and \code{\link[=compute_min_step]{compute_min_step()}} for the value
+it chooses.}
 \item{a number}{A threshold of your own, such as the tracking
 precision in the frame's spatial unit.}
 \item{\code{0}}{Every direction counts, however short the step, as
@@ -172,8 +173,9 @@ changes a lot between samples. The estimate then includes real
 movement, so the threshold may be too large; use the positional
 precision instead, or \code{0}.
 }
-The threshold is not stored in the result. To know it exactly, give it as
-a number.
+The threshold is not stored in the result. \code{\link[=compute_min_step]{compute_min_step()}} returns
+the one \code{"auto"} chooses for each trajectory, with the noise estimate,
+and a number given as \code{min_step} is used as it is.
 }
 }
 \examples{
