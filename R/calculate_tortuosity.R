@@ -69,7 +69,7 @@ windowed_tortuosity <- function(data, window_width, v_cols, names) {
       # Turning angle between consecutive velocity vectors
       .cos_turning = cos_turning(dplyr::pick(dplyr::all_of(v_cols))),
 
-      # Rolling sums using data.table (fast algorithm, centered window)
+      # Rolling sums using data.table (fast algorithm, centred window)
       .roll_sum_step = data.table::frollsum(
         .data$.step_length,
         n = window_width - 1L,

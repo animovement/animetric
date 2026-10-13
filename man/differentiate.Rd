@@ -39,3 +39,8 @@ previous iteration.
   t <- c(0, 0.9, 2.1, 3.8, 5.0, 5.2, 5.6, 6.7, 7.2, 8.9)
   differentiate(y, time = t, order = 2)
 }
+\references{
+Fornberg, B. (1988). Generation of finite difference formulas on
+arbitrarily spaced grids. \emph{Mathematics of Computation}, 51(184), 699-706.
+\doi{10.1090/S0025-5718-1988-0935077-0}
+}
