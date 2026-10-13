@@ -29,4 +29,9 @@ compute_gradient(c(0, 1, 4, 9, 16))
 # The spacing between coordinates need not be even
 compute_gradient(c(0, 1, 4, 9), coords = c(0, 1, 3, 6))
 }
+\references{
+Fornberg, B. (1988). Generation of finite difference formulas on
+arbitrarily spaced grids. \emph{Mathematics of Computation}, 51(184), 699-706.
+\doi{10.1090/S0025-5718-1988-0935077-0}
+}
 \concept{kinematics}

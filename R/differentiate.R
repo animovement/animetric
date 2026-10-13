@@ -10,6 +10,10 @@
 #'   Must be the same length as `values`.
 #' @return A numeric vector of the same length as `values` containing the
 #'   estimated first derivative at each point.
+#' @references
+#' Fornberg, B. (1988). Generation of finite difference formulas on
+#' arbitrarily spaced grids. *Mathematics of Computation*, 51(184), 699-706.
+#' \doi{10.1090/S0025-5718-1988-0935077-0}
 #' @family kinematics
 #' @examples
 #' # The derivative of x^2 is 2x, which the interior points recover exactly
@@ -41,7 +45,7 @@ compute_gradient <- function(values, coords = NULL) {
       h_back <- coord_diffs[i - 1] # coords[i]   - coords[i-1]
       h_forward <- coord_diffs[i] # coords[i+1] - coords[i]
 
-      # Use simple centered difference for uniform spacing
+      # Use simple centred difference for uniform spacing
       if (h_back == h_forward) {
         derivs[i] <- (values[i + 1] - values[i - 1]) / (2 * h_back)
       } else {
@@ -82,6 +86,10 @@ compute_gradient <- function(values, coords = NULL) {
 #'   Fornberg-based scheme implemented in `compute_gradient()`.  When
 #'   `order > 1`, the gradient is applied iteratively to the result of the
 #'   previous iteration.
+#' @references
+#' Fornberg, B. (1988). Generation of finite difference formulas on
+#' arbitrarily spaced grids. *Mathematics of Computation*, 51(184), 699-706.
+#' \doi{10.1090/S0025-5718-1988-0935077-0}
 #' @examples
 #'   # Simple equally spaced case
 #'   y <- sin(seq(0, 2 * pi, length.out = 10))

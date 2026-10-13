@@ -10,7 +10,7 @@ add_tortuosity(data, window_width = 11L, step_length = "auto")
 \item{data}{A Cartesian anipoint.}
 
 \item{window_width}{Size of the sliding window, in observations (default
-\code{11L}). Should be an odd number >= 3 for symmetric centering.}
+\code{11L}). Should be an odd number >= 3 for symmetric centring.}
 
 \item{step_length}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} The step length
 the path is rediscretised at for sinuosity and E_max, in the frame's
@@ -45,7 +45,7 @@ sinuosity and E_max are appropriate for random search paths.
 Works on 1D, 2D and 3D Cartesian data, reading the axes from the frame's
 declared variables.
 
-The window is centered on each timepoint. Near the ends of a trajectory,
+The window is centred on each timepoint. Near the ends of a trajectory,
 where the window would run past the first or last observation, the metrics
 are \code{NA}.
 

@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/animovement/animetric/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/animovement/animetric/actions/workflows/R-CMD-check.yaml)
 [![animetric status
 badge](https://animovement.r-universe.dev/badges/animetric)](https://animovement.r-universe.dev)
-[![codecov](https://codecov.io/gh/animovement/animetric/graph/badge.svg?token=Pf5n3yzLzK)](https://codecov.io/gh/animovement/animetric)
+[![codecov](https://codecov.io/gh/animovement/animetric/graph/badge.svg?token=Pf5n3yzLzK)](https://app.codecov.io/gh/animovement/animetric)
 [![Chat on Zulip](https://img.shields.io/badge/chat-Zulip-6492FE?logo=zulip&logoColor=white)](https://animovement.zulipchat.com)
 <!-- badges: end -->
 
@@ -50,6 +50,15 @@ library("animetric")
 ```
 
 
+
+## Lifecycle
+
+*animetric* is under active development. `add_orientation()`,
+`compute_min_step()` and `summarise_aniframe()` are experimental, as are
+the `vertical` and `min_step` arguments of `add_kinematics()`,
+`step_length` of `add_tortuosity()`, and `min_step` and `step_length` of
+`summarise_path()`: they may still change without a deprecation cycle.
+Everything else is stable and changes only through one.
 
 ## Citation {#citation}
 

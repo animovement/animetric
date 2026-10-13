@@ -10,7 +10,7 @@ calculate_tortuosity(data, window_width = 11L)
 \item{data}{A Cartesian anipoint.}
 
 \item{window_width}{Size of the sliding window, in observations (default
-\code{11L}). Should be an odd number >= 3 for symmetric centering.}
+\code{11L}). Should be an odd number >= 3 for symmetric centring.}
 }
 \value{
 The input anipoint with \code{straightness}, \code{sinuosity} and \code{emax}
