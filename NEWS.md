@@ -1,5 +1,10 @@
 # animetric (development version)
 
+These interfaces are experimental: they may still change without a deprecation cycle. Each carries an experimental badge in its documentation; everything else is stable and changes only through one.
+
+* `add_orientation()`, `compute_min_step()` and `summarise_aniframe()`.
+* The `vertical` and `min_step` arguments of `add_kinematics()`, the `step_length` argument of `add_tortuosity()`, and the `min_step` and `step_length` arguments of `summarise_path()`.
+
 ## Removed
 
 * `mean_angle()` and `median_angle()` are removed. Use `anicore::circ_mean()` and `anicore::circ_median()`, which are attached by `library(animovement)` (animovement/anicore#147). The circular statistics live in one place now, and these were the two that had drifted: `mean_angle()` duplicated `circ_mean()` exactly, and `median_angle()` was not a circular median at all.
