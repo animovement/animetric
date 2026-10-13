@@ -20,7 +20,7 @@ add_tortuosity(data, window_width = 11L, step_length = "auto")
 - window_width:
 
   Size of the sliding window, in observations (default `11L`). Should be
-  an odd number \>= 3 for symmetric centering.
+  an odd number \>= 3 for symmetric centring.
 
 - step_length:
 
@@ -62,7 +62,7 @@ sinuosity and E_max are appropriate for random search paths.
 Works on 1D, 2D and 3D Cartesian data, reading the axes from the frame's
 declared variables.
 
-The window is centered on each timepoint. Near the ends of a trajectory,
+The window is centred on each timepoint. Near the ends of a trajectory,
 where the window would run past the first or last observation, the
 metrics are `NA`.
 

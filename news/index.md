@@ -2,6 +2,21 @@
 
 ## animetric (development version)
 
+These interfaces are experimental: they may still change without a
+deprecation cycle. Each carries an experimental badge in its
+documentation; everything else is stable and changes only through one.
+
+- [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md),
+  [`compute_min_step()`](https://animovement.dev/animetric/reference/compute_min_step.md)
+  and
+  [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md).
+- The `vertical` and `min_step` arguments of
+  [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md),
+  the `step_length` argument of
+  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md),
+  and the `min_step` and `step_length` arguments of
+  [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md).
+
 ### Removed
 
 - `mean_angle()` and `median_angle()` are removed. Use

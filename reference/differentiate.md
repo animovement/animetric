@@ -40,6 +40,13 @@ Fornberg-based scheme implemented in
 When `order > 1`, the gradient is applied iteratively to the result of
 the previous iteration.
 
+## References
+
+Fornberg, B. (1988). Generation of finite difference formulas on
+arbitrarily spaced grids. *Mathematics of Computation*, 51(184),
+699-706.
+[doi:10.1090/S0025-5718-1988-0935077-0](https://doi.org/10.1090/S0025-5718-1988-0935077-0)
+
 ## Examples
 
 ``` r

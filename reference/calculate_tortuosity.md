@@ -28,7 +28,7 @@ calculate_tortuosity(data, window_width = 11L)
 - window_width:
 
   Size of the sliding window, in observations (default `11L`). Should be
-  an odd number \>= 3 for symmetric centering.
+  an odd number \>= 3 for symmetric centring.
 
 ## Value
 

@@ -22,6 +22,22 @@ Once you have installed the package, you can load it with:
 library("animetric")
 ```
 
+## Lifecycle
+
+*animetric* is under active development.
+[`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md),
+[`compute_min_step()`](https://animovement.dev/animetric/reference/compute_min_step.md)
+and
+[`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+are experimental, as are the `vertical` and `min_step` arguments of
+[`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md),
+`step_length` of
+[`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md),
+and `min_step` and `step_length` of
+[`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md):
+they may still change without a deprecation cycle. Everything else is
+stable and changes only through one.
+
 ## Citation
 
 If you enjoy the package, please make sure to cite it. If you find a

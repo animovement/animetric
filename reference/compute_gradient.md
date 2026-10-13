@@ -27,6 +27,13 @@ compute_gradient(values, coords = NULL)
 A numeric vector of the same length as `values` containing the estimated
 first derivative at each point.
 
+## References
+
+Fornberg, B. (1988). Generation of finite difference formulas on
+arbitrarily spaced grids. *Mathematics of Computation*, 51(184),
+699-706.
+[doi:10.1090/S0025-5718-1988-0935077-0](https://doi.org/10.1090/S0025-5718-1988-0935077-0)
+
 ## Examples
 
 ``` r
