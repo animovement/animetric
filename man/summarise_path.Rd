@@ -90,8 +90,9 @@ summarise_path(traj, step_length = 0.5)
 \references{
 Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal's
 path. Journal of Theoretical Biology, 229(2), 209-220.
+\doi{10.1016/j.jtbi.2004.03.016}.
 
 Bovet, P., & Benhamou, S. (1988). Spatial analysis of animals' movements
 using a correlated random walk model. Journal of Theoretical Biology,
-131(4), 419-433.
+131(4), 419-433. \doi{10.1016/S0022-5193(88)80038-9}.
 }
