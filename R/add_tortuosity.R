@@ -67,15 +67,16 @@
 #'
 #' Bovet, P., & Benhamou, S. (1988). Spatial analysis of animals' movements
 #' using a correlated random walk model. Journal of Theoretical Biology,
-#' 131(4), 419-433.
+#' 131(4), 419-433. \doi{10.1016/S0022-5193(88)80038-9}.
 #'
 #' Benhamou, S. (2004). How to reliably estimate the tortuosity of an animal’s
 #' path: straightness, sinuosity, or fractal dimension?.
 #' Journal of Theoretical Biology, 229(2), 209-220.
+#' \doi{10.1016/j.jtbi.2004.03.016}.
 #'
 #' Cheung, A., Zhang, S., Stricker, C., & Srinivasan, M. V. (2007). Animal
 #' navigation: the difficulty of moving in a straight line. Biological
-#' Cybernetics, 97(1), 47-61.
+#' Cybernetics, 97(1), 47-61. \doi{10.1007/s00422-007-0158-0}.
 #'
 #' @seealso
 #' * [add_kinematics()] for speed, course and the turning measures.
