@@ -19,6 +19,34 @@ documentation; everything else is stable and changes only through one.
 
 ### Removed
 
+- The deprecated functions and argument are removed, rather than shipped
+  once with a warning
+  ([\#120](https://github.com/animovement/animetric/issues/120)):
+  `add_centroid()` and `compute_centroid()` (use
+  [`add_point()`](https://animovement.dev/animetric/reference/add_point.md)
+  and
+  [`compute_point()`](https://animovement.dev/animetric/reference/compute_point.md));
+  `calculate_kinematics()`, `calculate_nnd()` and
+  `calculate_tortuosity()` (use
+  [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md),
+  [`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md)
+  and
+  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md));
+  `summarise_kinematics()` and `summarise_tortuosity()`, with their
+  `summarize_*()` spellings (use
+  [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+  and
+  [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md));
+  the `type` argument of
+  [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+  (use
+  [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+  for per-row measures and
+  [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
+  for whole paths); and `is_aniframe_kin()` (check for the columns you
+  need, e.g. `"speed" %in% names(x)`). The columns renamed on the way
+  are listed under Changed.
+
 - `mean_angle()` and `median_angle()` are removed. Use
   [`anicore::circ_mean()`](https://animovement.dev/anicore/reference/circ_mean.html)
   and
@@ -48,20 +76,16 @@ documentation; everything else is stable and changes only through one.
   distance travelled left out the steps to and from the missing position
   while the displacement still spanned the gap, so the straightness
   could exceed 1.
-  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md),
-  which is deprecated, keeps its old output.
 
-- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  gives correct results for polar, cylindrical and spherical input
-  stored in degrees. It converts such input to Cartesian with anispace’s
-  `map_to_*()`, which read every angle as radians until
-  animovement/anispace#47, so `phi = 90` was taken as 90 radians.
-  animetric now requires anispace 0.3.0.9005, which has the fix.
+- `calculate_kinematics()` gives correct results for polar, cylindrical
+  and spherical input stored in degrees. It converts such input to
+  Cartesian with anispace’s `map_to_*()`, which read every angle as
+  radians until animovement/anispace#47, so `phi = 90` was taken as 90
+  radians. animetric now requires anispace 0.3.0.9005, which has the
+  fix.
 
-- `heading` from
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  is `pi` for movement along `-x`, where it used to be rewritten to `0`
-  — the opposite direction
+- `heading` from `calculate_kinematics()` is `pi` for movement along
+  `-x`, where it used to be rewritten to `0` — the opposite direction
   ([\#69](https://github.com/animovement/animetric/issues/69)). The
   rewrite fired whenever `v_y` was exactly zero, which integer-pixel
   tracking produces routinely, so a trajectory along `-x` picked up
@@ -71,34 +95,27 @@ documentation; everything else is stable and changes only through one.
   stationary animal has no direction of travel; before, it read as `0`,
   or as `pi` when the velocity was a negative zero.
 
-- `angular_path_length` from
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  starts at `0`
+- `angular_path_length` from `calculate_kinematics()` starts at `0`
   ([\#68](https://github.com/animovement/animetric/issues/68)). When the
   first heading was negative it started at `2 * abs(heading)` and
   carried that offset along the whole trajectory, so a straight line at
   a heading of `-1` reported two radians of turning.
-  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  takes the difference between the last and first values, so its
-  `total_angular_path_length` was not affected. Turning made while the
-  animal is stopped (where `heading` is `NA`) is counted when it moves
-  off again.
+  `summarise_tortuosity()` takes the difference between the last and
+  first values, so its `total_angular_path_length` was not affected.
+  Turning made while the animal is stopped (where `heading` is `NA`) is
+  counted when it moves off again.
 
-- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
-  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md),
-  [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  and
-  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  read the axes and the index from the frame’s declared variables, so
-  they work on frames whose columns are not called `x`, `y`, `z` and
-  `time` ([\#81](https://github.com/animovement/animetric/issues/81)).
-  They used to stop with “Column `x` not found”. Velocity and
-  acceleration components are named by axis role (`v_x`, `a_y`, …)
-  whatever the input columns are called. 1D frames get translational
-  kinematics and tortuosity too;
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  used to return them unchanged. The 2D and 3D code paths are now one
-  implementation, with turning angles from
+- `calculate_kinematics()`, `calculate_tortuosity()`,
+  `summarise_kinematics()` and `summarise_tortuosity()` read the axes
+  and the index from the frame’s declared variables, so they work on
+  frames whose columns are not called `x`, `y`, `z` and `time`
+  ([\#81](https://github.com/animovement/animetric/issues/81)). They
+  used to stop with “Column `x` not found”. Velocity and acceleration
+  components are named by axis role (`v_x`, `a_y`, …) whatever the input
+  columns are called. 1D frames get translational kinematics and
+  tortuosity too; `calculate_kinematics()` used to return them
+  unchanged. The 2D and 3D code paths are now one implementation, with
+  turning angles from
   [`anicore::angle_between()`](https://animovement.dev/anicore/reference/angle_between.html).
   The only change in output is that 3D windowed tortuosity is `NA` at
   the first row where the window is incomplete, as it already was in 2D;
@@ -111,19 +128,16 @@ documentation; everything else is stable and changes only through one.
   `angular_acceleration`, `angular_path_length` and the heading
   summaries in radians, still labelled as degrees, so anything that
   trusted the metadata was off by a factor of 180/pi.
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
-  [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  and
-  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  now report them in degrees for such frames, with no extra step. Radian
-  frames are unchanged. The documentation now also says which way signed
-  angles run: they follow the frame’s own axes, counter-clockwise when
-  `y` points up, as aniread leaves image data.
+  `calculate_kinematics()`, `summarise_kinematics()` and
+  `summarise_tortuosity()` now report them in degrees for such frames,
+  with no extra step. Radian frames are unchanged. The documentation now
+  also says which way signed angles run: they follow the frame’s own
+  axes, counter-clockwise when `y` points up, as aniread leaves image
+  data.
 
-- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  keeps the input’s metadata, such as `sampling_rate`, and works on
-  frames whose axis columns have custom names. It used to rebuild its
-  result by re-detecting the columns, which dropped both.
+- `calculate_nnd()` keeps the input’s metadata, such as `sampling_rate`,
+  and works on frames whose axis columns have custom names. It used to
+  rebuild its result by re-detecting the columns, which dropped both.
 
 ### Added
 
@@ -140,10 +154,9 @@ documentation; everything else is stable and changes only through one.
   is counted once, when the animal moves off. The default, `"auto"`, is
   three times the positional noise estimated for each trajectory, and at
   most half its median step. `min_step = 0` counts every direction, as
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  did. On the SLEAP sample, cleaned and smoothed as in the Get Started
-  guides, the centre’s `total_turning` falls from about 356,000 to
-  243,000 degrees.
+  `calculate_kinematics()` did. On the SLEAP sample, cleaned and
+  smoothed as in the Get Started guides, the centre’s `total_turning`
+  falls from about 356,000 to 243,000 degrees.
 
 - [`compute_min_step()`](https://animovement.dev/animetric/reference/compute_min_step.md)
   returns the threshold that `min_step = "auto"` chooses for each
@@ -198,15 +211,14 @@ documentation; everything else is stable and changes only through one.
 ### Changed
 
 - [`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md)
-  replaces
-  [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
+  replaces `calculate_nnd()`
   ([\#109](https://github.com/animovement/animetric/issues/109)). It
   returns the frame with nearest-neighbour columns added, so it joins
   the `add_*()` family.
   [`compute_nnd()`](https://animovement.dev/animetric/reference/compute_nnd.md)
   keeps its name, as it returns values. On the way:
 
-  | [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md) | [`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md) |
+  | `calculate_nnd()` | [`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md) |
   |----|----|
   | `nnd_<across>` (e.g. `nnd_individual`) | `nnd_<n>_<across>` (e.g. `nnd_1_individual`) |
   | `nnd_<variable>` (e.g. `nnd_keypoint`) | `nnd_<n>_<variable>` (e.g. `nnd_1_keypoint`) |
@@ -225,11 +237,8 @@ documentation; everything else is stable and changes only through one.
 - [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md)
   and
   [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
-  replace
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  and
-  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md),
-  with the same arguments
+  replace `calculate_kinematics()` and `calculate_tortuosity()`, with
+  the same arguments
   ([\#103](https://github.com/animovement/animetric/issues/103)).
   Functions that return the frame with something added now all start
   with `add_`. Some columns are renamed on the way:
@@ -248,25 +257,22 @@ documentation; everything else is stable and changes only through one.
     (`a_x`, `a_y`).
   - [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
     names its columns with the window width, `11` being the default, and
-    adds only those three.
-    [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-    also added every kinematic column when the frame had none. The width
-    in the name keeps the windowed measures apart from the whole-path
-    ones of
+    adds only those three. `calculate_tortuosity()` also added every
+    kinematic column when the frame had none. The width in the name
+    keeps the windowed measures apart from the whole-path ones of
     [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md),
     and lets several widths sit side by side.
   - [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
     summarises the windowed measures at every width present
     (`median_straightness_11`, …), as well as the unsuffixed columns of
-    [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md).
+    `calculate_tortuosity()`.
 
 - [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md),
   [`add_orientation()`](https://animovement.dev/animetric/reference/add_orientation.md)
-  and the `vertical` argument of
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  are marked experimental (animovement/.github#46). They are new designs
-  that have not been used in anger yet, so they may still change without
-  a deprecation cycle; anything without a badge is stable, and changes
+  and the `vertical` argument of `calculate_kinematics()` are marked
+  experimental (animovement/.github#46). They are new designs that have
+  not been used in anger yet, so they may still change without a
+  deprecation cycle; anything without a badge is stable, and changes
   only through one.
   [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
   has open design questions
@@ -316,29 +322,23 @@ documentation; everything else is stable and changes only through one.
   [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
   is how direct the whole route was.
 
-- **Deprecated:**
+- **Removed:**
 
-  - [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-    →
+  - `summarise_kinematics()` →
     [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md).
-  - [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-    →
+  - `summarise_tortuosity()` →
     [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md),
     which returns the same measures, with `total_path_length` and `emax`
     named `total_distance` and `e_max`.
-  - `summarise_aniframe(type = )` keeps its old combined output, with a
-    warning.
-
-  Each deprecated call returns exactly what it did before. They will be
-  removed after the next release.
+  - `summarise_aniframe(type = )` →
+    [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
+    and
+    [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md).
 
 - [`add_point()`](https://animovement.dev/animetric/reference/add_point.md)
   and
   [`compute_point()`](https://animovement.dev/animetric/reference/compute_point.md)
-  replace
-  [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
-  and
-  [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
+  replace `add_centroid()` and `compute_centroid()`
   ([\#94](https://github.com/animovement/animetric/issues/94)). They
   derive a new member of an identity level at each moment, as before,
   and `method` now chooses how:
@@ -351,25 +351,18 @@ documentation; everything else is stable and changes only through one.
 
   A declared orientation is derived for the new member too: the circular
   mean of `yaw`, or the mean quaternion in 3D. It used to be left `NA`.
-  [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
-  and
-  [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
-  are deprecated, and return exactly what they did.
+  `add_centroid()` and `compute_centroid()` are removed.
 
 - **The `aniframe_kin` class is retired**
   ([\#58](https://github.com/animovement/animetric/issues/58)).
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  returns a plain anipoint. The class only labelled a frame as having
-  been through
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
+  `calculate_kinematics()` returns a plain anipoint. The class only
+  labelled a frame as having been through `calculate_kinematics()`,
   recorded nothing about its columns, and survived `select(-speed)`.
-  [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
-  is deprecated; check for the columns you need instead. Declaring
-  derived columns in anicore’s metadata is the planned replacement
-  (animovement/anicore#174).
+  `is_aniframe_kin()` is removed; check for the columns you need
+  instead. Declaring derived columns in anicore’s metadata is the
+  planned replacement (animovement/anicore#174).
 
-- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  gives turning measures for 3D data too
+- `calculate_kinematics()` gives turning measures for 3D data too
   ([\#63](https://github.com/animovement/animetric/issues/63)). Every 3D
   frame gets `turning_speed` (how fast the direction of travel turns, in
   any direction) and `cumulative_turning`, and
@@ -384,10 +377,8 @@ documentation; everything else is stable and changes only through one.
   turning speed is the angle between the velocities either side of each
   row over the time between them, so it has no wrap at +/-pi and no
   singularity when travel is vertical; 2D results are unchanged.
-  [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  and
-  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  summarise the new columns, and `total_turning` is now reported for 3D.
+  `summarise_kinematics()` and `summarise_tortuosity()` summarise the
+  new columns, and `total_turning` is now reported for 3D.
 
 - **Breaking:** the velocity-derived angular columns are renamed to say
   they describe the path, not the body
@@ -411,30 +402,24 @@ documentation; everything else is stable and changes only through one.
   and `sd_heading` become `*_course`, `*_angular_speed`,
   `*_angular_velocity` and `*_angular_acceleration` become
   `*_turning_speed`, `*_turning_rate` and `*_turning_acceleration`, and
-  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)’s
-  `total_angular_path_length` becomes `total_turning`. Values are
-  unchanged.
+  `summarise_tortuosity()`’s `total_angular_path_length` becomes
+  `total_turning`. Values are unchanged.
 
 - data.table is now a hard dependency
   ([\#27](https://github.com/animovement/animetric/issues/27)).
-  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  cannot work without it, so the first call on a fresh install used to
-  stop and offer to install it.
+  `calculate_tortuosity()` cannot work without it, so the first call on
+  a fresh install used to stop and offer to install it.
 
 - Works with anicore’s `anipoint` class and rebuilt accessor API
-  (animovement/anicore#154).
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  returns a frame of class
-  `c("aniframe_kin", "anipoint", "aniframe", ...)`.
+  (animovement/anicore#154). `calculate_kinematics()` returns a frame of
+  class `c("aniframe_kin", "anipoint", "aniframe", ...)`.
 
-- The circular summaries in
-  [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  come from anicore, and the `circular` package is no longer needed at
-  all (animovement/anicore#147). It was a soft dependency behind a
+- The circular summaries in `summarise_kinematics()` come from anicore,
+  and the `circular` package is no longer needed at all
+  (animovement/anicore#147). It was a soft dependency behind a
   `check_installed()` prompt, so the first call to
-  [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  on a fresh install used to stop and ask to install a package — for two
-  columns of the summary table.
+  `summarise_kinematics()` on a fresh install used to stop and ask to
+  install a package — for two columns of the summary table.
 
 - `mean_heading` is reported in `[0, 2*pi)`, like `median_heading`
   already was. It previously came back in `(-pi, pi]`, so the two
@@ -444,32 +429,6 @@ documentation; everything else is stable and changes only through one.
   [`anicore::wrap_angle()`](https://animovement.dev/anicore/reference/wrap_angle.html)
   gives by default. The direction is unchanged — only how it is written
   down.
-
-### Deprecated
-
-- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  →
-  [`add_kinematics()`](https://animovement.dev/animetric/reference/add_kinematics.md)
-  ([\#103](https://github.com/animovement/animetric/issues/103)).
-
-- [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  →
-  [`add_tortuosity()`](https://animovement.dev/animetric/reference/add_tortuosity.md)
-  ([\#103](https://github.com/animovement/animetric/issues/103)).
-
-- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  →
-  [`add_nnd()`](https://animovement.dev/animetric/reference/add_nnd.md)
-  ([\#109](https://github.com/animovement/animetric/issues/109)).
-
-  Each returns exactly what it did, with the old column names
-  (`path_length`; `straightness`, `sinuosity` and `emax`; `nnd_<across>`
-  and `nnd_distance`),
-  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  still adds the kinematic columns, and
-  [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  still takes `keypoint_neighbour`. They will be removed after the next
-  release.
 
 ### Fixed
 
@@ -518,20 +477,15 @@ documentation; everything else is stable and changes only through one.
   (animovement/anicore#84). The `aniframe` class keeps its name; only
   the package providing it changed.
 
-- The
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
-  [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  and
-  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  examples run rather than sitting in `\dontrun{}`. Each builds its own
-  frame with
+- The `calculate_kinematics()`, `calculate_nnd()` and
+  `calculate_tortuosity()` examples run rather than sitting in
+  `\dontrun{}`. Each builds its own frame with
   [`anicore::example_aniframe()`](https://animovement.dev/anicore/reference/anicore-deprecated.html);
   they were wrapped because they referred to an undefined `data`, so
   they had never been checked against the functions they document.
 
-- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  reads the columns it needs from the aniframe’s metadata, and takes the
-  identity roles explicitly
+- `calculate_nnd()` reads the columns it needs from the aniframe’s
+  metadata, and takes the identity roles explicitly
   ([\#37](https://github.com/animovement/animetric/issues/37)). It
   previously hard-coded `individual`, `c("session", "trial", "time")`,
   `keypoint` and `x`/`y`/`z`, consulting the metadata for none of them.
@@ -575,13 +529,10 @@ documentation; everything else is stable and changes only through one.
   takes `across`, `is_focal`, `is_candidate` and `labels` in place of
   `individual`, `keypoint` and `keypoint_neighbour`, mirroring the
   generalisation above. Its result names the ranked column
-  (`nnd_across`) which
-  [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  renames.
+  (`nnd_across`) which `calculate_nnd()` renames.
 
-- `summarise_keypoints()` is renamed
-  [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md),
-  and takes `across` to choose the level it collapses
+- `summarise_keypoints()` is renamed `add_centroid()`, and takes
+  `across` to choose the level it collapses
   ([\#47](https://github.com/animovement/animetric/issues/47)). **The
   old name is gone rather than deprecated** — it has not been in a
   release, so nothing can be depending on it. The old name said
@@ -614,22 +565,19 @@ documentation; everything else is stable and changes only through one.
   temporal variable averages over time, which is what the
   `summarise_*()` family does.
 
-- [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)’s
-  `include_keypoints`, `exclude_keypoints` and `centroid_name` are
-  renamed `include`, `exclude` and `name`, and it takes the same
-  `across` ([\#47](https://github.com/animovement/animetric/issues/47)).
+- `compute_centroid()`’s `include_keypoints`, `exclude_keypoints` and
+  `centroid_name` are renamed `include`, `exclude` and `name`, and it
+  takes the same `across`
+  ([\#47](https://github.com/animovement/animetric/issues/47)).
   `add_area` is gone from the summary function: it was never
   implemented, and area is a different shape of answer that will arrive
   as its own function rather than a flag.
 
 ### Fixed
 
-- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
-  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  and
-  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  refuse a frame whose grouping pools several trajectories, rather than
-  answering wrongly
+- `calculate_kinematics()`, `calculate_tortuosity()` and
+  `summarise_tortuosity()` refuse a frame whose grouping pools several
+  trajectories, rather than answering wrongly
   ([\#54](https://github.com/animovement/animetric/issues/54)). Speed
   and path length come from successive rows within a group, so a group
   has to hold one position per moment. Regrouping an aniframe coarsely —
@@ -643,8 +591,7 @@ documentation; everything else is stable and changes only through one.
   calculate_kinematics(regrouped_by_individual) # mean speed 2.7, silently
   ```
 
-  Path length accumulates the same way, and
-  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
+  Path length accumulates the same way, and `summarise_tortuosity()`
   takes its last value minus its first — across concatenated
   trajectories that is a number describing nothing, and it was inflating
   totals about threefold.
@@ -655,9 +602,8 @@ documentation; everything else is stable and changes only through one.
   how to summarise more coarsely — summarise at the declared grouping
   first, then combine those results.
 
-- [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
-  carries the source frame’s metadata into its result
-  ([\#38](https://github.com/animovement/animetric/issues/38),
+- `compute_centroid()` carries the source frame’s metadata into its
+  result ([\#38](https://github.com/animovement/animetric/issues/38),
   [\#47](https://github.com/animovement/animetric/issues/47)). Sampling
   rate, units and the rest were dropped, so a centroid arrived claiming
   to know nothing about the recording it came from.
@@ -682,20 +628,19 @@ documentation; everything else is stable and changes only through one.
 ### Changed
 
 - Removed the `aniframe_kin2d` and `aniframe_kin3d` classes.
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  set them, but nothing ever read them — no predicate, no method, no
-  test in any package — and the dimensionality they encoded already
-  lives in the `coordinate_system` metadata field. Kinematics output
-  still carries `aniframe_kin`, which is what the `summarise_*()`
-  functions dispatch on.
+  `calculate_kinematics()` set them, but nothing ever read them — no
+  predicate, no method, no test in any package — and the dimensionality
+  they encoded already lives in the `coordinate_system` metadata field.
+  Kinematics output still carries `aniframe_kin`, which is what the
+  `summarise_*()` functions dispatch on.
 
 ### Fixed
 
-- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  checks that the `individual` and `keypoint` columns exist before
-  reading them. An absent column was reported as an all-`NA` one, and
-  every call warned on the way. Surfaced by aniframe 0.7.0, which no
-  longer adds a `keypoint` column beside an existing identity.
+- `calculate_nnd()` checks that the `individual` and `keypoint` columns
+  exist before reading them. An absent column was reported as an
+  all-`NA` one, and every call warned on the way. Surfaced by aniframe
+  0.7.0, which no longer adds a `keypoint` column beside an existing
+  identity.
 
 ## animetric 0.3.2
 
@@ -708,32 +653,26 @@ documentation; everything else is stable and changes only through one.
 ### Added
 
 - [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md)
-  and
-  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md),
-  alongside `summarize_*()` spellings for
+  and `summarise_tortuosity()`, alongside `summarize_*()` spellings for
   [`summarise_aniframe()`](https://animovement.dev/animetric/reference/summarise_aniframe.md),
-  [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  and
-  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md).
+  `summarise_kinematics()` and `summarise_tortuosity()`.
 
 ### Fixed
 
-- [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  preserves the classes of the frame it was given.
-- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  keeps the incoming classes rather than returning a plain frame.
+- `calculate_tortuosity()` preserves the classes of the frame it was
+  given.
+- `calculate_nnd()` keeps the incoming classes rather than returning a
+  plain frame.
 
 ## animetric 0.3.0 (2025-12-04)
 
 The `calculate_*()` and `summarise_*()` families are reworked,
-tortuosity metrics arrive, and with
-[`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-the package gains its first social metric.
+tortuosity metrics arrive, and with `calculate_nnd()` the package gains
+its first social metric.
 
 ### Added
 
-- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  and
+- `calculate_nnd()` and
   [`compute_nnd()`](https://animovement.dev/animetric/reference/compute_nnd.md)
   compute nearest-neighbour distance through a time series — the first
   collective metric in the package.
@@ -742,11 +681,8 @@ the package gains its first social metric.
 
 - `calculate_kinematics_2d()`, `calculate_kinematics_3d()`,
   `calculate_tortuosity_2d()` and `calculate_tortuosity_3d()`.
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  and
-  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  branch on dimensionality themselves, from the frame’s
-  `coordinate_system`.
+  `calculate_kinematics()` and `calculate_tortuosity()` branch on
+  dimensionality themselves, from the frame’s `coordinate_system`.
 
 ## animetric 0.2.1
 
@@ -762,25 +698,19 @@ and summaries.
 
 ### Added
 
-- Kinematics:
-  [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md),
-  with `calculate_kinematics_2d()` and `_3d()` behind it, and
+- Kinematics: `calculate_kinematics()`, with `calculate_kinematics_2d()`
+  and `_3d()` behind it, and
   [`differentiate()`](https://animovement.dev/animetric/reference/differentiate.md).
-- Path complexity:
-  [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  with `_2d()` and `_3d()` variants,
+- Path complexity: `calculate_tortuosity()` with `_2d()` and `_3d()`
+  variants,
   [`compute_sinuosity()`](https://animovement.dev/animetric/reference/compute_sinuosity.md),
   [`compute_straightness()`](https://animovement.dev/animetric/reference/compute_straightness.md)
   and
   [`compute_emax()`](https://animovement.dev/animetric/reference/compute_emax.md).
-- Spatial summaries:
-  [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md).
+- Spatial summaries: `compute_centroid()`.
 - Circular statistics: `mean_angle()` and `median_angle()`.
-- Summaries:
-  [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  and `summarise_keypoints()`.
-- [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
-  to test whether a frame carries kinematics.
+- Summaries: `summarise_kinematics()` and `summarise_keypoints()`.
+- `is_aniframe_kin()` to test whether a frame carries kinematics.
 - Angle helpers re-exported from aniframe: `deg_to_rad()`,
   `rad_to_deg()`, `wrap_angle()`, `unwrap_angle()`, `diff_angle()` and
   `calculate_angular_difference()`.

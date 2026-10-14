@@ -71,9 +71,7 @@ append_point(
 - orientation:
 
   Whether to derive a declared orientation for the new member, or leave
-  it `NA` as
-  [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
-  did.
+  it `NA`.
 
 - call:
 

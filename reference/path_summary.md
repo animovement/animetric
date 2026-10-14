@@ -28,9 +28,7 @@ path_summary(
 - rediscretise:
 
   Whether sinuosity and E_max come from the path rediscretised to a
-  constant step length, or, as
-  [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  computed them, from the turning between successive frames.
+  constant step length, or from the turning between successive frames.
 
 - step_length:
 

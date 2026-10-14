@@ -57,9 +57,7 @@ add_kinematics(data, vertical = NULL, min_step = "auto")
 
   `0`
 
-  :   Every direction counts, however short the step, as
-      [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-      did.
+  :   Every direction counts, however short the step.
 
   It affects only the direction measures (`course` and the turning
   measures), not `speed` or `cumulative_distance`.

@@ -38,8 +38,6 @@ Only the measures present are summarised. The windowed measures are
 recognised by their names, `straightness`, `sinuosity` or `e_max`
 followed by `_` and a window width, so a frame with several widths has
 each summarised. The unsuffixed `straightness`, `sinuosity` and `emax`
-of the deprecated
-[`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
 are summarised too. Velocity and acceleration components,
 `course_unwrapped`, and the running totals `cumulative_distance` and
 `cumulative_turning` are left out by default;
@@ -99,11 +97,7 @@ summarise_aniframe(data, ...)
 
 - ...:
 
-  Not used. Passing `type` (the `"kinematics"` and `"tortuosity"`
-  summaries this function used to combine) is deprecated: use
-  `summarise_aniframe()` and
-  [`summarise_path()`](https://animovement.dev/animetric/reference/summarise_path.md)
-  instead.
+  Not used.
 
 - cols:
 

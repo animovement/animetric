@@ -61,26 +61,3 @@ These functions are cogs used in the `add_` and `summarise_` functions.
 
 - [`compute_nnd()`](https://animovement.dev/animetric/reference/compute_nnd.md)
   : Compute nearest neighbour distances within one group
-
-## Deprecated
-
-Kept for one release; see each page for its replacement.
-
-- [`calculate_kinematics()`](https://animovement.dev/animetric/reference/calculate_kinematics.md)
-  **\[deprecated\]** : Calculate kinematic measures from trajectory data
-- [`calculate_tortuosity()`](https://animovement.dev/animetric/reference/calculate_tortuosity.md)
-  **\[deprecated\]** : Calculate tortuosity metrics over sliding windows
-- [`calculate_nnd()`](https://animovement.dev/animetric/reference/calculate_nnd.md)
-  **\[deprecated\]** : Calculate distance to the n-th nearest neighbour
-- [`summarise_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  [`summarize_kinematics()`](https://animovement.dev/animetric/reference/summarise_kinematics.md)
-  **\[deprecated\]** : Calculate kinematic summary statistics
-- [`summarise_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  [`summarize_tortuosity()`](https://animovement.dev/animetric/reference/summarise_tortuosity.md)
-  **\[deprecated\]** : Calculate tortuosity summary statistics
-- [`add_centroid()`](https://animovement.dev/animetric/reference/add_centroid.md)
-  **\[deprecated\]** : Add a centroid to an anipoint
-- [`compute_centroid()`](https://animovement.dev/animetric/reference/compute_centroid.md)
-  **\[deprecated\]** : Compute the centroid of an identity level
-- [`is_aniframe_kin()`](https://animovement.dev/animetric/reference/is_aniframe_kin.md)
-  **\[deprecated\]** : Test whether a frame holds kinematics

@@ -6,7 +6,6 @@
 <url><loc>https://animovement.dev/animetric/authors.html</loc></url>
 <url><loc>https://animovement.dev/animetric/index.html</loc></url>
 <url><loc>https://animovement.dev/animetric/news/index.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/add_centroid.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_kinematics.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_nnd.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/add_orientation.html</loc></url>
@@ -16,10 +15,7 @@
 <url><loc>https://animovement.dev/animetric/reference/append_point.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/as_3d.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/auto_min_step.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/calculate_kinematics.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/calculate_nnd.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/calculate_rotation.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/calculate_tortuosity.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/calculate_translation.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/cartesian_axes.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_members.html</loc></url>
@@ -29,7 +25,6 @@
 <url><loc>https://animovement.dev/animetric/reference/check_summary_cols.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_tortuosity_input.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/check_vertical.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/compute_centroid.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_emax.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_gradient.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/compute_min_step.html</loc></url>
@@ -48,11 +43,7 @@
 <url><loc>https://animovement.dev/animetric/reference/has_direction.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/horizontal_basis.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/index.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/is_aniframe_kin.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/join_summaries.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/kinematics_cartesian.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/legacy_kinematics_names.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/legacy_type.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/mean_direction.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/mean_quaternion.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/mean_step_length.html</loc></url>
@@ -80,13 +71,8 @@
 <url><loc>https://animovement.dev/animetric/reference/sampling_interval.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/step_length.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/summarise_aniframe.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/summarise_kinematics.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/summarise_kinematics_legacy.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/summarise_legacy.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/summarise_measures.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/summarise_path.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/summarise_path_legacy.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/summarise_tortuosity.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/summary_statistics.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/tortuosity_columns.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/vector_norm.html</loc></url>
@@ -94,6 +80,5 @@
 <url><loc>https://animovement.dev/animetric/reference/weighted_mean_na.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/window_sinuosity.html</loc></url>
 <url><loc>https://animovement.dev/animetric/reference/window_straightness.html</loc></url>
-<url><loc>https://animovement.dev/animetric/reference/windowed_tortuosity.html</loc></url>
 </urlset>
 
