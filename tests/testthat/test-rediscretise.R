@@ -119,7 +119,7 @@ test_that("a stationary stretch leaves summarise_path()'s sinuosity alone", {
 
   smooth <- summarise_path(data)
   jittery <- summarise_path(paused)
-  legacy <- summarise_path_legacy(paused)
+  legacy <- path_summary(paused, min_step = 0, rediscretise = FALSE)
 
   # Rediscretised, the pause barely moves it; frame by frame, it dominates
   expect_equal(jittery$sinuosity, smooth$sinuosity, tolerance = 0.01)

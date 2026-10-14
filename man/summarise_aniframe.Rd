@@ -42,9 +42,7 @@ summarize_aniframe(data, ...)
 \arguments{
 \item{data}{An anipoint, anisegment or anijoint.}
 
-\item{...}{Not used. Passing \code{type} (the \code{"kinematics"} and \code{"tortuosity"}
-summaries this function used to combine) is deprecated: use
-\code{summarise_aniframe()} and \code{\link[=summarise_path]{summarise_path()}} instead.}
+\item{...}{Not used.}
 
 \item{cols}{Character vector of columns to summarise, in place of the
 class's default set. A known angle among them is still summarised with
@@ -86,11 +84,10 @@ statistics for \code{course} and for a declared \code{yaw}, reported as
 Only the measures present are summarised. The windowed measures are
 recognised by their names, \code{straightness}, \code{sinuosity} or \code{e_max} followed
 by \verb{_} and a window width, so a frame with several widths has each
-summarised. The unsuffixed \code{straightness}, \code{sinuosity} and \code{emax} of the
-deprecated \code{\link[=calculate_tortuosity]{calculate_tortuosity()}} are summarised too. Velocity and
-acceleration components, \code{course_unwrapped}, and the running totals
-\code{cumulative_distance} and \code{cumulative_turning} are left out by default;
-\code{\link[=summarise_path]{summarise_path()}} reports the totals.
+summarised. The unsuffixed \code{straightness}, \code{sinuosity} and \code{emax} are
+summarised too. Velocity and acceleration components, \code{course_unwrapped},
+and the running totals \code{cumulative_distance} and \code{cumulative_turning} are
+left out by default; \code{\link[=summarise_path]{summarise_path()}} reports the totals.
 
 Angles are summarised with circular statistics (\code{\link[anicore:circ_mean]{anicore::circ_mean()}} and
 its siblings), so that the mean of 350 and 10 degrees is 0 rather than 180.

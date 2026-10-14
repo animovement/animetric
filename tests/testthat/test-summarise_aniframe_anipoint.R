@@ -1,4 +1,4 @@
-# Tests for summarise_kinematics
+# Tests for summarise_aniframe on anipoints
 #
 # - summarise_aniframe returns correct columns for 2D data
 # - summarise_aniframe returns correct columns for 3D data

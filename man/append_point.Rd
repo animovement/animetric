@@ -46,7 +46,7 @@ or \code{"weighted_centroid"} after \code{method}; required when \code{method} i
 function.}
 
 \item{orientation}{Whether to derive a declared orientation for the new
-member, or leave it \code{NA} as \code{add_centroid()} did.}
+member, or leave it \code{NA}.}
 
 \item{call}{The calling environment, for error messages.}
 }

@@ -97,30 +97,13 @@ summarise_path <- function(data, min_step = "auto", step_length = "auto") {
 #' @export
 summarize_path <- summarise_path
 
-#' What `summarise_tortuosity()` returned
-#'
-#' Every direction counts toward `total_turning`, and sinuosity and E_max
-#' come from the turning between successive frames.
-#'
-#' @param data An anipoint.
-#' @return As [summarise_path()], with `total_path_length` in place of
-#'   `total_distance` and `emax` in place of `e_max`.
-#' @keywords internal
-summarise_path_legacy <- function(data) {
-  dplyr::rename(
-    path_summary(data, min_step = 0, rediscretise = FALSE),
-    total_path_length = "total_distance",
-    emax = "e_max"
-  )
-}
-
 #' The measures of each whole trajectory
 #'
 #' @param data An anipoint.
 #' @param min_step See [add_kinematics()].
 #' @param rediscretise Whether sinuosity and E_max come from the path
-#'   rediscretised to a constant step length, or, as `summarise_tortuosity()`
-#'   computed them, from the turning between successive frames.
+#'   rediscretised to a constant step length, or from the turning between
+#'   successive frames.
 #' @param step_length The step to rediscretise at, see [summarise_path()].
 #'   Ignored when `rediscretise` is `FALSE`.
 #' @param call The calling environment, for error messages.
