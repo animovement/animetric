@@ -7,13 +7,15 @@ These interfaces are experimental: they may still change without a deprecation c
 
 ## Removed
 
+* The deprecated functions and argument are removed, rather than shipped once with a warning (#120): `add_centroid()` and `compute_centroid()` (use `add_point()` and `compute_point()`); `calculate_kinematics()`, `calculate_nnd()` and `calculate_tortuosity()` (use `add_kinematics()`, `add_nnd()` and `add_tortuosity()`); `summarise_kinematics()` and `summarise_tortuosity()`, with their `summarize_*()` spellings (use `summarise_aniframe()` and `summarise_path()`); the `type` argument of `summarise_aniframe()` (use `summarise_aniframe()` for per-row measures and `summarise_path()` for whole paths); and `is_aniframe_kin()` (check for the columns you need, e.g. `"speed" %in% names(x)`). The columns renamed on the way are listed under Changed.
+
 * `mean_angle()` and `median_angle()` are removed. Use `anicore::circ_mean()` and `anicore::circ_median()`, which are attached by `library(animovement)` (animovement/anicore#147). The circular statistics live in one place now, and these were the two that had drifted: `mean_angle()` duplicated `circ_mean()` exactly, and `median_angle()` was not a circular median at all.
 
   `median_angle()` took the median of the sine and cosine components, which is not rotation-equivariant — rotating every angle in a sample by the same amount moved its answer by a different amount, so the result depended on where the circle was cut. `anicore::circ_median()` is Fisher's circular median and does not have that defect, so it is a replacement that returns **different numbers**. Any stored values computed with `median_angle()` were frame-dependent.
 
 ## Fixed
 
-* The windowed straightness of `add_tortuosity()` is `NA` for a window that holds a missing position (#108). The distance travelled left out the steps to and from the missing position while the displacement still spanned the gap, so the straightness could exceed 1. `calculate_tortuosity()`, which is deprecated, keeps its old output.
+* The windowed straightness of `add_tortuosity()` is `NA` for a window that holds a missing position (#108). The distance travelled left out the steps to and from the missing position while the displacement still spanned the gap, so the straightness could exceed 1.
 
 * `calculate_kinematics()` gives correct results for polar, cylindrical and spherical input stored in degrees. It converts such input to Cartesian with anispace's `map_to_*()`, which read every angle as radians until animovement/anispace#47, so `phi = 90` was taken as 90 radians. animetric now requires anispace 0.3.0.9005, which has the fix.
 
@@ -86,12 +88,10 @@ These interfaces are experimental: they may still change without a deprecation c
 
   `median_straightness_11` from `summarise_aniframe()` is the typical straightness over windows; `straightness` from `summarise_path()` is how direct the whole route was.
 
-* **Deprecated:**
+* **Removed:**
   - `summarise_kinematics()` → `summarise_aniframe()`.
   - `summarise_tortuosity()` → `summarise_path()`, which returns the same measures, with `total_path_length` and `emax` named `total_distance` and `e_max`.
-  - `summarise_aniframe(type = )` keeps its old combined output, with a warning.
-
-  Each deprecated call returns exactly what it did before. They will be removed after the next release.
+  - `summarise_aniframe(type = )` → `summarise_aniframe()` and `summarise_path()`.
 
 * `add_point()` and `compute_point()` replace `add_centroid()` and `compute_centroid()` (#94). They derive a new member of an identity level at each moment, as before, and `method` now chooses how:
   - `"centroid"`, the mean (the default, and what the old functions did);
@@ -99,9 +99,9 @@ These interfaces are experimental: they may still change without a deprecation c
   - `"weighted"`, weighted by `confidence`;
   - a function of your own, e.g. `\(x) mean(x, trim = 0.1)`.
 
-  A declared orientation is derived for the new member too: the circular mean of `yaw`, or the mean quaternion in 3D. It used to be left `NA`. `add_centroid()` and `compute_centroid()` are deprecated, and return exactly what they did.
+  A declared orientation is derived for the new member too: the circular mean of `yaw`, or the mean quaternion in 3D. It used to be left `NA`. `add_centroid()` and `compute_centroid()` are removed.
 
-* **The `aniframe_kin` class is retired** (#58). `calculate_kinematics()` returns a plain anipoint. The class only labelled a frame as having been through `calculate_kinematics()`, recorded nothing about its columns, and survived `select(-speed)`. `is_aniframe_kin()` is deprecated; check for the columns you need instead. Declaring derived columns in anicore's metadata is the planned replacement (animovement/anicore#174).
+* **The `aniframe_kin` class is retired** (#58). `calculate_kinematics()` returns a plain anipoint. The class only labelled a frame as having been through `calculate_kinematics()`, recorded nothing about its columns, and survived `select(-speed)`. `is_aniframe_kin()` is removed; check for the columns you need instead. Declaring derived columns in anicore's metadata is the planned replacement (animovement/anicore#174).
 
 * `calculate_kinematics()` gives turning measures for 3D data too (#63). Every 3D frame gets `turning_speed` (how fast the direction of travel turns, in any direction) and `cumulative_turning`, and `calculate_kinematics(data, vertical = "z")` adds `course` and `course_unwrapped` in the horizontal plane, `course_elevation` (the angle of travel above it), and the signed horizontal `turning_rate` and `turning_acceleration`. The new `vertical` argument names the axis that points up in the world, with a minus sign when it points down (`"-y"`); the frame's `axis_directions` cannot supply it, since they are relative to the camera (animovement/anicore#172 proposes declaring it). Course counts about the vertical by the right-hand rule. The 3D turning speed is the angle between the velocities either side of each row over the time between them, so it has no wrap at +/-pi and no singularity when travel is vertical; 2D results are unchanged. `summarise_kinematics()` and `summarise_tortuosity()` summarise the new columns, and `total_turning` is now reported for 3D.
 
@@ -125,14 +125,6 @@ These interfaces are experimental: they may still change without a deprecation c
 * The circular summaries in `summarise_kinematics()` come from anicore, and the `circular` package is no longer needed at all (animovement/anicore#147). It was a soft dependency behind a `check_installed()` prompt, so the first call to `summarise_kinematics()` on a fresh install used to stop and ask to install a package — for two columns of the summary table.
 
 * `mean_heading` is reported in `[0, 2*pi)`, like `median_heading` already was. It previously came back in `(-pi, pi]`, so the two summaries of the same column disagreed about where the circle starts; near `+/-pi` that showed up as a mean of `-3.13` beside a median of `3.15`. Both now use the range `anicore::wrap_angle()` gives by default. The direction is unchanged — only how it is written down.
-
-## Deprecated
-
-* `calculate_kinematics()` → `add_kinematics()` (#103).
-* `calculate_tortuosity()` → `add_tortuosity()` (#103).
-* `calculate_nnd()` → `add_nnd()` (#109).
-
-  Each returns exactly what it did, with the old column names (`path_length`; `straightness`, `sinuosity` and `emax`; `nnd_<across>` and `nnd_distance`), `calculate_tortuosity()` still adds the kinematic columns, and `calculate_nnd()` still takes `keypoint_neighbour`. They will be removed after the next release.
 
 ## Fixed
 

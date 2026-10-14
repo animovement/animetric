@@ -1,4 +1,4 @@
-# Tests for summarise_tortuosity
+# Tests for summarise_path
 #
 # - summarise_path returns correct columns for 2D data
 # - summarise_path returns correct columns for 3D data

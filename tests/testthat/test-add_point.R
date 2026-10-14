@@ -418,21 +418,12 @@ test_that("add_point() keeps the orientation declaration", {
   expect_equal(centroid$hd, c(0.2, 0.2))
 })
 
-# Deprecated add_centroid() and compute_centroid() ------------------------
-
-test_that("add_centroid() and compute_centroid() are deprecated, unchanged", {
+test_that("orientation = FALSE leaves the new member's orientation NA", {
   af <- with_yaw(c(0.1, 0.3, 0.1, 0.3))
 
-  expect_warning(
-    added <- add_centroid(af),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_warning(
-    computed <- compute_centroid(af),
-    class = "lifecycle_warning_deprecated"
-  )
+  added <- append_point(af, orientation = FALSE)
+  computed <- derive_point(af, orientation = FALSE)
 
-  # As before: the centroid's position, with orientation left NA
   centroid <- dplyr::filter(added, .data$keypoint == "centroid")
   expect_equal(centroid$x, c(1, 1))
   expect_true(all(is.na(centroid$hd)))

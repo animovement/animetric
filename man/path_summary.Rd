@@ -18,8 +18,8 @@ path_summary(
 \item{min_step}{See \code{\link[=add_kinematics]{add_kinematics()}}.}
 
 \item{rediscretise}{Whether sinuosity and E_max come from the path
-rediscretised to a constant step length, or, as \code{summarise_tortuosity()}
-computed them, from the turning between successive frames.}
+rediscretised to a constant step length, or from the turning between
+successive frames.}
 
 \item{step_length}{The step to rediscretise at, see \code{\link[=summarise_path]{summarise_path()}}.
 Ignored when \code{rediscretise} is \code{FALSE}.}

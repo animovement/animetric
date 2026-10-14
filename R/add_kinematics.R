@@ -34,8 +34,7 @@
 #'       it chooses.}
 #'     \item{a number}{A threshold of your own, such as the tracking
 #'       precision in the frame's spatial unit.}
-#'     \item{`0`}{Every direction counts, however short the step, as
-#'       [calculate_kinematics()] did.}
+#'     \item{`0`}{Every direction counts, however short the step.}
 #'   }
 #'   It affects only the direction measures (`course` and the turning
 #'   measures), not `speed` or `cumulative_distance`.

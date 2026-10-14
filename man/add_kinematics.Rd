@@ -38,8 +38,7 @@ median step. See Details, and \code{\link[=compute_min_step]{compute_min_step()}
 it chooses.}
 \item{a number}{A threshold of your own, such as the tracking
 precision in the frame's spatial unit.}
-\item{\code{0}}{Every direction counts, however short the step, as
-\code{\link[=calculate_kinematics]{calculate_kinematics()}} did.}
+\item{\code{0}}{Every direction counts, however short the step.}
 }
 It affects only the direction measures (\code{course} and the turning
 measures), not \code{speed} or \code{cumulative_distance}.}

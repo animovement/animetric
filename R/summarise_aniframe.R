@@ -28,11 +28,10 @@
 #' Only the measures present are summarised. The windowed measures are
 #' recognised by their names, `straightness`, `sinuosity` or `e_max` followed
 #' by `_` and a window width, so a frame with several widths has each
-#' summarised. The unsuffixed `straightness`, `sinuosity` and `emax` of the
-#' deprecated [calculate_tortuosity()] are summarised too. Velocity and
-#' acceleration components, `course_unwrapped`, and the running totals
-#' `cumulative_distance` and `cumulative_turning` are left out by default;
-#' [summarise_path()] reports the totals.
+#' summarised. The unsuffixed `straightness`, `sinuosity` and `emax` are
+#' summarised too. Velocity and acceleration components, `course_unwrapped`,
+#' and the running totals `cumulative_distance` and `cumulative_turning` are
+#' left out by default; [summarise_path()] reports the totals.
 #'
 #' Angles are summarised with circular statistics ([anicore::circ_mean()] and
 #' its siblings), so that the mean of 350 and 10 degrees is 0 rather than 180.
@@ -46,9 +45,7 @@
 #'   circular statistics.
 #' @param measures Measures of central tendency and dispersion:
 #'   `"median_mad"` (default) or `"mean_sd"`.
-#' @param ... Not used. Passing `type` (the `"kinematics"` and `"tortuosity"`
-#'   summaries this function used to combine) is deprecated: use
-#'   `summarise_aniframe()` and [summarise_path()] instead.
+#' @param ... Not used.
 #'
 #' @return A data frame with one row per group: the grouping columns, then
 #'   `<measure>_<column>` for each measure, e.g. `median_speed` and
@@ -70,18 +67,6 @@
 #' @export
 #' @aliases summarize_aniframe
 summarise_aniframe <- function(data, ...) {
-  type <- legacy_type(...)
-  if (!is.null(type)) {
-    lifecycle::deprecate_warn(
-      "0.6.0",
-      "summarise_aniframe(type)",
-      details = "Use `summarise_aniframe()` for the distribution of per-row measures and `summarise_path()` for whole-path measures."
-    )
-    dots <- list(...)
-    measures <- if (is.null(dots$measures)) "median_mad" else dots$measures
-    measures <- match.arg(measures, c("median_mad", "mean_sd"))
-    return(summarise_legacy(data, type, measures))
-  }
   UseMethod("summarise_aniframe")
 }
 
@@ -111,7 +96,7 @@ summarise_aniframe.anipoint <- function(
       "turning_acceleration",
       "course_elevation",
       tortuosity_columns(data),
-      # From the deprecated calculate_tortuosity()
+      # Unsuffixed, as calculate_tortuosity() named them before its removal
       "straightness",
       "sinuosity",
       "emax",
@@ -298,66 +283,4 @@ check_summary_cols <- function(data, cols, call = rlang::caller_env()) {
     )
   }
   invisible(TRUE)
-}
-
-#' The `type` argument the old `summarise_aniframe()` took
-#'
-#' Named, or as the first unnamed argument, as the old signature
-#' `summarise_aniframe(data, type, measures)` allowed.
-#'
-#' @param ... The arguments after `data`.
-#' @return The requested types, or `NULL` when none was given.
-#' @keywords internal
-legacy_type <- function(...) {
-  dots <- list(...)
-  type <- dots$type
-  dot_names <- names(dots)
-  if (is.null(dot_names)) {
-    dot_names <- rep("", length(dots))
-  }
-  unnamed <- dots[dot_names == ""]
-  if (
-    is.null(type) &&
-      length(unnamed) > 0L &&
-      is.character(unnamed[[1]]) &&
-      all(unnamed[[1]] %in% c("kinematics", "tortuosity"))
-  ) {
-    type <- unnamed[[1]]
-  }
-  if (is.null(type)) {
-    return(NULL)
-  }
-  match.arg(type, c("kinematics", "tortuosity"), several.ok = TRUE)
-}
-
-#' What `summarise_aniframe(type = )` used to return
-#'
-#' @param data An anipoint.
-#' @param type `"kinematics"`, `"tortuosity"` or both.
-#' @param measures `"median_mad"` or `"mean_sd"`.
-#' @return A data frame with one row per group.
-#' @keywords internal
-summarise_legacy <- function(data, type, measures) {
-  summaries <- list()
-  if ("kinematics" %in% type) {
-    summaries$kinematics <- summarise_kinematics_legacy(data, measures)
-  }
-  if ("tortuosity" %in% type) {
-    summaries$tortuosity <- summarise_path_legacy(data)
-  }
-  join_summaries(summaries, dplyr::group_vars(data))
-}
-
-#' Join multiple summary data frames
-#' @keywords internal
-join_summaries <- function(summaries, group_vars) {
-  if (length(summaries) == 1L) {
-    return(summaries[[1L]])
-  }
-
-  if (length(group_vars) == 0L) {
-    return(dplyr::bind_cols(summaries))
-  }
-
-  purrr::reduce(summaries, dplyr::left_join, by = group_vars)
 }

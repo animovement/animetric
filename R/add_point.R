@@ -135,7 +135,7 @@ compute_point <- function(
 #'
 #' @inheritParams add_point
 #' @param orientation Whether to derive a declared orientation for the new
-#'   member, or leave it `NA` as `add_centroid()` did.
+#'   member, or leave it `NA`.
 #' @param call The calling environment, for error messages.
 #' @return The anipoint with the new member appended.
 #' @keywords internal

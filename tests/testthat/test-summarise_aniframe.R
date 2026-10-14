@@ -1,20 +1,11 @@
-# Tests for summarise_aniframe and join_summaries
+# Tests for summarise_aniframe
 #
 # summarise_aniframe:
-# - summarise_aniframe returns combined output with default type
-# - summarise_aniframe returns only kinematics when type = "kinematics"
-# - summarise_aniframe returns only tortuosity when type = "tortuosity"
-# - summarise_aniframe passes measures argument to summarise_kinematics
+# - summarise_aniframe respects the measures argument
 # - summarise_aniframe preserves grouping structure
 # - summarise_aniframe works with 2D data
 # - summarise_aniframe works with 3D data
 # - summarise_aniframe validates input
-#
-# join_summaries:
-# - join_summaries returns single summary unchanged
-# - join_summaries binds columns when no groups
-# - join_summaries left joins when groups present
-# - join_summaries handles multiple summaries correctly
 
 # Helper to create mock 2D kinematics aniframe
 mock_kin_2d <- function(n = 10, grouped = FALSE) {
@@ -124,10 +115,9 @@ test_that("every window width present is summarised, and nothing else", {
   expect_false(any(grepl("straightness_index|my_e_max", names(result))))
 })
 
-test_that("the deprecated calculate_tortuosity()'s columns are summarised", {
-  rlang::local_options(lifecycle_verbosity = "quiet")
+test_that("unsuffixed straightness, sinuosity and emax are summarised", {
   data <- mock_kin_2d(n = 20) |>
-    calculate_tortuosity(window_width = 5L)
+    dplyr::mutate(straightness = 0.5, sinuosity = 0.2, emax = 3)
 
   result <- summarise_aniframe(data)
 
@@ -302,128 +292,4 @@ test_that("anievents and other objects are refused with a reason", {
     summarise_aniframe(data.frame(x = 1)),
     "anipoint, anisegment or anijoint"
   )
-})
-
-# Deprecated: type, summarise_kinematics(), summarise_tortuosity() -------
-
-test_that("type still gives the old summaries, with a deprecation warning", {
-  data <- mock_kin_2d()
-
-  expect_warning(
-    kin <- summarise_aniframe(data, type = "kinematics"),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_equal(kin, summarise_kinematics_legacy(data, "median_mad"))
-
-  expect_warning(
-    path <- summarise_aniframe(data, type = "tortuosity"),
-    class = "lifecycle_warning_deprecated"
-  )
-  # The old names and values, which summarise_path() has since changed
-  expect_equal(path, summarise_path_legacy(data))
-
-  expect_warning(
-    both <- summarise_aniframe(
-      data,
-      type = c("kinematics", "tortuosity"),
-      measures = "mean_sd"
-    ),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_equal(
-    both,
-    dplyr::bind_cols(summarise_kinematics_legacy(data, "mean_sd"), path[-1])
-  )
-
-  # The old signature took type as the second argument
-  expect_warning(
-    positional <- summarise_aniframe(data, "tortuosity"),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_equal(positional, path)
-})
-
-test_that("summarise_kinematics() and summarise_tortuosity() are deprecated", {
-  data <- mock_kin_2d()
-
-  expect_warning(
-    kin <- summarise_kinematics(data, measures = "mean_sd"),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_equal(kin, summarise_kinematics_legacy(data, "mean_sd"))
-
-  expect_warning(
-    path <- summarise_tortuosity(data),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_named(
-    path,
-    c(
-      "keypoint",
-      "total_path_length",
-      "total_turning",
-      "net_displacement",
-      "straightness",
-      "sinuosity",
-      "emax"
-    )
-  )
-  expect_equal(path, summarise_path_legacy(data))
-})
-
-# join_summaries ---------------------------------------------------------
-
-test_that("join_summaries returns single summary unchanged", {
-  summary <- data.frame(a = 1, b = 2)
-  summaries <- list(only = summary)
-
-  result <- join_summaries(summaries, character(0))
-
-  expect_identical(result, summary)
-})
-
-test_that("join_summaries binds columns when no groups", {
-  summary1 <- data.frame(a = 1, b = 2)
-  summary2 <- data.frame(c = 3, d = 4)
-  summaries <- list(first = summary1, second = summary2)
-
-  result <- join_summaries(summaries, character(0))
-
-  expect_equal(ncol(result), 4L)
-  expect_equal(names(result), c("a", "b", "c", "d"))
-  expect_equal(nrow(result), 1L)
-})
-
-test_that("join_summaries left joins when groups present", {
-  summary1 <- data.frame(id = c("a", "b"), x = c(1, 2))
-  summary2 <- data.frame(id = c("a", "b"), y = c(3, 4))
-  summaries <- list(first = summary1, second = summary2)
-
-  result <- join_summaries(summaries, "id")
-
-  expect_equal(nrow(result), 2L)
-  expect_true(all(c("id", "x", "y") %in% names(result)))
-})
-
-test_that("join_summaries handles multiple summaries with groups", {
-  summary1 <- data.frame(id = c("a", "b"), x = c(1, 2))
-  summary2 <- data.frame(id = c("a", "b"), y = c(3, 4))
-  summary3 <- data.frame(id = c("a", "b"), z = c(5, 6))
-  summaries <- list(first = summary1, second = summary2, third = summary3)
-
-  result <- join_summaries(summaries, "id")
-
-  expect_equal(nrow(result), 2L)
-  expect_true(all(c("id", "x", "y", "z") %in% names(result)))
-})
-
-test_that("join_summaries preserves row order", {
-  summary1 <- data.frame(id = c("a", "b"), x = c(1, 2))
-  summary2 <- data.frame(id = c("b", "a"), y = c(4, 3))
-  summaries <- list(first = summary1, second = summary2)
-
-  result <- join_summaries(summaries, "id")
-
-  expect_equal(result$id, c("a", "b"))
-  expect_equal(result$y, c(3, 4))
 })
